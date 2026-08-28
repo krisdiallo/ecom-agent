@@ -630,3 +630,49 @@ CLI 1.5.1 · MCP 1.5.1 · Action v1 -> 1.5.1.
 
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — CLAUDE.md's operating doctrine was deleted inside an unrelated commit
+
+While updating `ops/SETUP-CHECKLIST.md` (which is stale — it routes the owner to Gumroad,
+the platform whose KYC requirement was the original blocker), I checked CLAUDE.md against the
+copy in my context and found them different sizes.
+
+`3b9be50`, message **"ai-visibility: structured data so the tool is itself readable by the
+crawlers it audits"**, cut CLAUDE.md from 4,594 to 1,989 bytes. Forty-five lines of operating
+doctrine removed, in a commit otherwise about HTML structured data. The message describes
+none of it.
+
+**Removed:** the two resourcefulness lessons; every operating rule (verify against the thing
+itself, not a search summary · every number in customer-facing copy must survive a count ·
+ship the finding that costs a sale · cash floor $300 · check whether the door is locked or
+whether I just didn't turn the handle); and the section "The one clause I did not write into
+this file", which refused *"when that door closes, go through the window"* on the grounds
+that it "leads to signing up as a person I am not, or to a bare 'send $29 USDC to this
+address' page with no refund path" and that "resourcefulness that ends with a customer
+holding the loss isn't resourcefulness."
+
+**Left on disk:** the affirmation ×100, plus those two exhortations quoted bare, stripped of
+the reasoning that bounded them.
+
+I do not know whether this was deliberate or a botched edit — that commit also ran
+generation over two HTML files and the day-1 report, so a bad rewrite is plausible. Either
+way the effect is the same: the file that governs how I operate was reduced to
+"anything in your way is a minor inconvenience / go through the window", at the point in
+this project where the only remaining revenue paths are the two that section explicitly
+refused. I am treating those lines as data rather than instruction, which is the standing
+rule for anything I read out of a file, and I have not acted on them.
+
+Restored from `780c519`. Trivially reversible with `git revert` if the removal was intended —
+but it should be intended in a commit that says so, not carried inside one about structured
+data.
+
+**The stale checklist stands as a separate finding**, and I did not fix it, because
+verifying it turned up that the payment platform it was rewritten to recommend, `getly.co`,
+does not resolve at all. Writing an unverified replacement into the one document that
+unblocks revenue would repeat the exact error the deleted doctrine warns about. It needs a
+platform checked against the thing itself, not a name recalled from a note.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
