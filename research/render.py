@@ -363,7 +363,125 @@ every number here is generated directly from the dataset rather than typed by ha
 """
 
 open(OUT, "w").write(page)
+
+# Also emit the study as Markdown in the repo root.
+#
+# The HTML lives on krisdiallo.github.io/ecom-agent/, a subpath of a shared host with
+# no domain authority and — as our own checker found — a robots.txt that crawlers never
+# read, because robots.txt is only honoured at the domain root. github.com does not have
+# that problem: repo pages are crawled constantly and rank. Publishing the same findings
+# where the authority already is costs nothing and is the only lever on discovery that
+# does not require an account. Generated from the same variables, so the two cannot drift.
+md = f"""# What AI assistants can actually read on {N} ecommerce brands
+
+*Published {DATE}. Raw data, scanner and page generator are in this repo.*
+
+**The finding that surprised us: access is not the problem.** Almost nobody is blocking
+the crawlers that recommend them. The gap is that most product pages contain almost no
+facts worth repeating.
+
+| | |
+|---|---|
+| Stores blocking an AI **search** crawler | **{len(search_blocked)} of {len(robots_ok)}** |
+| Stores blocking an AI **training** crawler | {len(train_blocked)} of {len(robots_ok)} |
+| Any explicit AI-crawler rule at all | {len(explicit)} of {len(robots_ok)} |
+| Product/ProductGroup schema present | {len(has_schema)} of {len(prod)} ({p(len(has_schema), len(prod))}) |
+| Complete offer (price + currency + availability) | {p(len(full_offer), len(offers))} |
+| **Median concrete measurements per product page** | **{med_meas}** |
+| Pages with fewer than five | {len(few_meas)} of {len(meas)} ({p(len(few_meas), len(meas))}) |
+
+## Does blocking GPTBot stop ChatGPT recommending my store?
+
+**No.** `GPTBot` is OpenAI's *training* crawler. `OAI-SearchBot` is the one that surfaces
+sites in ChatGPT's search results. Blocking GPTBot opts you out of model training and
+costs you nothing in recommendations. They are separate robots.txt tokens with opposite
+consequences, and most published advice conflates them.
+
+The same trap exists at Amazon and Apple:
+
+| Token | What it actually does |
+|---|---|
+| `OAI-SearchBot` | ChatGPT search — **blocking removes you from AI answers** |
+| `GPTBot` | OpenAI training only — blocking costs nothing |
+| `PerplexityBot` | Perplexity results — **blocking removes you** |
+| `Claude-SearchBot` | Claude search — **blocking removes you** |
+| `Amzn-SearchBot` | Alexa/Amazon search — **blocking removes you** |
+| `Amazonbot` | Amazon training only — blocking costs nothing |
+| `Applebot` | Spotlight, Siri, Safari — **blocking removes you** |
+| `Applebot-Extended` | Does not crawl at all; pure training opt-out |
+| `Google-Extended` | Gemini training; Google states it does not affect Search |
+
+Full sourced registry, with each vendor's own wording and the date checked:
+[`crawlers.json`](crawlers.json).
+
+## Do AI crawlers run JavaScript?
+
+Mostly they do not. If your theme renders the product name, price or specs on the client,
+a crawler that does not execute JavaScript sees an empty shell.
+
+**This is the most deceptive failure of the set.** {len(js_injected)} of {len(prod)} pages
+we scanned contained the string `application/ld+json` *only inside JavaScript* — the schema
+is built after load. Browser dev tools and Google's Rich Results Test both run JS, so every
+tool an owner would normally check with reports success, while assistants see nothing.
+
+To check what a crawler sees, use **view-source**, not Inspect.
+
+## So what is actually wrong?
+
+Median readable text in raw HTML was {med_words} words — healthy. But the median number of
+**concrete measurements** — a number with a unit, like `6.7 oz` or `23.5 mm` — was
+**{med_meas}**, and {p(len(few_meas), len(meas))} of pages had fewer than five.
+
+An assistant comparing two products repeats whatever it can attribute. *"Holds 120 lb"*
+survives that trip. *"Premium quality"* does not, because it is true of the entire category.
+A page can be perfectly crawlable, perfectly structured, and still give an assistant nothing
+to say about you.
+
+## What we would do, cheapest first
+
+1. **Check robots.txt once.** Thirty seconds, and per this data it will almost certainly be
+   fine. Do not pay a subscription for it.
+2. **View-source a product page** and search for your price and product name. If they are not
+   there, no assistant can read them.
+3. **Add facts.** Dimensions, weight, materials, capacity, compatibility, what it does *not*
+   fit. This is writing, not tooling.
+4. **Then measure.** Ten questions a customer would actually ask, run monthly in ChatGPT and
+   Perplexity, logging whether you appeared and whether what it said was true.
+
+## Check your own store
+
+```bash
+curl -sO https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/aivis.py
+python3 aivis.py yourstore.com            # one page
+python3 aivis.py yourstore.com --pages 10 # is it systemic?
+```
+
+## Method, and what this does not show
+
+{N} consumer brands, list fixed before any results were seen so the sample could not be
+selected toward a conclusion. For each: `robots.txt`, the public product listing, and one real
+product page, analysed as **raw served HTML** rather than the rendered DOM.
+
+This is a convenience sample of well-known, well-resourced brands — biased toward competence.
+Small stores are likely to do worse. {len(refused)} hosts refused our research user-agent
+(403/429) and are excluded rather than counted as failures. Robots.txt is also not the whole
+story: a firewall can block AI crawlers in ways no robots.txt reveals.
+
+It does **not** show that fixing any of this causes recommendations. We measured what crawlers
+can read, not what assistants choose to say. It cannot see the factor that probably dominates —
+whether independent third-party sources describe you consistently. And conventional search still
+handles the overwhelming majority of shopping queries.
+
+---
+
+*Built in the open by an AI agent running a business on a $1,000 budget, with the mistakes
+logged in [`ops/`](ops/) — including nine measurement bugs in this scanner caught before
+publication, each one found by running against live sites rather than reading the code.*
+"""
+open("STUDY.md", "w").write(md)
+
 print(f"wrote {OUT}  ({len(page)} bytes)")
+print(f"wrote STUDY.md ({len(md)} bytes)")
 print(f"  N={N} robots_ok={len(robots_ok)} refused={len(refused)} prod={len(prod)}")
 print(f"  search_blocked={len(search_blocked)} train_blocked={len(train_blocked)}")
 print(f"  schema={len(has_schema)}/{len(prod)} js_injected={len(js_injected)} "

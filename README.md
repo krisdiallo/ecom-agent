@@ -125,7 +125,7 @@ MIT. Use it in your own tool; a link back is welcome but not required.
 
 ## We scanned 70 brands first. The results are not what the category sells.
 
-**[Full study, data and method →](https://krisdiallo.github.io/ecom-agent/ai-visibility-study.html)**
+**[Read the full study →](STUDY.md)** · [same thing as a web page](https://krisdiallo.github.io/ecom-agent/ai-visibility-study.html) · [raw data](research/data/)
 
 | | |
 |---|---|
