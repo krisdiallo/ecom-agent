@@ -3,7 +3,7 @@
   "name": "io.github.krisdiallo/aivis",
   "title": "AI Visibility Checker",
   "description": "Open-source store audit: AI crawler rules, raw-HTML facts, agent-commerce (UCP) readiness.",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "repository": {
     "url": "https://github.com/krisdiallo/ecom-agent",
     "source": "github"
@@ -12,9 +12,17 @@
   "packages": [
     {
       "registryType": "mcpb",
-      "identifier": "https://github.com/krisdiallo/ecom-agent/releases/download/v1.1.1/aivis.mcpb",
-      "version": "1.1.1",
-      "fileSha256": "da77825763f6ccb5c0c056a876e88f7f60807c49292afccbc3e7f2fd74dc3f18",
+      "identifier": "https://github.com/krisdiallo/ecom-agent/releases/download/v1.1.2/aivis.mcpb",
+      "version": "1.1.2",
+      "fileSha256": "0fc6461b3081dcc7cbe235151ac94ddf2e65c168546463f9ea4d99b4975178e7",
+      "transport": {
+        "type": "stdio"
+      }
+    },
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/krisdiallo/aivis:1.1.2",
+      "version": "1.1.2",
       "transport": {
         "type": "stdio"
       }

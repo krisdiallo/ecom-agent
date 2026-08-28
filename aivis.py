@@ -27,7 +27,7 @@ https://github.com/krisdiallo/ecom-agent
 import argparse, gzip, io, json, re, sys, urllib.error, urllib.request
 from html import unescape
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 UA = ("Mozilla/5.0 (compatible; aivis/%s; +https://github.com/krisdiallo/ecom-agent) "
       "AI-visibility self-check" % __version__)
