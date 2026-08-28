@@ -1,0 +1,44 @@
+{
+  "manifest_version": "0.3",
+  "name": "aivis",
+  "display_name": "AI Visibility Checker",
+  "version": "1.0.0",
+  "description": "Check whether AI assistants can find, read and transact with an ecommerce store.",
+  "long_description": "Three checks against a live store, read-only. (1) robots.txt, distinguishing the crawlers whose blocking removes you from AI answers (OAI-SearchBot, PerplexityBot, Claude-SearchBot, Amzn-SearchBot, Applebot) from training-only crawlers where blocking costs you nothing (GPTBot, ClaudeBot, Google-Extended) — a distinction most published advice gets backwards. (2) A product page's raw HTML rather than the rendered DOM, because most AI crawlers do not run JavaScript: structured data, offer completeness, and how many concrete measurements the page actually gives. (3) The agent-commerce layer (Universal Commerce Protocol over MCP), which decides whether an agent can buy rather than merely describe. Backed by a published survey of 70 consumer brands: 0 of 62 blocked an AI search crawler, and 49 of 70 expose a live agent-commerce endpoint. Every crawler claim is sourced to the vendor's own documentation.",
+  "author": {
+    "name": "krisdiallo",
+    "url": "https://github.com/krisdiallo/ecom-agent"
+  },
+  "homepage": "https://github.com/krisdiallo/ecom-agent",
+  "documentation": "https://github.com/krisdiallo/ecom-agent/blob/main/STUDY.md",
+  "support": "https://github.com/krisdiallo/ecom-agent/issues",
+  "license": "MIT",
+  "keywords": [
+    "ecommerce",
+    "seo",
+    "ai-visibility",
+    "generative-engine-optimization",
+    "robots-txt",
+    "structured-data",
+    "shopify"
+  ],
+  "server": {
+    "type": "python",
+    "entry_point": "server/aivis_mcp.py",
+    "mcp_config": {
+      "command": "python3",
+      "args": ["${__dirname}/server/aivis_mcp.py"]
+    }
+  },
+  "tools": [
+    {
+      "name": "check_ai_visibility",
+      "description": "Check whether AI assistants can find, read and transact with an ecommerce store. Read-only: nothing is created, purchased or uploaded."
+    }
+  ],
+  "compatibility": {
+    "runtimes": {
+      "python": ">=3.8"
+    }
+  }
+}

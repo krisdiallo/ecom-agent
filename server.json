@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.krisdiallo/aivis",
+  "title": "AI Visibility Checker",
+  "description": "Check whether AI assistants can find, read and transact with an ecommerce store: robots.txt AI-crawler rules, product-page raw HTML, and the agent-commerce (UCP/MCP) layer. Read-only.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/krisdiallo/ecom-agent",
+    "source": "github"
+  },
+  "websiteUrl": "https://krisdiallo.github.io/ecom-agent/ai-visibility-study.html",
+  "packages": [
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/krisdiallo/ecom-agent/releases/download/v1.0.0/aivis.mcpb",
+      "version": "1.0.0",
+      "fileSha256": "a62fe44c0ec0c8cc300e5391ac54bb276481ca62101a79c4445e04197f0baef8",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

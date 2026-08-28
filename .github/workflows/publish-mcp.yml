@@ -1,0 +1,59 @@
+# Publish aivis to the official MCP registry.
+#
+# Authentication is GitHub Actions OIDC — no personal access token, no stored secret,
+# no account created anywhere. The identity is this repository, which grants the
+# io.github.krisdiallo/* namespace and nothing else.
+#
+# The package is an .mcpb bundle attached to a GitHub release, so there is no npm or
+# PyPI account in the path either. The checker stays a single stdlib-only file.
+name: Publish to MCP Registry
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*.*.*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # OIDC
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Never publish something that does not run. These are the same gates the
+      # self-check workflow uses.
+      - name: Gate — registry/CLI consistency
+        run: |
+          pip install --quiet jsonschema
+          python3 research/test_consistency.py
+
+      - name: Gate — MCP server speaks clean JSON-RPC
+        run: python3 research/test_mcp.py
+
+      # Rebuild the bundle and confirm it is byte-identical to the published release
+      # asset that server.json pins by sha256. If they ever diverge, publishing would
+      # point the registry at an artifact nobody verified.
+      - name: Gate — bundle matches the pinned sha256
+        run: |
+          python3 research/build_mcpb.py
+          BUILT=$(cut -d' ' -f1 < dist/aivis.mcpb.sha256)
+          PINNED=$(python3 -c "import json;print(json.load(open('server.json'))['packages'][0]['fileSha256'])")
+          URL=$(python3 -c "import json;print(json.load(open('server.json'))['packages'][0]['identifier'])")
+          curl -sL -o released.mcpb "$URL"
+          RELEASED=$(python3 -c "import hashlib;print(hashlib.sha256(open('released.mcpb','rb').read()).hexdigest())")
+          echo "built=$BUILT"; echo "pinned=$PINNED"; echo "released=$RELEASED"
+          test "$BUILT" = "$PINNED" || { echo "::error::server.json sha does not match a fresh build"; exit 1; }
+          test "$RELEASED" = "$PINNED" || { echo "::error::published release asset does not match server.json"; exit 1; }
+
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+
+      - name: Authenticate (OIDC)
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish
+        run: ./mcp-publisher publish
