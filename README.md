@@ -42,6 +42,26 @@ python3 aivis.py yourstore.com --pages 10
 
 ---
 
+## What this is, in the words you'd search for it
+
+This is a free **GEO tool** — **generative engine optimization**, also called **LLM SEO**
+or **answer engine optimization**: making sure an AI assistant can read your store well
+enough to cite or recommend it. It is the ecommerce-specific version of the broader
+**AI search optimization** question, focused on the two things that decide whether an
+answer engine can use your content at all:
+
+1. **Your robots.txt** — are you disallowing the crawlers that feed answers
+   (`OAI-SearchBot`, `PerplexityBot`, `Claude-SearchBot`)? Most "block AI" advice gets this
+   wrong by conflating them with training crawlers.
+2. **Your product page's structured data and facts in raw HTML** — what a crawler that does
+   not run JavaScript actually receives, not what dev tools show you.
+
+If you searched for an **AI visibility checker** or a **robots.txt checker** for an
+ecommerce store, this does both, with primary-source data on 165 AI crawlers rather than
+generic advice.
+
+---
+
 ## Or give it to your AI
 
 An MCP server, so Claude Code, Claude Desktop, Cursor or any MCP client can run the check
