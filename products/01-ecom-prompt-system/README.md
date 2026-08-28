@@ -1,6 +1,6 @@
 # The Ecom Operator's Prompt System
 
-**60 tested prompts + 6 workflows for running a store's copy, ads, email, and CRO with AI.**
+**17 tested prompts + 4 workflows for running a store's copy, ads, email, and CRO with AI.**
 
 Not a list of prompts. A system: every prompt takes structured inputs, states its assumptions,
 and ends with a self-check that catches the specific way AI output fails for ecommerce

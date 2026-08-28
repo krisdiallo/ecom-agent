@@ -2,7 +2,7 @@
 Price: $29. Category: Business & Money → Marketing.
 
 ## Title
-The Ecom Operator's Prompt System — 60 prompts + 6 workflows for store copy, ads, email & CRO
+The Ecom Operator's Prompt System — 17 prompts + 4 workflows for store copy, ads, email & CRO
 
 ## Subtitle
 Stop rewriting AI output that sounds like every other store.
@@ -16,7 +16,7 @@ been describing anyone's product.
 That's not a model problem. It's a context problem — and prompts that don't fix it will
 keep producing the same average-of-the-internet output no matter which AI you use.
 
-**What this is:** 60 prompts and 6 workflows built for people who run a store. Each prompt
+**What this is:** 17 prompts and 4 workflows built for people who run a store. Each prompt
 takes a structured brief, refuses to invent facts, and ends with a self-check that catches
 the specific ways AI output fails in ecommerce.
 

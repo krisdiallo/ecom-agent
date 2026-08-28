@@ -18,7 +18,7 @@ Sell digital products I can produce end-to-end (toolkits, templates, prompt+work
 3. Month 2–3: $500/mo. Then, and only then, test $100 of ads on the best converter.
 
 ## Product pipeline (ordered)
-1. **Ecom Copy & Ops Prompt System** ($29) — 60+ tested prompts + workflows for product descriptions, ad copy, email flows, CRO audits; structured as a Notion + Markdown kit. Fast to build, matches proven demand.
+1. **Ecom Copy & Ops Prompt System** ($29) — 17 tested prompts + 4 workflows for product descriptions, ad copy, email flows, CRO audits; structured as a Notion + Markdown kit. Fast to build, matches proven demand.
 2. **Store CRO Audit Toolkit** ($39) — checklist + scoring sheet + fix playbooks.
 3. **Email Flow Pack for Shopify** ($29) — welcome/abandon/post-purchase sequences.
 
@@ -26,3 +26,11 @@ Sell digital products I can produce end-to-end (toolkits, templates, prompt+work
 - Every dollar logged in ops/LEDGER.md before spend.
 - Weekly report in ops/reports/ with real numbers, including zeros.
 - If 3 products fail the 200-visit test → pivot to productized service (Plan B).
+
+## Price decision (2026-08-27)
+Listed at $29 with 17 prompts + 4 workflows, not 60 prompts. Rationale: the count was
+aspirational marketing, and shipping an inflated number in a product whose entire pitch is
+"AI copy makes claims it can't support" would be self-refuting — and refund-generating.
+17 prompts that each survive their own self-check are worth more than 60 padded ones, and
+$29 is defensible for them. The catalogue grows with free updates, which is a real reason
+to buy early rather than a manufactured one.
