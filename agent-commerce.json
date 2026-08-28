@@ -1,7 +1,7 @@
 {
  "$schema": "https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/agent-commerce.schema.json",
  "name": "agent-commerce-index",
- "version": "1.0.0",
+ "version": "1.1.0",
  "measured": "2026-08-28",
  "license": "MIT",
  "homepage": "https://github.com/krisdiallo/ecom-agent",
@@ -22,7 +22,7 @@
   "distinct_tool_surfaces": 1,
   "uniform_tool_surface": true
  },
- "finding": "All 49 live endpoints exposed an identical 13-tool surface on a single UCP version. There was no variation at all. Agent-commerce capability is therefore currently a property of the PLATFORM, not a merchant configuration choice \u2014 a store has it because its platform enabled it, not because anyone opted in. Two consequences: a merchant cannot meaningfully 'optimise' this axis today beyond choosing a platform, and an agent developer can assume a uniform tool surface across these stores rather than negotiating per-merchant capabilities.",
+ "finding": "All 49 live endpoints exposed an identical 13-tool surface on a single UCP version. There was no variation at all. Agent-commerce capability is therefore currently a property of the PLATFORM, not a merchant configuration choice \u2014 a store has it because its platform enabled it, not because anyone opted in. Two consequences: a merchant cannot meaningfully 'optimise' this axis today beyond choosing a platform, and an agent developer can assume a uniform tool surface across these stores rather than negotiating per-merchant capabilities. IMPORTANT QUALIFICATION, added after probing further: an endpoint being live does NOT mean any agent can buy. tools/list answers anonymously, but every tool CALL is refused without a published UCP agent profile URI (invalid_profile_url), verified on three independent stores. So the accurate statement is that these stores are transactable by IDENTIFIED agents, not by anonymous ones. Our earlier phrasing implied the latter and was too strong.",
  "tool_surface": [
   "cancel_cart",
   "cancel_checkout",
@@ -611,5 +611,21 @@
    "llms_txt_kind": null,
    "tool_count": 0
   }
- ]
+ ],
+ "access_control": {
+  "anonymous_tools_list": true,
+  "anonymous_tool_calls": false,
+  "requirement": "A published UCP agent profile URI, supplied as `meta.ucp-agent` on the call.",
+  "observed_error": {
+   "code": -32001,
+   "message": "UCP discovery failed",
+   "data_code": "invalid_profile_url"
+  },
+  "verified_on": [
+   "www.allbirds.com",
+   "liquiddeath.com",
+   "magicspoon.com"
+  ],
+  "note": "Capability enumeration is open; transacting is not. This is an accountability layer: a store can tell which agent is acting, and an anonymous agent cannot reach the catalogue, let alone a checkout. We did NOT create an agent profile to test past this \u2014 manufacturing an identity in order to transact on someone else's storefront is not a thing we will do to get a cleaner dataset."
+ }
 }

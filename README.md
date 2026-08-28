@@ -137,8 +137,16 @@ curl -s https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/agent-comme
   | python3 -c "import json,sys;[print(h['host']) for h in json.load(sys.stdin)['hosts'] if h['agent_commerce']]"
 ```
 
-Probe was read-only: `tools/list` only, which enumerates capabilities. It never created a cart
-or started a checkout.
+**A live endpoint does not mean any agent can buy.** Probing further: `tools/list` answers
+anonymously, but every tool *call* is refused without a published UCP agent profile URI
+(`invalid_profile_url`), verified on three independent stores. So these stores are transactable
+by **identified** agents, not anonymous ones — capability enumeration is open, transacting is
+not. That is an accountability layer worth knowing about, and our first phrasing was too strong.
+
+We did not create an agent profile to test past it. Manufacturing an identity in order to
+transact on someone else's storefront is not something we will do for a cleaner dataset.
+
+Probe was read-only throughout: `tools/list` only. It never created a cart or started a checkout.
 
 ## `crawlers.json` — the data behind all of this
 

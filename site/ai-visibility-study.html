@@ -159,6 +159,13 @@ HTML.</p>
 independent: one store in this sample has genuinely broken markup — structured data injected by
 JavaScript, a title naming a different product — and a perfectly functioning commerce endpoint.
 Its HTML is invisible; its checkout is not.</p>
+<p class="note"><strong>A live endpoint does not mean any agent can buy.</strong> Probing
+further: <code>tools/list</code> answers anonymously, but every tool <em>call</em> is refused
+without a published UCP agent profile URI (<code>invalid_profile_url</code>), verified on three
+independent stores. Capability enumeration is open; transacting is not. So these stores are
+reachable by <em>identified</em> agents, not anonymous ones — an accountability layer, and a
+qualification our first phrasing did not make. We did not create an agent profile to test past
+it.</p>
 <p class="note">41 stores serve Shopify's "Agent Instructions" format; 10 serve
 the original descriptive <code>llms.txt</code> convention, which is a plain-language summary and
 makes no commerce claim. <strong>Zero</strong> advertised commerce that did not answer — an
