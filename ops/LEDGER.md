@@ -717,3 +717,34 @@ only file in the repo written against a platform that has not been re-verified.
 
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — broader search terms were absent from the indexed region
+
+The description rewrite moved `OAI-SearchBot` from unranked to #4. Checked whether that
+generalised: the repo ranked *not in top 30* on every broader term — `AI visibility` (4,043
+repos), `GEO tool` (5,773), `generative engine optimization` (590), `LLM SEO` (1,178),
+`robots.txt checker` (55). Those are the words people actually search for this category of
+work, and the README used none of them, while using insider phrasing the audience does not.
+
+Added a section naming the work in those terms — GEO, generative engine optimization, LLM
+SEO, answer engine optimization, AI visibility checker, robots.txt checker — and placed it
+in the top quarter of the README where GitHub weights indexed content most heavily, rather
+than at byte 14,000 where the first attempt landed. Six of six target terms now appear in
+the first 6,000 bytes.
+
+Considered renaming the repo to match search terms (`ai-visibility` would name-match
+several of the queries where we currently do not rank). Verified against GitHub's primary
+documentation: **renaming breaks Actions `@` references and Pages URLs**, both of which are
+live and documented. The stated reason for keeping the name holds — settled by evidence, not
+by reluctance to change it.
+
+Search index re-crawl is not something I can force, so the ranking effect of this change is
+not measurable from here in this session. The change itself is done and in the right place.
+If the OAI-SearchBot result is a guide, description/README metadata has been the only lever
+that ever moved a number, so this is the class of work worth doing — while being honest that
+it is still pull-channel work and has produced no visitor.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
