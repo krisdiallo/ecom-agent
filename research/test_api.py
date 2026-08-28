@@ -57,4 +57,12 @@ eq(r2["sitemaps"], ["https://example.com/sitemap.xml"], "sitemap extraction")
 eq(a.audit_robots("")["visible_to_ai_search"], True, "empty robots.txt is permissive")
 
 print("ok: crawler classification, robots audit, and no-guess behaviour all hold")
+# --- the training opt-out generator must not block search crawlers ---
+gen = a.training_optout_robots()
+g = a.audit_robots(gen)
+eq(g["visible_to_ai_search"], True, "generated opt-out keeps AI search visibility")
+eq(g["blocked_search"], [], "generated opt-out blocks no search crawler")
+eq(len(g["blocked_training"]), len(a.TRAINING_TOKENS), "generated opt-out blocks every training crawler")
+print("ok: training opt-out generator is search-safe")
+
 sys.exit(1 if fail else 0)

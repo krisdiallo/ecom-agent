@@ -28,7 +28,7 @@ import argparse, gzip, io, ipaddress, json, re, socket, sys
 import urllib.error, urllib.parse, urllib.request
 from html import unescape
 
-__version__ = "1.4.0"
+__version__ = "1.5.0"
 
 UA = ("Mozilla/5.0 (compatible; aivis/%s; +https://github.com/krisdiallo/ecom-agent) "
       "AI-visibility self-check" % __version__)
@@ -331,6 +331,45 @@ def audit_robots(robots_txt):
             out["blocked_training"].append(token)
     out["visible_to_ai_search"] = not out["blocked_search"]
     return out
+
+
+def training_optout_robots(comment=True):
+    """Emit a robots.txt block that opts out of AI *training* without losing AI search.
+
+    Why this exists. The most-adopted AI blocklist in the ecosystem
+    (ai-robots-txt/ai.robots.txt, ~4k stars) generates a file disallowing all 166 known
+    AI user-agents. Audited with audit_robots(), that file blocks every search crawler
+    we track — OAI-SearchBot, PerplexityBot, Claude-SearchBot, Claude-User,
+    Amzn-SearchBot, Amzn-User, Applebot — alongside the training ones.
+
+    For someone who genuinely wants to block everything, that is correct and does what
+    it says. But an operator who wanted "don't train on me" also gets "don't recommend
+    me, and drop me from Siri, Spotlight and Alexa", which is a different decision and
+    is not obvious from the outside. Their own data notes the distinction in prose; the
+    generated artifact does not act on it.
+
+    This emits the other option. Every token is sourced to vendor documentation in
+    crawlers.json.
+    """
+    lines = []
+    if comment:
+        lines += [
+            "# Opt out of AI training WITHOUT losing AI search visibility.",
+            "# Blocking a training crawler costs you nothing in recommendations.",
+            "# Blocking a SEARCH crawler removes you from AI answers entirely — so the",
+            "# search crawlers are deliberately absent below. Verify with:",
+            "#   python3 aivis.py yourstore.com",
+            f"# Tokens sourced to vendor docs: {len(TRAIN_BOTS)} training crawlers.",
+            "",
+        ]
+    for token, what in TRAIN_BOTS:
+        lines += [f"# {what}", f"User-agent: {token}", "Disallow: /", ""]
+    if comment:
+        lines += [
+            "# Left ALLOWED on purpose — blocking these removes you from AI answers:",
+            "#   " + ", ".join(t for t, _ in SEARCH_BOTS),
+        ]
+    return "\n".join(lines).rstrip() + "\n"
 
 
 # ---------- product page ----------
@@ -957,12 +996,15 @@ def main():
     ap = argparse.ArgumentParser(
         prog="aivis", description="Check whether AI assistants can read your store.",
         epilog="Example:  python3 aivis.py allbirds.com")
-    ap.add_argument("store", help="your store domain, e.g. yourstore.com")
+    ap.add_argument("store", nargs="?", help="your store domain, e.g. yourstore.com")
     ap.add_argument("--url", help="a specific product page to check")
     ap.add_argument("--pages", type=int, default=1, metavar="N",
                     help="sample N product pages instead of one, and report whether "
                          "problems are systemic (default: 1)")
     ap.add_argument("--no-color", action="store_true")
+    ap.add_argument("--training-optout", action="store_true",
+                    help="print a robots.txt block that opts out of AI training while "
+                         "keeping AI search visibility, then exit")
     ap.add_argument("--no-agent", action="store_true",
                     help="skip the agent-commerce (UCP/MCP) check")
     ap.add_argument("--json", action="store_true",
@@ -972,6 +1014,13 @@ def main():
                     help="exit non-zero on this severity or worse (default: critical)")
     ap.add_argument("--version", action="version", version=f"aivis {__version__}")
     args = ap.parse_args()
+    if args.training_optout:
+        sys.stdout.write(training_optout_robots())
+        return 0
+    if not args.store:
+        # store is nargs="?" only so --training-optout can run without it; every other
+        # path still needs it, and must say so rather than crashing on None.
+        ap.error("a store domain is required (or use --training-optout)")
     paint(sys.stdout.isatty() and not args.no_color and not args.json)
 
     host = re.sub(r"^https?://", "", args.store).strip("/").split("/")[0]

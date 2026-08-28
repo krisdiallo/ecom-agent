@@ -114,6 +114,35 @@ Three more that circulating robots.txt snippets routinely get wrong:
 - **`facebookexternalhit` is not an AI crawler.** It renders your link previews. It gets swept
   into "block AI bots" lists, which then silently breaks how your links look when shared.
 
+## The most popular AI blocklist also blocks AI search
+
+`ai-robots-txt/ai.robots.txt` (~4k stars) is the ecosystem's default answer to "block AI bots".
+Its generated `robots.txt` disallows all 166 known AI user-agents. Audited with this tool:
+
+```
+$ python3 -c "import aivis,urllib.request as u; \
+  print(aivis.audit_robots(u.urlopen('https://raw.githubusercontent.com/\
+ai-robots-txt/ai.robots.txt/main/robots.txt').read().decode()))"
+
+visible_to_ai_search: False
+blocked_search : OAI-SearchBot, PerplexityBot, Claude-SearchBot, Claude-User,
+                 Amzn-SearchBot, Amzn-User, Applebot
+```
+
+If you want to block everything, that file is correct and does exactly what it says. But if you
+wanted *"don't train on me"*, you also got **"don't recommend me, and drop me from Siri,
+Spotlight and Alexa"** — a different decision. Their own data notes the distinction in prose;
+the generated file doesn't act on it.
+
+So here is the other option:
+
+```bash
+python3 aivis.py --training-optout >> robots.txt
+```
+
+Blocks all 8 training crawlers, leaves all 7 search crawlers allowed. Verified in CI by auditing
+our own generated output.
+
 ## Use it as a library
 
 If you're building a GEO tool, a crawler, or a shopping agent, you probably want the primitive
