@@ -114,7 +114,7 @@ Three more that circulating robots.txt snippets routinely get wrong:
 - **`facebookexternalhit` is not an AI crawler.** It renders your link previews. It gets swept
   into "block AI bots" lists, which then silently breaks how your links look when shared.
 
-## The most popular AI blocklist also blocks AI search
+## Blocking AI is two decisions, not one
 
 `ai-robots-txt/ai.robots.txt` (~4k stars) is the ecosystem's default answer to "block AI bots".
 Its generated `robots.txt` disallows all 166 known AI user-agents. Audited with this tool:
@@ -129,12 +129,21 @@ blocked_search : OAI-SearchBot, PerplexityBot, Claude-SearchBot, Claude-User,
                  Amzn-SearchBot, Amzn-User, Applebot
 ```
 
-If you want to block everything, that file is correct and does exactly what it says. But if you
-wanted *"don't train on me"*, you also got **"don't recommend me, and drop me from Siri,
-Spotlight and Alexa"** — a different decision. Their own data notes the distinction in prose;
-the generated file doesn't act on it.
+**That is deliberate on their part, and correct for their audience.** Their FAQ states the
+position plainly: these crawlers are *"extractive, confer no benefit to the creators of data
+they're ingesting."* A publisher who does not want ChatGPT answering questions from their
+articles without a click wants exactly this file. We are not describing a bug, and an earlier
+version of this section wrongly implied one.
 
-So here is the other option:
+The point is that **blocking AI is two decisions, not one**, and a single list collapses them:
+
+- *"Don't train on me."* Costs you nothing in recommendations.
+- *"Don't answer questions using me."* Removes you from ChatGPT search, Perplexity, Claude,
+  Alexa, Siri and Spotlight.
+
+A publisher usually wants both. **An ecommerce store usually wants the first and not the
+second** — being absent from AI answers is lost demand, not protected work. If that is you, this
+generates the other file:
 
 ```bash
 python3 aivis.py --training-optout >> robots.txt

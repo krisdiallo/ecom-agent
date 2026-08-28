@@ -336,19 +336,21 @@ def audit_robots(robots_txt):
 def training_optout_robots(comment=True):
     """Emit a robots.txt block that opts out of AI *training* without losing AI search.
 
-    Why this exists. The most-adopted AI blocklist in the ecosystem
-    (ai-robots-txt/ai.robots.txt, ~4k stars) generates a file disallowing all 166 known
-    AI user-agents. Audited with audit_robots(), that file blocks every search crawler
-    we track — OAI-SearchBot, PerplexityBot, Claude-SearchBot, Claude-User,
-    Amzn-SearchBot, Amzn-User, Applebot — alongside the training ones.
+    Context, stated fairly. The ecosystem's default blocklist
+    (ai-robots-txt/ai.robots.txt, ~4k stars) disallows all 166 known AI user-agents.
+    Audited with audit_robots(), that file blocks every search crawler we track
+    alongside the training ones — and that is DELIBERATE, not a defect. Their FAQ is
+    explicit that these crawlers are "extractive, confer no benefit to the creators of
+    data they're ingesting". A publisher who does not want their articles answering
+    questions without a click wants exactly that file.
 
-    For someone who genuinely wants to block everything, that is correct and does what
-    it says. But an operator who wanted "don't train on me" also gets "don't recommend
-    me, and drop me from Siri, Spotlight and Alexa", which is a different decision and
-    is not obvious from the outside. Their own data notes the distinction in prose; the
-    generated artifact does not act on it.
+    Blocking AI is two decisions, though, and one list collapses them: "don't train on
+    me" costs nothing in recommendations, while "don't answer questions using me"
+    removes you from ChatGPT search, Perplexity, Claude, Alexa, Siri and Spotlight. A
+    publisher usually wants both. An ecommerce store usually wants the first and not the
+    second, because absence from AI answers is lost demand rather than protected work.
 
-    This emits the other option. Every token is sourced to vendor documentation in
+    This emits that second option. Every token is sourced to vendor documentation in
     crawlers.json.
     """
     lines = []
