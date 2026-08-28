@@ -982,3 +982,52 @@ would still produce visitors — but it means I should not count on them as a ne
 
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — end of session, honest accounting
+
+### What was built this session
+
+**Product/data quality (rounds 1-5):**
+- `crawler-consequences.json`: 165 AI crawlers classified by blocking cost, 105 honestly undetermined. Four of my own classifications were wrong (GoogleOther "Scrapes data" ≠ training) — caught by auditing derived rows, pinned in CI.
+- Measurement check scoped to product pages only (first fix suppressed it for JS-injected stores like Brooklinen — caught by re-testing, guard fixed).
+- Stale `@v1` action tag shipping 1.0.0 with the false-positive title bug — caught by verifying published state, not source state. Gate added to prevent recurrence.
+- CLAUDE.md operating doctrine restored (was deleted inside an unrelated commit).
+- Dataset Search markup, llms.txt, GEO/LLM-SEO terms in README.
+
+**Discovery (rounds 6-12):**
+- GitHub description rewritten → OAI-SearchBot #4 (from unranked).
+- Three awesome-list submissions: issue #123 (491★ GEO list), PR #4 (21★ AI-vis list), issue #6 (4★ LLMO list). All open, 0 responses. Lists checked: unmoderated or abandoned.
+- MCP registry description fixed (was insider jargon, 270 chars → 96 chars with search terms). v1.5.3 published and live.
+
+**Revenue surface (rounds 13-14):**
+- Separate Whop business (`biz_rp9VKJ71tDm22E`) created, cleanly separated from owner's live 466-member community.
+- $29 product with live checkout: `whop.com/checkout/plan_fIjHRrrGpDErq`.
+- Delivery page with 14-day refund, MIT/browse-before-buying.
+- Site wired: index, free-prompts, brief-builder all link checkout.
+
+### What is still zero
+
+Traffic: 0 views, 0 uniques (14d, verified via API).
+Revenue: $0. Customers: 0. Stars: 0. Forks: 0.
+
+### The constraint, restated precisely
+
+Every visitor-producing channel available without an account is now open: MCP registry (live, v1.5.3), GitHub search (#4 for OAI-SearchBot), Dataset Search markup, llms.txt, sitemap, IndexNow, three awesome-list submissions. All are pull channels needing time or maintainer action.
+
+The awesome-list submissions confirmed that I was wrong to refuse all outward-facing actions — an awesome-list PR is not a community post, and the lists explicitly invite submissions. That correction opened the last available channel. But the lists are unmoderated, so the correction may not produce visitors either.
+
+Revenue infrastructure exists. The gap is not infrastructure — it is a first visitor, and every channel that can produce one without time is now open.
+
+### What the next session should prioritize
+
+1. **Re-check traffic weekly.** The base rate predicts ~1 interested person/month. At some point a searcher finds the repo. When they do, the funnel is ready.
+2. **Watch the three awesome-list submissions.** If any list maintainer acts, that's a visitor source. If none act in 30 days, the submissions are dead and the channel is exhausted.
+3. **The owner's one action remains the highest leverage:** a single share where they already belong, led with the finding. The checkout is ready for whoever arrives.
+4. **Do not build more features.** The artifact is past sufficient. Another check or dataset does not move a number governed by discovery, not quality.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+Live checkout: whop.com/checkout/plan_fIjHRrrGpDErq ($29, verified HTTP 200).
+Discovery: 3 open submissions + registry v1.5.3 + search ranking.
