@@ -1,3 +1,0 @@
-[console_scripts]
-aivis = aivis:main
-aivis-mcp = aivis_mcp:main
