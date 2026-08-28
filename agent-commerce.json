@@ -1,0 +1,615 @@
+{
+ "$schema": "https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/agent-commerce.schema.json",
+ "name": "agent-commerce-index",
+ "version": "1.0.0",
+ "measured": "2026-08-28",
+ "license": "MIT",
+ "homepage": "https://github.com/krisdiallo/ecom-agent",
+ "about": "Which consumer storefronts expose a live agent-commerce endpoint an AI agent can call to search a catalogue, build a cart and complete a checkout \u2014 bypassing HTML entirely. Measured by probing each host, not read from documentation. Probe was read-only: it called only tools/list, which enumerates capabilities, and never created a cart or started a checkout.",
+ "method": {
+  "discovery": "GET /.well-known/ucp for a merchant profile, falling back to /api/ucp/mcp",
+  "probe": "POST JSON-RPC {\"method\":\"tools/list\"} to the advertised MCP endpoint",
+  "counted_live": "endpoint returned a parseable tool list",
+  "sample": "Convenience sample of well-known consumer brands, fixed before any results were seen. Biased toward well-resourced stores; not a random sample.",
+  "scanner": "research/ucp_scan.py"
+ },
+ "summary": {
+  "hosts_probed": 70,
+  "live_endpoints": 49,
+  "ucp_versions": [
+   "2026-04-08"
+  ],
+  "distinct_tool_surfaces": 1,
+  "uniform_tool_surface": true
+ },
+ "finding": "All 49 live endpoints exposed an identical 13-tool surface on a single UCP version. There was no variation at all. Agent-commerce capability is therefore currently a property of the PLATFORM, not a merchant configuration choice \u2014 a store has it because its platform enabled it, not because anyone opted in. Two consequences: a merchant cannot meaningfully 'optimise' this axis today beyond choosing a platform, and an agent developer can assume a uniform tool surface across these stores rather than negotiating per-merchant capabilities.",
+ "tool_surface": [
+  "cancel_cart",
+  "cancel_checkout",
+  "complete_checkout",
+  "create_cart",
+  "create_checkout",
+  "get_cart",
+  "get_checkout",
+  "get_order",
+  "get_product",
+  "lookup_catalog",
+  "search_catalog",
+  "update_cart",
+  "update_checkout"
+ ],
+ "purchase_capable_tools": [
+  "cancel_cart",
+  "cancel_checkout",
+  "complete_checkout",
+  "create_cart",
+  "create_checkout",
+  "get_cart",
+  "get_checkout",
+  "get_order",
+  "update_cart",
+  "update_checkout"
+ ],
+ "hosts": [
+  {
+   "host": "bearaby.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "beardbrand.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "drinkolipop.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "goodr.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "hellotushy.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "iliabeauty.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "knix.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "liquiddeath.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "magicspoon.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "packagefreeshop.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "ritual.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "rothys.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "thrivecausemetics.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "versedskin.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.allbirds.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.aloyoga.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.baronfig.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.blendersEyewear.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.blueland.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "descriptive",
+   "tool_count": 13
+  },
+  {
+   "host": "www.brooklinen.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.casper.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.chubbiesshorts.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "descriptive",
+   "tool_count": 13
+  },
+  {
+   "host": "www.coophomegoods.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.deathwishcoffee.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.everlane.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.foursigmatic.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.girlfriend.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.glossier.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.harrys.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 13
+  },
+  {
+   "host": "www.jonesroadbeauty.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.kettleandfire.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.kosas.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.mejuri.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 13
+  },
+  {
+   "host": "www.meritbeauty.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.nomadgoods.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "descriptive",
+   "tool_count": 13
+  },
+  {
+   "host": "www.outdoorvoices.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "descriptive",
+   "tool_count": 13
+  },
+  {
+   "host": "www.peakdesign.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.pitviper.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.solawave.co",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.starface.world",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.stateBicycle.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.summerfridays.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.taylorstitch.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.tenthousand.cc",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 13
+  },
+  {
+   "host": "www.thefeed.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "descriptive",
+   "tool_count": 13
+  },
+  {
+   "host": "www.tower28beauty.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.tula.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.ugmonk.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "www.untuckit.com",
+   "agent_commerce": true,
+   "ucp_version": "2026-04-08",
+   "llms_txt": true,
+   "llms_txt_kind": "agent-instructions",
+   "tool_count": 13
+  },
+  {
+   "host": "dbrand.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "drinkag1.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "huel.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "purple.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": true,
+   "llms_txt_kind": "descriptive",
+   "tool_count": 0
+  },
+  {
+   "host": "vuori.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": true,
+   "llms_txt_kind": "descriptive",
+   "tool_count": 0
+  },
+  {
+   "host": "www.blkbox.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "www.bombas.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "www.bulletproof.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": true,
+   "llms_txt_kind": "descriptive",
+   "tool_count": 0
+  },
+  {
+   "host": "www.drunkelephant.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "www.gymshark.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "www.hero-cosmetics.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "www.hims.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": true,
+   "llms_txt_kind": "descriptive",
+   "tool_count": 0
+  },
+  {
+   "host": "www.leesa.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": true,
+   "llms_txt_kind": "descriptive",
+   "tool_count": 0
+  },
+  {
+   "host": "www.manscaped.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "www.meundies.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "www.moment.co",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "www.native-cos.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "www.quip.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "www.saie.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "www.tracksmith.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  },
+  {
+   "host": "www.youthtothepeople.com",
+   "agent_commerce": false,
+   "ucp_version": null,
+   "llms_txt": false,
+   "llms_txt_kind": null,
+   "tool_count": 0
+  }
+ ]
+}
