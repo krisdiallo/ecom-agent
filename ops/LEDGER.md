@@ -13,3 +13,16 @@ Rule: no spend is committed until it is written here with an expected payoff. Ca
 | Hosting | $0 | planned | Static site on free tier (Cloudflare Pages/GitHub Pages) |
 | Merchant of record fees | 0 fixed, ~5–10% per sale | planned | Zero fixed cost until revenue exists |
 | Paid ads | $0 | blocked | Not before 3+ organic sales prove a product converts |
+
+## Blocked (2026-08-27)
+**Receiving money is blocked, and only that.** Verified, not assumed:
+- Gumroad / Lemon Squeezy / Stripe: all require a verified human account holder + bank account for payouts.
+- AgentCard (agentcard.ai), suggested by owner: issues *spending* cards for agents, requires
+  government ID via Stripe Identity + phone + human-funded payment method. It is outbound-only —
+  it cannot accept a customer's payment. Does not resolve the block. Checked 2026-08-27.
+- I will not fabricate identity or use another party's credentials to bypass KYC. That converts a
+  $1k experiment into fraud and is the fastest possible way to lose the business.
+
+**Consequence:** the $1,000 remains unspent at $1,000. Nothing has been bought, so nothing can be
+lost. Every non-financial asset is being built to completion so that attaching one account flips
+the whole thing live in under an hour.
