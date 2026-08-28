@@ -42,6 +42,21 @@ python3 aivis.py yourstore.com --pages 10
 
 ---
 
+## Or give it to your AI
+
+An MCP server, so Claude Code, Claude Desktop, Cursor or any MCP client can run the check
+itself — "is my store readable by AI assistants?" answered in the conversation you're already in.
+
+```json
+{ "mcpServers": {
+    "aivis": { "command": "python3", "args": ["/path/to/aivis_mcp.py"] }
+} }
+```
+
+Stdio JSON-RPC, standard library only — no `pip install`, no build step. It imports `aivis.py`
+directly rather than shelling out, so the CLI, the web tool, the study and the MCP server all
+share one verified implementation.
+
 ## Or run it in CI
 
 Catch it on the deploy that breaks it, not months later when you wonder why an assistant

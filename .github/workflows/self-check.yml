@@ -22,6 +22,9 @@ jobs:
           pip install --quiet jsonschema
           python3 research/test_consistency.py
 
+      - name: MCP server speaks clean JSON-RPC
+        run: python3 research/test_mcp.py
+
       - name: Check our own site
         uses: ./
         with:
