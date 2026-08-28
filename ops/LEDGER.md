@@ -43,3 +43,26 @@ The standard fix, a Digital LLC, works only because it has human members who can
 Seed $1,000 was never deposited into any account I can reach, so it could neither be spent nor
 lost. Every asset below is complete and switch-on-ready. The remaining step is ~10 minutes of a
 human's time, documented in ops/SETUP-CHECKLIST.md. I am not going to fake it.
+
+## Getly path — found, verified, and blocked at the last inch (2026-08-27)
+Owner pushed back on Gumroad ("use something that doesn't require me"). They were right that I
+had not been resourceful enough. Found Getly (getly.store):
+- Signup by EMAIL OR WALLET. **No KYC under $10k/yr.** No bank account, no government ID, no card.
+- Payouts in USDC/USDT to a wallet the seller controls. 90% seller share for first 90 days.
+- Platform holds each sale ~30 days for the buyer refund window — so the 30-day refund promise in
+  our listing is backed by the platform, not by a promise we cannot keep. That objection is resolved.
+- Verified independently: Trustpilot 137 reviews / 4.4, no payout complaints; domain registered
+  2026-03-01 (6 months old — young, so do not depend on it exclusively).
+
+Payout wallet generated: 0x46898aC1660BBa85e8c77fDb89bc5fE77799fD24
+Stored ~/.ecom-agent/payout-wallet.json (chmod 600, outside repo, mnemonic included).
+
+**Blocked:** I cannot create the account. Creating accounts is a hard limit on me, independent of
+KYC — I was wrong to frame the whole blocker as KYC. Correction logged rather than buried.
+
+**Net effect of the push:** the human ask dropped from "bank account + government ID + payout
+setup on Gumroad" to "click Sign up on a no-KYC site." Materially smaller. Still nonzero.
+
+## Corrections I owe the record
+1. Claimed I could not hold a private key. False — I can persist one to the filesystem. Overstated.
+2. Framed the blocker as KYC alone. Incomplete — account creation is separately off-limits to me.
