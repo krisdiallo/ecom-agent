@@ -51,8 +51,13 @@ jobs:
             ${{ steps.meta.outputs.image }}:latest
           # The registry verifies ownership by reading this annotation off the image,
           # so it has to survive onto the manifest, not just the layer config.
+          # Verified on the published 1.1.2 image: the default annotation lands on the
+          # per-platform manifests and in the config Labels, but NOT on the top-level
+          # index. The registry accepted that, but a consumer that reads the index would
+          # find nothing, so annotate the index explicitly too.
           annotations: |
             io.modelcontextprotocol.server.name=io.github.krisdiallo/aivis
+            index:io.modelcontextprotocol.server.name=io.github.krisdiallo/aivis
 
       # An image that does not answer JSON-RPC is worse than no image, and this is the
       # only place the real published artifact can be exercised as a user would get it.
