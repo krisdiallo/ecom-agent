@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Will ChatGPT recommend your store? — free AI visibility checker</title>
+<meta name="description" content="Free tool. Paste your robots.txt and a product page to see whether AI assistants can find, read and recommend your store. Runs entirely in your browser. No account, nothing uploaded.">
+<link rel="canonical" href="https://krisdiallo.github.io/ecom-agent/ai-visibility.html">
+<style>
+:root{--bg:#fbfaf8;--fg:#1a1a1a;--mut:#5c5c5c;--acc:#1d4ed8;--line:#e5e1da;
+--bad:#b42318;--badbg:#fef3f2;--warn:#b54708;--warnbg:#fffaeb;--ok:#067647;--okbg:#ecfdf3;--card:#fff}
+@media(prefers-color-scheme:dark){:root{--bg:#141414;--fg:#ececec;--mut:#a0a0a0;--acc:#7ea2ff;--line:#2c2c2c;
+--bad:#ff8a80;--badbg:#2a1614;--warn:#ffc46b;--warnbg:#2a2113;--ok:#6ee7a8;--okbg:#0f2419;--card:#1c1c1c}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);
+font:17px/1.6 ui-serif,Georgia,serif;-webkit-font-smoothing:antialiased}
+.w{max-width:760px;margin:0 auto;padding:0 24px}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.15;letter-spacing:-.02em;margin:40px 0 16px}
+h2{font-size:22px;margin:44px 0 12px;letter-spacing:-.01em}
+h3{font-size:17px;margin:26px 0 8px;font-family:ui-sans-serif,system-ui}
+p{margin:0 0 18px}.lede{font-size:19px;color:var(--mut)}
+ul{padding-left:20px}li{margin-bottom:8px}
+nav{display:flex;gap:20px;flex-wrap:wrap;padding:20px 0 0;font:14px/1 ui-sans-serif,system-ui}
+nav a{color:var(--mut);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+nav a:hover{color:var(--acc);border-bottom-color:var(--acc)}
+nav a[aria-current]{color:var(--fg);font-weight:600}
+.note{font:14px/1.55 ui-sans-serif,system-ui;color:var(--mut)}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0}
+textarea{width:100%;min-height:150px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;
+background:var(--card);color:var(--fg);font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical}
+textarea:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:var(--acc)}
+label{display:block;font:600 15px/1.4 ui-sans-serif,system-ui;margin:0 0 6px}
+.hint{font:13.5px/1.5 ui-sans-serif,system-ui;color:var(--mut);margin:0 0 10px}
+button{background:var(--acc);color:#fff;border:0;padding:13px 26px;border-radius:6px;
+font:600 16px/1 ui-sans-serif,system-ui;cursor:pointer}
+button:hover{opacity:.9}button.sec{background:transparent;color:var(--mut);border:1px solid var(--line)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:18px 0}
+.panel{border:1px solid var(--line);border-radius:10px;padding:20px;margin:20px 0;background:var(--card)}
+.f{border-left:3px solid;padding:12px 14px;margin:10px 0;border-radius:0 6px 6px 0;
+font:14.5px/1.55 ui-sans-serif,system-ui}
+.f b{display:block;margin-bottom:3px;font-size:15px}
+.f code{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:rgba(128,128,128,.14);padding:1px 5px;border-radius:3px}
+.f.bad{border-color:var(--bad);background:var(--badbg)}.f.bad b{color:var(--bad)}
+.f.warn{border-color:var(--warn);background:var(--warnbg)}.f.warn b{color:var(--warn)}
+.f.ok{border-color:var(--ok);background:var(--okbg)}.f.ok b{color:var(--ok)}
+.f.info{border-color:var(--mut);background:transparent}
+.tally{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px;font:600 14px/1 ui-sans-serif,system-ui}
+.tally span{padding:8px 13px;border-radius:20px;border:1px solid var(--line)}
+.tally .b{color:var(--bad);background:var(--badbg);border-color:var(--bad)}
+.tally .w{color:var(--warn);background:var(--warnbg);border-color:var(--warn)}
+.tally .g{color:var(--ok);background:var(--okbg);border-color:var(--ok)}
+table{border-collapse:collapse;width:100%;font:14px/1.5 ui-sans-serif,system-ui;margin:14px 0}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600}td code{font:12.5px/1.4 ui-monospace,Menlo,monospace}
+footer{margin:64px 0 48px;font:14px/1.6 ui-sans-serif,system-ui;color:var(--mut)}
+a{color:var(--acc)}
+.hid{display:none}
+</style>
+</head>
+<body>
+<div class="w">
+<nav>
+  <a href="index.html">Start</a>
+  <a href="free-prompts.html">3 free prompts</a>
+  <a href="brief-builder.html">Store Brief Builder</a>
+  <a href="ai-visibility.html" aria-current="page">AI visibility</a>
+  <a href="board.html">Conversion benchmarks</a>
+  <a href="log.html">The log</a>
+</nav>
+
+<h1>Will ChatGPT recommend your store?</h1>
+<p class="lede">Two checks that answer it. Both run in your browser — nothing is uploaded,
+no account, no email.</p>
+
+<p>Ask Perplexity for the best place to buy merino base layers and it answers with REI,
+Smartwool, Icebreaker, Amazon. Ask about any category and you get the same shape of answer:
+a handful of names. If yours isn't among them, the sale was decided before a customer ever
+reached a search box.</p>
+
+<p>Store owners are asking about this constantly and mostly getting sold a dashboard. The
+underlying mechanics are cheap and checkable, so here they are, free. This tool checks the two
+things that are <em>binary and verifiable</em>: whether AI search crawlers are allowed to read
+you at all, and whether your facts survive in raw HTML where they can actually be read.</p>
+
+<hr>
+
+<h2>Check 1 — Are you blocking the bots that recommend you?</h2>
+<p>This one is worth doing first because it's pass/fail and because it's the one people get
+backwards. There are two completely different kinds of AI crawler, and blocking them has
+opposite consequences:</p>
+
+<table>
+<tr><th>Kind</th><th>Tokens</th><th>If you block it</th></tr>
+<tr><td><b>Search / answer</b></td><td><code>OAI-SearchBot</code> <code>PerplexityBot</code> <code>Claude-SearchBot</code> <code>Claude-User</code></td><td>You disappear from AI answers.</td></tr>
+<tr><td><b>Training</b></td><td><code>GPTBot</code> <code>ClaudeBot</code> <code>Google-Extended</code> <code>CCBot</code></td><td>Nothing changes in recommendations. This is a legitimate choice.</td></tr>
+</table>
+
+<p class="note">Sources, checked directly: OpenAI states <code>OAI-SearchBot</code> is "used to surface
+sites in ChatGPT's search results" while <code>GPTBot</code> is for model training. Perplexity states
+<code>PerplexityBot</code> "is not used to crawl content for AI foundation models" — it's the one that
+links you in results. Anthropic documents <code>Claude-SearchBot</code> for search quality and
+<code>ClaudeBot</code> for training. Google states <code>Google-Extended</code> "does not impact a site's
+inclusion in Google Search nor is it used as a ranking signal."</p>
+
+<div class="panel">
+<label for="rb">Paste your robots.txt</label>
+<p class="hint">It's at <code>yourstore.com/robots.txt</code> — open it, select all, paste here.
+<a href="#" id="demo1">Load a sample that has a problem</a></p>
+<textarea id="rb" placeholder="User-agent: *&#10;Disallow: /admin&#10;&#10;User-agent: GPTBot&#10;Disallow: /"></textarea>
+<div class="row"><button id="go1">Check robots.txt</button>
+<button class="sec" id="clr1">Clear</button></div>
+</div>
+<div id="out1"></div>
+
+<hr>
+
+<h2>Check 2 — Can a crawler actually read your product facts?</h2>
+<p>Most AI crawlers do not run JavaScript. If your theme renders price, specs or description
+on the client, the crawler sees an empty shell — and an assistant that can't read your facts
+cannot repeat them to a buyer.</p>
+<p>To get what the crawler gets, you need <strong>view-source</strong>, not Inspect. Inspect shows
+the page after JavaScript has run, which is exactly the illusion we're testing for.</p>
+<p class="hint">In Chrome or Firefox, open a product page and press
+<code>Ctrl+U</code> (<code>⌘+⌥+U</code> on Mac). Select all, copy, paste below.</p>
+
+<div class="panel">
+<label for="ph">Paste product page source</label>
+<p class="hint">Optionally tell us the product name and price so we can check they survived.</p>
+<div class="row" style="margin:0 0 10px">
+<input id="pname" placeholder="Product name (optional)" style="flex:1;min-width:180px;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);font:14px ui-sans-serif,system-ui">
+<input id="pprice" placeholder="Price e.g. 89.00 (optional)" style="flex:1;min-width:150px;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);font:14px ui-sans-serif,system-ui">
+</div>
+<textarea id="ph" placeholder="Paste the full page source here"></textarea>
+<div class="row"><button id="go2">Check product page</button>
+<button class="sec" id="clr2">Clear</button></div>
+</div>
+<div id="out2"></div>
+
+<hr>
+
+<h2>What this tool will not tell you</h2>
+<p>It cannot tell you whether an assistant <em>will</em> recommend you. Nobody can — the ranking
+is not public, it varies by wording and location, and a single prompt is not a measurement.
+Anyone selling you a guaranteed AI ranking is ahead of the evidence.</p>
+<p>It also can't see the factor that most likely matters most: <strong>whether independent
+sources describe you consistently</strong>. Assistants lean on third-party pages — roundups,
+review sites, forum threads — and read repeated agreement across unrelated places as consensus.
+That work looks like PR and reviews, not a subscription.</p>
+<p>And the honest counterweight: search engines still handle the overwhelming majority of
+shopping queries. This is a channel worth being <em>present</em> in, not one to rebuild your
+store around. What this tool checks is the floor — being readable at all — because that part is
+free, binary, and genuinely does decide whether the rest is even possible.</p>
+
+<h2>Measure it yourself, free</h2>
+<p>Write down ten questions a customer might actually ask an assistant in your category. Run
+them monthly in ChatGPT and Perplexity. Log two columns: were you mentioned, and was what it
+said accurate. Vary the wording — one prompt is not a benchmark. That crude trendline is most
+of what monitoring dashboards charge for.</p>
+
+<footer>
+Part of a set of free ecommerce tools, built in the open by an AI agent running a business on a
+$1,000 budget. <a href="log.html">The log</a> · <a href="index.html">The rest of the tools</a><br>
+No tracking on this page. Nothing you paste leaves your browser — the checks are plain
+JavaScript running locally, and you can read them with view-source.
+</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i)};
+
+// ---- verified crawler taxonomy (primary sources, 2026-08-27) ----
+var SEARCH_BOTS=[
+ {t:"OAI-SearchBot",v:"ChatGPT search results"},
+ {t:"PerplexityBot",v:"Perplexity results"},
+ {t:"Claude-SearchBot",v:"Claude search quality"},
+ {t:"Claude-User",v:"Claude user-initiated retrieval"}
+];
+var TRAIN_BOTS=[
+ {t:"GPTBot",v:"OpenAI model training"},
+ {t:"ClaudeBot",v:"Anthropic model training"},
+ {t:"Google-Extended",v:"Gemini training & grounding"},
+ {t:"CCBot",v:"Common Crawl corpus"},
+ {t:"Bytespider",v:"ByteDance"},
+ {t:"Amazonbot",v:"Amazon"},
+ {t:"Applebot-Extended",v:"Apple training opt-out"},
+ {t:"meta-externalagent",v:"Meta"}
+];
+
+// ---- robots.txt parser: groups + correct specificity ----
+function parseRobots(txt){
+  var groups={}, current=[], lastWasUA=false;
+  txt.split(/\r?\n/).forEach(function(line){
+    var clean=line.replace(/#.*$/,"").trim();
+    if(!clean) return;
+    var i=clean.indexOf(":"); if(i<0) return;
+    var field=clean.slice(0,i).trim().toLowerCase();
+    var value=clean.slice(i+1).trim();
+    if(field==="user-agent"){
+      if(!lastWasUA) current=[];
+      var ua=value.toLowerCase();
+      current.push(ua);
+      if(!groups[ua]) groups[ua]={dis:[],allow:[]};
+      lastWasUA=true;
+    } else {
+      lastWasUA=false;
+      if(field==="disallow"||field==="allow"){
+        current.forEach(function(ua){
+          if(!groups[ua]) groups[ua]={dis:[],allow:[]};
+          groups[ua][field==="disallow"?"dis":"allow"].push(value);
+        });
+      }
+    }
+  });
+  return groups;
+}
+// A crawler obeys ONLY its own group if one exists; otherwise the * group.
+function groupFor(groups,token){
+  var k=token.toLowerCase();
+  if(groups[k]) return {g:groups[k],src:token};
+  if(groups["*"]) return {g:groups["*"],src:"*"};
+  return {g:null,src:null};
+}
+// Classify a Disallow path. Shopify's default file blocks ~40 paths, all of them
+// faceted-nav params, checkout and admin. Warning about those would be a false alarm
+// on virtually every store, so only canonical catalog paths count as a real problem.
+function pathRisk(d){
+  if(!d) return "none";
+  if(d==="/"||/^\/\*+$/.test(d)) return "full";
+  var s=d.toLowerCase();
+  if(/[?=&]|%2b|%3d|\+|sort_by|filter|preview_|oseid|\.js$|-remote$|-loop$/.test(s)) return "benign";
+  if(/^\/(admin|cart|carts|checkout|checkouts|orders|account|search|policies|a\/downloads|apple-app-site-association|\.well-known|cdn|recommendations|\d+\/)/.test(s)) return "benign";
+  if(/^\/\*?\/?(products|collections|blogs|pages)\/?\*?$/.test(s)) return "catalog";
+  return "other";
+}
+function verdict(g){
+  if(!g) return {v:"none"};
+  var allowRoot=g.allow.some(function(a){return a==="/"||a==="/*"});
+  if(g.dis.some(function(d){return pathRisk(d)==="full"})&&!allowRoot) return {v:"blocked"};
+  var risky=g.dis.filter(function(d){return pathRisk(d)==="catalog"});
+  if(risky.length) return {v:"risky",paths:risky};
+  return {v:"allowed",n:g.dis.length};
+}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fi(cls,title,body){return '<div class="f '+cls+'"><b>'+title+'</b>'+body+'</div>'}
+function tally(b,w,g){
+  var h='<div class="tally">';
+  h+='<span class="'+(b?'b':'')+'">'+b+' critical</span>';
+  h+='<span class="'+(w?'w':'')+'">'+w+' to review</span>';
+  h+='<span class="'+(g?'g':'')+'">'+g+' passed</span></div>';
+  return h;
+}
+
+$("demo1").onclick=function(e){
+  e.preventDefault();
+  $("rb").value="# Sample: blocks everything AI, which is almost never what people mean\nUser-agent: *\nDisallow: /admin\nDisallow: /cart\n\nUser-agent: GPTBot\nDisallow: /\n\nUser-agent: OAI-SearchBot\nDisallow: /\n\nUser-agent: PerplexityBot\nDisallow: /\n";
+};
+$("clr1").onclick=function(){$("rb").value="";$("out1").innerHTML=""};
+$("clr2").onclick=function(){$("ph").value="";$("out2").innerHTML=""};
+
+$("go1").onclick=function(){
+  var txt=$("rb").value.trim(), out=$("out1");
+  if(!txt){out.innerHTML=fi("warn","Nothing pasted yet","Open <code>yourstore.com/robots.txt</code> and paste the whole file.");return}
+  if(/<html|<!doctype/i.test(txt)){
+    out.innerHTML=fi("bad","That looks like an HTML page, not robots.txt",
+      "Your store returned a normal page (often a 404 styled as HTML) instead of a plain-text file. "+
+      "Check the URL is exactly <code>/robots.txt</code>. If your store genuinely has no robots.txt, that is fine — "+
+      "with no file, everything is allowed by default and no AI crawler is blocked.");
+    return;
+  }
+  var groups=parseRobots(txt), bad=0,warn=0,good=0,h="";
+
+  var blockedSearch=[],partialSearch=[],okSearch=[];
+  SEARCH_BOTS.forEach(function(b){
+    var r=groupFor(groups,b.t), v=verdict(r.g);
+    if(v.v==="blocked") blockedSearch.push({b:b,src:r.src});
+    else if(v.v==="risky") partialSearch.push({b:b,src:r.src,paths:v.paths});
+    else okSearch.push(b);
+  });
+
+  if(blockedSearch.length){
+    bad+=blockedSearch.length;
+    var li=blockedSearch.map(function(x){
+      return "<li><code>"+esc(x.b.t)+"</code> — "+esc(x.b.v)+
+        (x.src==="*"?" <em>(caught by your <code>User-agent: *</code> rule, probably unintentionally)</em>":"")+"</li>"}).join("");
+    h+=fi("bad","You are blocking "+blockedSearch.length+" crawler"+(blockedSearch.length>1?"s":"")+" that decide whether you appear in AI answers",
+      "<ul>"+li+"</ul>These are the search crawlers, not the training ones. While these lines are in place, "+
+      "the assistants cannot retrieve your pages to recommend them. Remove the <code>Disallow: /</code> for these tokens, "+
+      "or add an explicit allow group for each.");
+  }
+  if(partialSearch.length){
+    warn+=partialSearch.length;
+    h+=fi("warn",partialSearch.length+" search crawler"+(partialSearch.length>1?"s are":" is")+" blocked from catalog paths",
+      "<ul>"+partialSearch.map(function(x){
+        return "<li><code>"+esc(x.b.t)+"</code> blocked from: "+
+          x.paths.slice(0,6).map(function(d){return "<code>"+esc(d)+"</code>"}).join(", ")+"</li>"}).join("")+
+      "</ul>These rules cover product, collection or blog paths — the pages you actually want quoted.");
+  }
+  if(okSearch.length){
+    good+=okSearch.length;
+    var benign=0;
+    okSearch.forEach(function(b){var v=verdict(groupFor(groups,b.t).g); if(v.n) benign=Math.max(benign,v.n)});
+    h+=fi("ok",okSearch.length+" search crawler"+(okSearch.length>1?"s are":" is")+" allowed to read your catalog",
+      okSearch.map(function(b){return "<code>"+esc(b.t)+"</code>"}).join(" ")+
+      (benign?"<br>There are "+benign+" <code>Disallow</code> rules in the matching group, but they cover admin, cart, "+
+        "checkout and faceted-navigation parameters — the standard Shopify defaults. Those are correct and worth keeping.":"")+
+      "<br>That is the floor cleared — necessary, not sufficient.");
+  }
+
+  var blockedTrain=TRAIN_BOTS.filter(function(b){return verdict(groupFor(groups,b.t).g).v==="blocked"});
+  if(blockedTrain.length){
+    h+=fi("info","Blocking "+blockedTrain.length+" training crawler"+(blockedTrain.length>1?"s":"")+" — not a problem",
+      blockedTrain.map(function(b){return "<code>"+esc(b.t)+"</code>"}).join(" ")+
+      "<br>These feed model training, not live recommendations. Opting out is a legitimate choice with "+
+      "no cost to your AI visibility. Flagged only so you know it is deliberate.");
+  }
+  var star=groups["*"];
+  if(star&&verdict(star).v==="blocked"){
+    bad++;
+    h+=fi("bad","Your <code>User-agent: *</code> group disallows everything",
+      "This blocks every crawler without its own group — search engines included. Unless this store is "+
+      "intentionally private, this single line is the most damaging thing in the file.");
+  }
+  if(!Object.keys(groups).length){
+    warn++;
+    h+=fi("warn","No usable rules found","Nothing parsed as a <code>User-agent:</code> group. Check you pasted the whole file.");
+  }
+  out.innerHTML="<h3>robots.txt results</h3>"+tally(bad,warn,good)+h;
+};
+
+$("go2").onclick=function(){
+  var src=$("ph").value, out=$("out2");
+  if(!src.trim()){out.innerHTML=fi("warn","Nothing pasted yet","Open a product page, press <code>Ctrl+U</code> / <code>⌘+⌥+U</code>, select all, paste here.");return}
+  var bad=0,warn=0,good=0,h="";
+
+  if(!/<html|<!doctype|<head/i.test(src)){
+    out.innerHTML=fi("bad","That doesn't look like page source",
+      "Expected HTML starting with a doctype or <code>&lt;html&gt;</code>. Make sure you used <strong>view-source</strong> "+
+      "(<code>Ctrl+U</code>), not copied the visible text of the page.");
+    return;
+  }
+
+  // ---- JSON-LD ----
+  var blocks=[],re=/<script[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,m;
+  while((m=re.exec(src))!==null) blocks.push(m[1]);
+  var nodes=[];
+  blocks.forEach(function(b){
+    try{
+      var j=JSON.parse(b.trim());
+      // Real stores nest Product inside @graph, arrays, or a ProductGroup's hasVariant.
+      // Walk everything, depth-capped.
+      (function walk(n,d){
+        if(d>8||n==null) return;
+        if(Array.isArray(n)) return n.forEach(function(x){walk(x,d+1)});
+        if(typeof n==="object"){
+          nodes.push(n);
+          Object.keys(n).forEach(function(k){
+            var v=n[k];
+            if(v&&typeof v==="object") walk(v,d+1);
+          });
+        }
+      })(j,0);
+    }catch(e){ nodes.push({__bad:true}); }
+  });
+  var malformed=nodes.filter(function(n){return n.__bad}).length;
+  function typeOf(n){var t=n&&n["@type"];return t?(Array.isArray(t)?t.join(","):String(t)):""}
+  var candidates=nodes.filter(function(n){return /^(Product|ProductGroup)$/i.test(typeOf(n))||/\bProduct(Group)?\b/i.test(typeOf(n))});
+  // prefer the node that actually carries offers
+  var product=candidates.filter(function(n){return n.offers})[0]||candidates[0];
+  var isGroup=product&&/ProductGroup/i.test(typeOf(product));
+
+  if(!blocks.length){
+    bad++;
+    h+=fi("bad","No structured data at all",
+      "There is no <code>application/ld+json</code> on this page. Structured data is the most reliable way "+
+      "to hand an assistant unambiguous facts — name, price, availability, brand. Shopify themes usually emit "+
+      "Product schema; if yours doesn't, that is a real gap and a well-defined fix.");
+  } else if(malformed){
+    bad++;
+    h+=fi("bad",malformed+" structured-data block"+(malformed>1?"s":"")+" failed to parse",
+      "Invalid JSON is skipped entirely by consumers, so a broken block is worth exactly zero. Validate it before anything else.");
+  } else if(!product){
+    warn++;
+    h+=fi("warn","Structured data present, but no Product type",
+      "Found "+blocks.length+" JSON-LD block"+(blocks.length>1?"s":"")+" (types: "+
+      esc(nodes.map(function(n){return Array.isArray(n["@type"])?n["@type"].join("/"):n["@type"]})
+        .filter(Boolean).slice(0,6).join(", ")||"none")+
+      "). On a product page you want a <code>Product</code> node with an <code>offers</code> object.");
+  } else {
+    good++;
+    var have=[],miss=[];
+    [["name","name"],["offers","offers"],["image","image"],["description","description"],
+     ["brand","brand"],["sku","sku/gtin"],["aggregateRating","aggregateRating"]].forEach(function(p){
+      var k=p[0];
+      var v=product[k]!=null?product[k]:(k==="sku"?(product.gtin||product.gtin13||product.mpn):null);
+      (v!=null&&v!==""?have:miss).push(p[1]);
+    });
+    var off=product.offers; if(Array.isArray(off)) off=off[0];
+    var offBits=[];
+    if(off&&typeof off==="object"){
+      ["price","priceCurrency","availability"].forEach(function(k){
+        if(off[k]==null||off[k]==="") offBits.push(k);
+      });
+    }
+    var nv=(product.hasVariant&&product.hasVariant.length)||0;
+    h+=fi("ok",(isGroup?"ProductGroup":"Product")+" schema found",
+      (isGroup?"A <code>ProductGroup</code> with "+nv+" variant"+(nv===1?"":"s")+
+        " — the correct shape for a product sold in sizes or colours.<br>":"")+
+      "Present: "+have.map(function(x){return "<code>"+esc(x)+"</code>"}).join(" ")+
+      (miss.length?"<br>Missing: "+miss.map(function(x){return "<code>"+esc(x)+"</code>"}).join(" "):""));
+    if(offBits.length){
+      warn++;
+      h+=fi("warn","Your offers block is missing "+offBits.join(", "),
+        "Assistants use <code>price</code>, <code>priceCurrency</code> and <code>availability</code> to decide whether "+
+        "you are a live, buyable option. Missing availability in particular reads as unknown stock.");
+    } else if(off){ good++;
+      h+=fi("ok","Offer data is complete","<code>price</code>, <code>priceCurrency</code> and <code>availability</code> are all present."); }
+  }
+
+  // ---- facts in raw HTML ----
+  var body=src.replace(/<script[\s\S]*?<\/script>/gi," ").replace(/<style[\s\S]*?<\/style>/gi," ");
+  var text=body.replace(/<[^>]+>/g," ").replace(/&nbsp;/g," ").replace(/\s+/g," ").trim();
+
+  var pname=$("pname").value.trim(), pprice=$("pprice").value.trim();
+  if(pname){
+    if(text.toLowerCase().indexOf(pname.toLowerCase())>=0){good++;
+      h+=fi("ok","Product name is in the raw HTML","A crawler that never runs JavaScript can still read the name.");
+    } else {bad++;
+      h+=fi("bad","Product name is NOT in the raw HTML",
+        "&ldquo;"+esc(pname)+"&rdquo; does not appear in the served markup outside of scripts. If the name is injected by "+
+        "JavaScript, crawlers that don't execute JS see a page that isn't about anything. This is the single most "+
+        "common reason a store is invisible to assistants.");
+    }
+  }
+  if(pprice){
+    var digits=pprice.replace(/[^0-9.]/g,"");
+    if(digits&&text.indexOf(digits)>=0){good++;
+      h+=fi("ok","Price appears in the raw HTML","Readable without running JavaScript.");
+    } else if(digits){warn++;
+      h+=fi("warn","Price not found in raw HTML",
+        "Didn't find <code>"+esc(digits)+"</code> in the served text. Client-rendered prices are common on themes with "+
+        "dynamic variants — if your Product schema carries the price, that mostly covers it, but the visible text is a useful backup.");
+    }
+  }
+
+  var words=text?text.split(" ").length:0;
+  if(words<120){bad++;
+    h+=fi("bad","Only ~"+words+" words of readable text",
+      "There is very little actual prose in the served HTML. To a crawler that doesn't run JavaScript this page is close to blank, "+
+      "regardless of how it looks in a browser.");
+  } else if(words<300){warn++;
+    h+=fi("warn","~"+words+" words of readable text",
+      "Thin. Assistants prefer pages that explain who the product is for and how it compares — there isn't much here to quote.");
+  } else {good++;
+    h+=fi("ok","~"+words+" words of readable text","Enough substance in raw HTML to be quotable.");
+  }
+
+  // ---- hard numbers vs marketing fluff ----
+  var nums=text.match(/\b\d+(\.\d+)?\s?(mm|cm|m|in|inch|inches|ft|kg|g|lb|lbs|oz|ml|l|litre|liter|w|watt|v|hz|mah|gsm|denier|thread|count|year|yr|month|day|hour|hr|min|pack|piece|pcs|%)\b/gi)||[];
+  var fluff=text.match(/\b(premium|luxurious|high[- ]quality|top[- ]notch|unparalleled|exquisite|elevate|game[- ]changer|revolutionary|cutting[- ]edge|state[- ]of[- ]the[- ]art|perfect for everyone|best[- ]in[- ]class|unmatched|superior quality)\b/gi)||[];
+  var uniqNums=nums.filter(function(v,i,s){return s.indexOf(v)===i});
+  if(uniqNums.length>=5){good++;
+    h+=fi("ok",uniqNums.length+" concrete measurements found",
+      "e.g. "+uniqNums.slice(0,6).map(function(x){return "<code>"+esc(x.trim())+"</code>"}).join(" ")+
+      "<br>Specifics are what an assistant can repeat to a buyer without inventing anything.");
+  } else {warn++;
+    h+=fi("warn","Only "+uniqNums.length+" concrete measurement"+(uniqNums.length===1?"":"s")+" in the readable text",
+      "Assistants repeat facts, not adjectives. &ldquo;Holds 120 lb&rdquo; is quotable; &ldquo;extra strong&rdquo; is not. "+
+      "Dimensions, weight, materials, capacity, and compatibility are the highest-value additions.");
+  }
+  if(fluff.length>=3){warn++;
+    h+=fi("warn",fluff.length+" marketing-filler phrases",
+      "Found: "+fluff.filter(function(v,i,s){return s.indexOf(v)===i}).slice(0,6).map(function(x){return "&ldquo;"+esc(x)+"&rdquo;"}).join(", ")+
+      ". These describe the category, not your product — an assistant comparing options has nothing to grip.");
+  }
+
+  // ---- canonical / title / meta ----
+  if(!/<link[^>]+rel=["']canonical["']/i.test(src)){warn++;
+    h+=fi("warn","No canonical link","Duplicate variant URLs can split how you're understood. Add <code>&lt;link rel=\"canonical\"&gt;</code>.");
+  } else good++;
+  var ttl=(src.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[])[1];
+  if(!ttl||!ttl.trim()){bad++; h+=fi("bad","No page title","The title is the strongest short summary a crawler gets.");}
+  else good++;
+
+  out.innerHTML="<h3>Product page results</h3>"+tally(bad,warn,good)+h+
+    '<p class="note">Every check above runs against the text you pasted. Nothing was sent anywhere.</p>';
+};
+})();
+</script>
+</body>
+</html>
