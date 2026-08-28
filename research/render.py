@@ -298,6 +298,17 @@ ChatGPT and Perplexity, logging whether you appeared and whether what it said wa
 </ul>
 <p><a class="cta" href="ai-visibility.html">Run these checks on your store, free →</a></p>
 
+<p>Or one command, against your live store, nothing uploaded:</p>
+<pre style="overflow-x:auto;background:rgba(128,128,128,.10);padding:12px 14px;border-radius:6px;
+font:13px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;margin:0 0 14px"><code>curl -sO https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/aivis.py
+python3 aivis.py yourstore.com</code></pre>
+<p class="note">Single file, no dependencies. There is also a
+<a href="https://github.com/krisdiallo/ecom-agent#or-run-it-in-ci">GitHub Action</a> if you
+want it to fail your build, and
+<a href="https://github.com/krisdiallo/ecom-agent/blob/main/crawlers.json"><code>crawlers.json</code></a>
+— the sourced registry behind every crawler claim on this page, with each entry carrying the
+vendor's own wording and the date it was checked. MIT; use it in your own tool.</p>
+
 <h2>What this study does not show</h2>
 <p>It does not show that fixing any of this causes recommendations. We measured what crawlers can
 read, not what assistants choose to say, and we know of no public evidence establishing that
