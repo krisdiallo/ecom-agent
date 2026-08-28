@@ -28,7 +28,7 @@ import argparse, gzip, io, ipaddress, json, re, socket, sys
 import urllib.error, urllib.parse, urllib.request
 from html import unescape
 
-__version__ = "1.2.1"
+__version__ = "1.3.0"
 
 UA = ("Mozilla/5.0 (compatible; aivis/%s; +https://github.com/krisdiallo/ecom-agent) "
       "AI-visibility self-check" % __version__)
@@ -91,6 +91,44 @@ def _gunzip_capped(raw, limit=MAX_BYTES):
             break
         out += chunk
     return out
+
+
+# Benchmarks from our own published survey of 70 consumer brands (2026-08-28).
+# Raw data: research/data/, method and caveats: STUDY.md. Embedded rather than fetched
+# so the tool keeps working offline and in three years — the numbers are dated, and a
+# dated number you can see beats a live one you cannot reach.
+#
+# The point is to answer "compared to what?". Telling someone they have 2 concrete
+# measurements is useless; telling them 2 is the median of 51 well-resourced brands,
+# and that a quarter of those brands have none at all, is actionable.
+BENCH = {
+    "n_pages": 51, "n_hosts": 70, "measured": "2026-08-28",
+    "measurements": {25: 0, 50: 2, 75: 4, 90: 9},
+    "words": {25: 894, 50: 1508, 75: 2170, 90: 3022},
+    "schema_pct": 88,
+    "agent_commerce_pct": 70,
+}
+
+
+def band_of(value, table):
+    """Describe where a value sits in the published distribution, in words.
+
+    Deliberately not "you are at the Nth percentile". Because p25 for concrete
+    measurements is 0, a store with ZERO measurements came out as "at or above the 25th
+    percentile" — technically true, and the exact opposite of what the reader needs to
+    hear. A number that flatters is worse than a phrase that is blunt.
+    """
+    if value >= table[90]:
+        return "top 10% of the sample"
+    if value >= table[75]:
+        return "top 25%"
+    if value >= table[50]:
+        return "above the median"
+    if value > table[25]:
+        return "below the median"
+    if value > 0:
+        return "bottom 25%"
+    return "bottom 25% — nothing at all here"
 
 
 class BlockedTarget(Exception):
@@ -798,24 +836,31 @@ def check_product(host, rep, url=None):
                   "Without it there is no machine-readable price or availability.")
 
     w = a["words"]
+    wvs = (f"Benchmark: median {BENCH['words'][50]:,} words, top 25% is "
+           f"{BENCH['words'][75]:,}+. You: {band_of(w, BENCH['words'])}.")
     if w < 120:
         rep.f("bad", f"Only ~{w} words of readable text",
               "To a crawler that doesn't run JavaScript this page is close to blank, "
               "however it looks in a browser.")
     elif w < 300:
-        rep.f("warn", f"~{w} words of readable text", "Thin — not much here to quote.")
+        rep.f("warn", f"~{w} words of readable text", "Thin — not much here to quote.\n" + wvs)
     else:
-        rep.f("ok", f"~{w} words of readable text", "Enough substance to be quotable.")
+        rep.f("ok", f"~{w} words of readable text",
+              "Enough substance to be quotable.\n" + wvs)
 
     m = a["meas"]
+    vs = (f"Benchmark ({BENCH['n_pages']} pages, {BENCH['measured']}): median "
+          f"{BENCH['measurements'][50]}, top 25% is {BENCH['measurements'][75]}+, "
+          f"top 10% is {BENCH['measurements'][90]}+. You: "
+          f"{band_of(len(m), BENCH['measurements'])}.")
     if len(m) >= 5:
-        rep.f("ok", f"{len(m)} concrete measurements", "e.g. " + ", ".join(m[:6]))
+        rep.f("ok", f"{len(m)} concrete measurements", "e.g. " + ", ".join(m[:6]) + "\n" + vs)
     else:
         rep.f("warn", f"Only {len(m)} concrete measurement(s) in the readable text",
-              "Across 70 brands we scanned, the median was 2 — this is the most common real "
-              "gap. Assistants repeat facts, not adjectives: 'holds 120 lb' survives the trip, "
-              "'premium quality' does not. Dimensions, weight, materials, capacity, "
-              "compatibility are the highest-value additions.")
+              vs + "\nAssistants repeat facts, not adjectives: 'holds 120 lb' survives the "
+              "trip, 'premium quality' does not. Dimensions, weight, materials, capacity and "
+              "compatibility are the highest-value additions — and note a quarter of the brands "
+              "we measured have none at all, so this is the most winnable gap on the list.")
 
     if a["title"] and a["og"]:
         agree = titles_agree(a["title"], a["og"])
