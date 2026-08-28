@@ -167,7 +167,10 @@ def analyse_product(html, name=None, price=None):
     text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", body)).strip()
     res["words"] = len(text.split())
     if name:
-        res["name_in_raw_html"] = name.lower() in text.lower()
+        # Fold both sides: an early run reported Allbirds' product name as "missing"
+        # purely because products.json uses a curly apostrophe and the page uses &#39;.
+        res["name_in_raw_html"] = fold(name) in fold(text)
+        res["product_name"] = name[:120]
     if price:
         digits = re.sub(r"[^0-9.]", "", str(price))
         res["price_in_raw_html"] = bool(digits) and digits in text
@@ -180,18 +183,24 @@ def analyse_product(html, name=None, price=None):
     title = norm_ws(unescape(t.group(1))) if t else ""
     res["has_title"] = bool(title)
     res["title"] = title[:160]
+    og = re.search(r"<meta[^>]+property=[\"']og:title[\"'][^>]+content=[\"']([^\"']+)", html, re.I)
+    ogt = norm_ws(unescape(og.group(1))) if og else None
+    res["og_title"] = ogt[:160] if ogt else None
     # Discovered from real data (Brooklinen, 2026-08-28): a page can serve a <title>
     # for an entirely different product while og:title and canonical are correct.
-    # The title is the strongest short summary a crawler gets, so a mismatch matters.
-    # Compare on entity-decoded, punctuation-normalised text — an early version flagged
-    # Allbirds as mismatched purely because its title encodes the apostrophe as &#39;.
-    if name and title:
-        nt, nn = fold(title), fold(name)
-        first = fold(re.split(r"[|–—]", title)[0])
-        res["title_matches_product"] = bool(
-            nn and (nn in nt or (first and (first in nn or nn in first))))
-    og = re.search(r"<meta[^>]+property=[\"']og:title[\"'][^>]+content=[\"']([^\"']+)", html, re.I)
-    res["og_title"] = norm_ws(unescape(og.group(1)))[:160] if og else None
+    #
+    # Compare <title> against og:title, NOT against the products.json name. An earlier
+    # version compared to the internal name and produced 3 false positives out of 4:
+    # merchants legitimately use a different internal name ("tote-bag-with-zipper")
+    # from the display title ("The Lightweight Zipper Tote"), and that is not a defect.
+    # title vs og:title is the defensible signal because both are on-page claims about
+    # the same product, so disagreement is genuinely self-contradictory.
+    if title and ogt:
+        nt, no = fold(title), fold(ogt)
+        head = lambda s: fold(re.split(r"[|–—]", s)[0])
+        res["title_og_consistent"] = bool(
+            nt and no and (nt in no or no in nt
+                           or head(title) in no or head(ogt) in nt))
     # structured data present only as a JS-injected string is invisible to non-JS crawlers
     res["jsonld_js_injected"] = (res["jsonld_blocks"] == 0
                                  and "application/ld+json" in html)

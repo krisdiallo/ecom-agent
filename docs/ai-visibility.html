@@ -520,11 +520,24 @@ $("go2").onclick=function(){
     good++;
     // Found in the wild on a major DTC brand: <title> named a completely different
     // product while og:title and canonical were both correct.
+    // Compare title against og:title first — both are the page's own claims about the
+    // same product, so disagreement is genuinely self-contradictory. Comparing against
+    // a typed-in name produced 3 false positives out of 4 when tested across real
+    // stores, because merchants legitimately use a different internal name from the
+    // display title. The typed name is only used when there is no og:title to check.
     var mism=false, why="";
-    if(pname&&fold(ttl).indexOf(fold(pname))<0&&fold(pname).indexOf(fold(ttl).split(" | ")[0])<0){
-      mism=true; why="Your title is <em>"+esc(ttl)+"</em> but you told us the product is <em>"+esc(pname)+"</em>.";
-    } else if(ogt&&fold(ttl).indexOf(fold(ogt))<0&&fold(ogt).indexOf(fold(ttl))<0){
-      mism=true; why="Your <code>&lt;title&gt;</code> is <em>"+esc(ttl)+"</em> but your <code>og:title</code> is <em>"+esc(ogt)+"</em>. They describe different things.";
+    var head=function(s){return fold(s.split(/[|–—]/)[0])};
+    if(ogt){
+      var a=fold(ttl), b=fold(ogt);
+      if(a&&b&&a.indexOf(b)<0&&b.indexOf(a)<0&&b.indexOf(head(ttl))<0&&a.indexOf(head(ogt))<0){
+        mism=true;
+        why="Your <code>&lt;title&gt;</code> says <em>"+esc(ttl)+"</em> but your <code>og:title</code> says <em>"+
+            esc(ogt)+"</em>. The page is contradicting itself about what it sells.";
+      }
+    } else if(pname&&fold(ttl).indexOf(fold(pname))<0&&fold(pname).indexOf(head(ttl))<0){
+      mism=true;
+      why="Your title is <em>"+esc(ttl)+"</em> but you told us the product is <em>"+esc(pname)+
+          "</em>. If that's just a shorter internal name, ignore this.";
     }
     if(mism){
       bad++;
