@@ -114,6 +114,33 @@ Three more that circulating robots.txt snippets routinely get wrong:
 - **`facebookexternalhit` is not an AI crawler.** It renders your link previews. It gets swept
   into "block AI bots" lists, which then silently breaks how your links look when shared.
 
+## Use it as a library
+
+If you're building a GEO tool, a crawler, or a shopping agent, you probably want the primitive
+rather than the report:
+
+```python
+from aivis import classify_crawler, audit_robots
+
+classify_crawler("GPTBot")["blocking_effect"]         # 'opts_out_of_training_only'
+classify_crawler("OAI-SearchBot")["blocking_effect"]  # 'removes_from_ai_answers'
+classify_crawler("SomeRandomBot")                     # None — it won't guess
+
+r = audit_robots(open("robots.txt").read())
+r["visible_to_ai_search"]   # False if any AI *search* crawler is blocked
+r["blocked_search"]         # the ones that actually cost you answers
+r["blocked_training"]       # blocking these costs nothing; listed separately on purpose
+```
+
+`audit_robots` applies real group precedence — a crawler obeys its own group and ignores
+`User-agent: *` when it has one — and classifies paths so a stock Shopify file, with its ~45
+default `Disallow` rules, doesn't read as broken.
+
+Every classification is sourced to the vendor's own documentation
+([`crawlers.json`](crawlers.json) carries the quotes and dates), and
+[`research/test_api.py`](research/test_api.py) is a contract test in CI so the values can't
+drift. Zero dependencies: `pip install git+https://github.com/krisdiallo/ecom-agent`.
+
 ## `agent-commerce.json` — which stores an AI agent can actually buy from
 
 **[`agent-commerce.json`](agent-commerce.json)** — 70 storefronts probed, **49 expose a live

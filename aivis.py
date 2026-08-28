@@ -28,7 +28,7 @@ import argparse, gzip, io, ipaddress, json, re, socket, sys
 import urllib.error, urllib.parse, urllib.request
 from html import unescape
 
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 
 UA = ("Mozilla/5.0 (compatible; aivis/%s; +https://github.com/krisdiallo/ecom-agent) "
       "AI-visibility self-check" % __version__)
@@ -261,6 +261,76 @@ def verdict(g):
     if any(path_risk(d) == "catalog" for d in g["dis"]):
         return "risky"
     return "allowed"
+
+
+# ---------------------------------------------------------------------------
+# Public library API.
+#
+# The audience actually reachable through a registry and GitHub is developers
+# building GEO tools and shopping agents, not merchants. They need the primitive,
+# not the report: "is this token a search crawler or a training crawler, and what
+# does blocking it cost me?" Every value below is sourced to the vendor's own
+# documentation — see crawlers.json for the quotes and dates.
+#
+#     from aivis import classify_crawler, audit_robots
+#     classify_crawler("GPTBot")["blocking_effect"]   # 'opts_out_of_training_only'
+#     audit_robots(open("robots.txt").read())["blocked_search"]
+# ---------------------------------------------------------------------------
+
+SEARCH_TOKENS = tuple(t for t, _ in SEARCH_BOTS)
+TRAINING_TOKENS = tuple(t for t, _ in TRAIN_BOTS)
+
+#: Tokens the vendor documents as user-initiated, where robots.txt may not apply.
+USER_INITIATED = ("ChatGPT-User", "Perplexity-User", "meta-externalfetcher")
+
+
+def classify_crawler(token):
+    """Classify a robots.txt user-agent token.
+
+    Returns None for unknown tokens rather than guessing — an unrecognised crawler
+    is not evidence of anything, and defaulting it to 'training' would be the exact
+    conflation this project exists to correct.
+    """
+    k = (token or "").strip().lower()
+    for t, what in SEARCH_BOTS:
+        if t.lower() == k:
+            return {"token": t, "purpose": "search", "serves": what,
+                    "blocking_effect": "removes_from_ai_answers"}
+    for t, what in TRAIN_BOTS:
+        if t.lower() == k:
+            return {"token": t, "purpose": "training", "serves": what,
+                    "blocking_effect": "opts_out_of_training_only"}
+    for t in USER_INITIATED:
+        if t.lower() == k:
+            return {"token": t, "purpose": "user_initiated", "serves": "user-initiated fetch",
+                    "blocking_effect": "may_be_ignored"}
+    return None
+
+
+def audit_robots(robots_txt):
+    """Which AI crawlers a robots.txt blocks, split by what blocking actually costs.
+
+    Applies real group precedence: a crawler obeys its own group and ignores
+    ``User-agent: *`` when it has one. Paths are classified so that the ~45 default
+    Disallow rules on a stock Shopify store do not read as a problem.
+    """
+    g = parse_robots(robots_txt or "")
+    out = {"blocked_search": [], "blocked_training": [],
+           "search_restricted_from_catalog": [], "allowed_search": [],
+           "sitemaps": re.findall(r"(?im)^\s*sitemap:\s*(\S+)", robots_txt or "")}
+    for token in SEARCH_TOKENS:
+        v = verdict(group_for(g, token))
+        if v == "blocked":
+            out["blocked_search"].append(token)
+        elif v == "risky":
+            out["search_restricted_from_catalog"].append(token)
+        else:
+            out["allowed_search"].append(token)
+    for token in TRAINING_TOKENS:
+        if verdict(group_for(g, token)) == "blocked":
+            out["blocked_training"].append(token)
+    out["visible_to_ai_search"] = not out["blocked_search"]
+    return out
 
 
 # ---------- product page ----------

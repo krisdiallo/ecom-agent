@@ -28,6 +28,9 @@ jobs:
       - name: SSRF and resource guards hold
         run: python3 research/test_ssrf.py
 
+      - name: Library API contract holds
+        run: python3 research/test_api.py
+
       - name: Check our own site
         uses: ./
         with:
