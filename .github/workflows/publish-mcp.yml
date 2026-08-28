@@ -48,6 +48,21 @@ jobs:
           test "$BUILT" = "$PINNED" || { echo "::error::server.json sha does not match a fresh build"; exit 1; }
           test "$RELEASED" = "$PINNED" || { echo "::error::published release asset does not match server.json"; exit 1; }
 
+      # Both workflows fire on the same tag, so the registry once validated an OCI
+      # image the image job had not pushed yet and rejected the publish. Wait for it
+      # rather than racing: the registry checks the image exists, so we must too.
+      - name: Gate — OCI image is published and anonymously pullable
+        run: |
+          TAG=$(python3 -c "import json;print([p['identifier'] for p in json.load(open('server.json'))['packages'] if p['registryType']=='oci'][0])")
+          REPO=${TAG#ghcr.io/}; NAME=${REPO%%:*}; VER=${REPO##*:}
+          for i in $(seq 1 30); do
+            T=$(curl -s "https://ghcr.io/token?scope=repository:${NAME}:pull&service=ghcr.io"                 | python3 -c "import sys,json;print(json.load(sys.stdin).get('token',''))")
+            CODE=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $T"                    -H "Accept: application/vnd.oci.image.index.v1+json"                    "https://ghcr.io/v2/${NAME}/manifests/${VER}")
+            [ "$CODE" = "200" ] && { echo "$TAG is pullable"; exit 0; }
+            echo "attempt $i: HTTP $CODE, waiting for the image job"; sleep 10
+          done
+          echo "::error::$TAG never became pullable"; exit 1
+
       - name: Install mcp-publisher
         run: |
           curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
