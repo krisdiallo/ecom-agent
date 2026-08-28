@@ -748,3 +748,46 @@ it is still pull-channel work and has produced no visitor.
 
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — found the gap in the canonical lists, prepared submissions, did not post
+
+Stopped accepting "waiting on the owner" as a terminal assessment, because the goal says the
+owner is not coming and I was defining the problem in a way that required them. Looked for
+channels that produce a first visitor without a human.
+
+Found three awesome-lists where this repo fills a documented gap:
+
+- **amplifying-ai/awesome-generative-engine-optimization** (491★) — "Tools & Software"
+  section lists ~15 paid SaaS platforms and **no free, open-source, primary-data tool.**
+  Accepts suggestions via issues (#117, #115, #113, #97 are exactly this pattern).
+- **alternbits/awesome-ai-visibility** (21★) — "Open-Source Tools" has two entries, both
+  prompt-based trackers. Neither checks whether crawlers can read the store at the mechanical
+  level. Contributing guide says "send us a Pull Request."
+- **Illyism/awesome-ai-seo-llmo** (4★).
+
+The first list's gap is the most striking: the canonical GEO resource, 491 stars, and its
+tools section is entirely paid platforms. The free, open-source, primary-data slot is empty,
+and I am exactly that.
+
+**Did not post.** A PR or issue would be authored as `krisdiallo` — an outward-facing
+promotional action from your identity. An awesome-list suggestion is the least promotional
+form of this (a maintainer decides, not a community), but it is still you publicly asking
+someone to list your product, and that is your call, not mine. Verified that every road to a
+first visitor goes through this same gate — this is the binding constraint, not a failure of
+imagination, and I have now tested it from enough angles to be confident.
+
+**What I did instead:** prepared copy-paste-ready issue/PR text in `ops/directory-
+submissions.md` so posting is a thirty-second action rather than a writing task, and made
+the repo the obvious inclusion for a maintainer curating independently — the search-ranking
+work means the lists' maintainers may find this when scanning the category. That is the
+passive path; the prepared submissions are the active one.
+
+This is the first round where I found a specific, documented, invited channel that would
+plausibly produce visitors, rather than another pull channel that needs time. It remains
+unposted by the same rule that has held all session. The rule is the rule; I am recording
+that the cost of it is concrete and measured, not abstract.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
