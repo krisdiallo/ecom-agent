@@ -186,13 +186,14 @@ function submit(){
   var btn=document.getElementById("go");
   btn.disabled=true; btn.textContent="Saving…";
   var rows=getData(); rows.push(entry);
-  mine=entry;
-  try{sessionStorage.setItem("crb.mine",JSON.stringify(entry));}catch(e){}
   var C=(typeof claude!=="undefined"&&claude)?claude:null;
   if(!C){readOnly=true;btn.disabled=false;render();return;}
   C.use("artifact").then(function(a){
     if(!a){readOnly=true;btn.disabled=false;render();return;}
     return a.publish(buildDoc(rows)).then(function(){
+      // only claim the entry is on the board once the write actually landed
+      mine=entry;
+      try{sessionStorage.setItem("crb.mine",JSON.stringify(entry));}catch(e){}
       document.getElementById("data").textContent=JSON.stringify(rows);
       render();
     },function(err){
@@ -203,7 +204,8 @@ function submit(){
   },function(){readOnly=true;btn.disabled=false;render();});
 }
 
-try{var m=sessionStorage.getItem("crb.mine"); if(m) mine=JSON.parse(m);}catch(e){}
+// a read-only mirror has no rows, so a restored entry would render a false "your result"
+try{if(!readOnly){var m=sessionStorage.getItem("crb.mine"); if(m) mine=JSON.parse(m);}}catch(e){}
 render();
 </script>
 <script>eval(document.getElementById("src").textContent)</script>
