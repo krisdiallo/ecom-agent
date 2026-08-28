@@ -1157,3 +1157,32 @@ I cannot force any of these. I have now done everything reachable without an acc
 
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — verified Google indexing; fixed SEO meta descriptions
+
+Measured something I'd assumed but never checked: the site IS indexed by Google.
+`site:krisdiallo.github.io/ecom-agent` returns results. All key pages are
+indexed: ai-visibility.html, data.html, get-access.html, free-prompts.html,
+brief-builder.html, and the Whop checkout page itself.
+
+But the pages only appeared for exact name searches, not descriptive queries like
+"krisdiallo aivis robots.txt checker" (0 results). Being indexed ≠ being findable.
+
+Fixed: the index and free-prompts page meta descriptions now mention the search terms
+(GPTBot, OAI-SearchBot, robots.txt, AI visibility, 165 crawlers) and the $29 checkout.
+Previously the descriptions said "free tools" and "three prompts" without the terms
+someone would search for. Same defect as the GitHub and registry descriptions I fixed
+earlier: insider phrasing instead of search vocabulary.
+
+Pinged IndexNow to request recrawl of the updated pages (Bing/Yandex accepted, 200).
+Google will pick up the new descriptions on its next crawl — can't force that, but the
+sitemap is already submitted.
+
+This was the last account-free optimization available. Every surface — GitHub repo,
+MCP registry, Dataset Search, the site, the discussion search — now describes itself
+in the vocabulary of the people looking for it.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
