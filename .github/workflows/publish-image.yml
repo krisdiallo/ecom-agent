@@ -36,10 +36,16 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "image=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/aivis" >> "$GITHUB_OUTPUT"
 
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
       - uses: docker/build-push-action@v6
         with:
           context: .
           push: true
+          # Most developers on this audience are on Apple Silicon; an amd64-only image
+          # runs under emulation with a warning, which is a poor first impression.
+          platforms: linux/amd64,linux/arm64
           tags: |
             ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}
             ${{ steps.meta.outputs.image }}:latest
@@ -54,11 +60,9 @@ jobs:
         run: |
           IMG="${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}"
           docker pull "$IMG"
-          OUT=$(printf '%s\n' \
+          printf '%s\n' \
             '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' \
             '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
-            | docker run -i --rm "$IMG")
-          echo "$OUT"
-          echo "$OUT" | grep -q '"name":"aivis"' || { echo "::error::no serverInfo"; exit 1; }
-          echo "$OUT" | grep -q 'check_ai_visibility' || { echo "::error::tool missing"; exit 1; }
-          echo "$OUT" | grep -q 'build_recommendation_test' || { echo "::error::tool missing"; exit 1; }
+            | docker run -i --rm "$IMG" > out.jsonl
+          cat out.jsonl
+          python3 research/verify_image_output.py out.jsonl
