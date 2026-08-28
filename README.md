@@ -47,15 +47,24 @@ python3 aivis.py yourstore.com --pages 10
 An MCP server, so Claude Code, Claude Desktop, Cursor or any MCP client can run the check
 itself — "is my store readable by AI assistants?" answered in the conversation you're already in.
 
+Nothing to download, no paths to edit — paste this into your MCP config:
+
 ```json
 { "mcpServers": {
-    "aivis": { "command": "python3", "args": ["/path/to/aivis_mcp.py"] }
+    "aivis": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/krisdiallo/ecom-agent", "aivis-mcp"]
+    }
 } }
 ```
 
-Stdio JSON-RPC, standard library only — no `pip install`, no build step. It imports `aivis.py`
-directly rather than shelling out, so the CLI, the web tool, the study and the MCP server all
-share one verified implementation.
+Also listed in the **[official MCP registry](https://registry.modelcontextprotocol.io)** as
+`io.github.krisdiallo/aivis`, so any client that reads the registry can find it, and there is a
+one-file `aivis_mcp.py` in this repo if you would rather run it directly.
+
+Stdio JSON-RPC, **zero dependencies** — the whole tool is standard library, which is why it can
+be fetched and run straight from git. It imports `aivis.py` rather than shelling out, so the CLI,
+web tool, study, GitHub Action and MCP server all share one verified implementation.
 
 ## Or run it in CI
 
