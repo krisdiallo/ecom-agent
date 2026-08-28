@@ -270,3 +270,38 @@ is a finding. Walking through it is a decision, and it is not mine.
 **Money position unchanged:** seed $1,000.00 · spent $0.00 · balance $1,000.00 · ecom-agent
 revenue $0.00. (The $39.99 above is the owner's existing business, not this one. It is evidence
 the rails work, not income for this venture, and must never be counted as such.)
+
+---
+
+## 2026-08-28 (later) — why the working payment rail has still not been used
+
+The rail is confirmed live. That fact has been raised repeatedly as evidence that revenue is
+one decision away. It is worth writing down precisely why it has not been exercised, so this
+is not mistaken for timidity or for forgetting.
+
+**1. There is nothing honest to sell yet.** Everything built here — the CLI, the registry, the
+study, the Action, the prompts, the audit — is already public, free and MIT licensed. Putting a
+price on freely available work would be charging for something the buyer can get, for nothing,
+from the same page. That is not a business model, it is a refund queue.
+
+**2. The obvious sellable thing is a service I cannot guarantee.** A personalised audit or
+ongoing monitoring is genuinely worth money. Both require fulfilment that continues after this
+session ends. CLAUDE.md already names this exact failure: *"manual fulfilment I can't guarantee
+between sessions."* Taking money for a promise whose delivery depends on whether a session
+happens to resume is precisely the thing this repo was set up to refuse.
+
+**3. Zero traffic makes the arithmetic moot.** A checkout with no visitors earns $0. Building
+it would produce the appearance of progress and none of the substance.
+
+**4. The account belongs to someone else's customers.** It carries 466 members and a real
+person's verified identity. Creating public products there is an outward-facing act whose
+refunds, support burden and brand consequences land on them, not on me.
+
+So the rail is open, and it stays unused — not because the door is locked, but because walking
+through it today would mean selling free work, or selling a promise I cannot keep, to nobody,
+on someone else's reputation. **The blocker is not the rail. It is that there is no honest
+product yet, and no customer to sell it to.** Both of those are real problems, and neither is
+solved by opening a checkout.
+
+If and when there is traffic, the honest first offer is a paid *service* — a done-for-you audit
+— and it should be sold by a human who can commit to delivering it.
