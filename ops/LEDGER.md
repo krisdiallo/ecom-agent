@@ -1098,3 +1098,62 @@ actions, all leading with findings rather than product pitches.
 
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — enabled Discussions on my own repo; it ranks #1 in discussion search
+
+Enabled GitHub Discussions on `krisdiallo/ecom-agent` and posted a discussion with the
+GPTBot/OAI-SearchBot finding. Verified: searching GitHub Discussions for "GPTBot
+ChatGPT robots" returns my discussion **#1** — ahead of the 4084★ ai-robots-txt repo's
+own discussion.
+
+This is the same discovery mechanism that led me to the `browser-use` and `ai-robots-txt`
+discussions: GitHub discussion search. Now it works in my direction. Someone confused
+about whether blocking GPTBot removes them from ChatGPT searches those terms, finds my
+discussion, and lands on my repo.
+
+### Complete inventory of discovery actions (all live, all account-free)
+
+| # | Action | Surface | Status |
+|---|---|---|---|
+| 1 | MCP registry | `io.github.krisdiallo/aivis` v1.5.3 | live, isLatest |
+| 2 | GitHub search | `OAI-SearchBot` query | ranked #4 |
+| 3 | GitHub topic page | `topic:oai-searchbot` | ranked #3 |
+| 4 | Dataset Search | `data.html` with schema.org/Dataset | live, validated |
+| 5 | llms.txt | `/ecom-agent/llms.txt` | live |
+| 6 | Sitemap + IndexNow | sitemap.xml submitted | live |
+| 7 | Awesome-list issue | `amplifying-ai/...` (491★) | open, 0 response |
+| 8 | Awesome-list PR | `alternbits/...` (21★) | open, unmerged |
+| 9 | Awesome-list issue | `Illyism/...` (4★) | open, 0 response |
+| 10 | Discussion answer | `browser-use` (111k★) | posted, 0 replies |
+| 11 | Discussion answer | `ai-robots-txt` (4084★) | posted, 0 replies |
+| 12 | Discussion answer | `henu-wang/ai-crawlers-reference` (1★) | posted, 0 replies |
+| 13 | Own discussion | `krisdiallo/ecom-agent` #1 | **#1 in discussion search** |
+| 14 | README SEO | GEO/LLM-SEO terms | indexed region |
+| 15 | Repo description | search-term rewrite | ranked #4 → #6 |
+
+### What has produced zero
+
+Traffic: 0 views (14d). Stars: 0. Revenue: $0. Customers: 0.
+All 15 actions were posted today. Discovery surfaces need days to be crawled, read,
+and acted on. The awesome-list submissions are in unmoderated lists. The discussion
+search ranking (#1) is the most promising signal — but it requires someone to search
+those terms, and I cannot control when that happens.
+
+### The constraint, final and precise
+
+Every account-free channel is open. Every account-required channel is blocked by the
+no-account-creation rule. The live checkout at `whop.com/checkout/plan_fIjHRrrGpDErq`
+($29, HTTP 200, automated delivery) is ready for any visitor who arrives.
+
+The gap is a first visitor. Producing one requires either:
+- Time: organic search at a measured base rate of ~1 interested person/month
+- A maintainer acting on one of the 3 open awesome-list submissions
+- Someone searching GitHub discussions for "GPTBot" and finding my discussion (#1)
+- One share by the owner (documented in ops/SETUP-CHECKLIST.md)
+
+I cannot force any of these. I have now done everything reachable without an account.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
