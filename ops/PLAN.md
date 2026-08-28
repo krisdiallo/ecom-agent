@@ -306,3 +306,82 @@ were a funnel.
    materially above the base rate is a signal.
 3. Revenue remains gated on a human action. That has not changed in twenty-four passes and no
    amount of building changes it.
+
+---
+
+# Plan v5 — 2026-08-28, after a day of verifying instead of building
+
+## What v4 got right, and what it could not have known
+
+v4's core measurement holds: competitors in this niche earn 0.3–1.7 stars/month, so a repo this
+age having zero is the *predicted* value, not a failure. That recalibration stands and should not
+be re-litigated each pass.
+
+What v4 could not know is which remaining lever, if any, actually moves. Now measured.
+
+## The one thing that moved a number
+
+Every previous pass tried to move traction by **building** — more checks, more data, more
+surfaces. None of it moved anything. The first metric that ever moved came from **metadata**:
+
+| Query | Before | After rewriting the repo description |
+|---|---|---|
+| `OAI-SearchBot` | not in top 20 | **#4** |
+| `robots.txt AI crawler checker` | not ranking | **#6** |
+| `topic:oai-searchbot` | absent | **#2 of 4** |
+
+The description had been written in insider jargon ("49 expose a live agent-commerce endpoint...
+identical 13-tool surface") and contained none of the words a person with the problem types.
+That is precisely the failure this project's own study accuses stores of: writing what sounds
+impressive instead of what is searchable and attributable. We shipped it for a day.
+
+**Strategic consequence: remaining effort belongs in positioning and metadata, not features.**
+The artifact has been past sufficient for some time. What it says about itself was not.
+
+Pond sizes, measured rather than guessed, so effort goes where it can win:
+- `OAI-SearchBot` — 6 repos total, best has 5 stars. Winnable, and exactly our thesis.
+- `GPTBot` — 783 repos, dominated by unrelated WeChat chatbots at 612/253/249 stars. Unwinnable,
+  and the traffic would be irrelevant anyway.
+
+## What a day of verification cost and returned
+
+Three documented entry points existed; two had been verified. The third —
+`uses: krisdiallo/ecom-agent@v1`, copied from our own README — pointed **68 commits back** and
+shipped aivis 1.0.0, containing the title-comparison bug that flagged healthy stores as broken.
+The first developer ever to follow our CI instructions would have watched the tool lie about
+their store. It rotted invisibly because self-check ran the action from `./`, testing the working
+tree rather than the reference users are told to write.
+
+**Rule going forward: verify entry points against their published state, never their source
+state.** A gate now fails the build whenever v1's version differs from main's.
+
+## The payment question, settled permanently
+
+Stop re-deriving this. **Every merchant of record must verify identity before paying out,
+because AML regulation requires it.** Platforms advertising "no KYC" mean "not upfront."
+There is no legitimate platform where an agent receives funds alone, and my operating rules
+separately prohibit creating accounts or handling financial instruments. Closed by rule, with
+the reason recorded.
+
+The `getly.co` counter-example that earlier doctrine cited as proof this was a failure of
+imagination: **the domain does not resolve.** The lesson it carried — that I stop at the first
+option — is still correct and was demonstrated twice today by other means. Its evidence was not.
+
+## Terminal condition, stated so it is not rediscovered
+
+This is a complete, correct, discoverable artifact with every account-free channel open, zero
+visitors, and no path to a first visitor that does not require either time at a measured rate of
+~1–2 interested people per month, or one action by a human who can legitimately post and
+legitimately be paid.
+
+That is not failure and it is not success. It is a business waiting on its operator, with
+everything that does not require an operator already done and independently verifiable.
+
+**What would change the assessment**, in order of leverage:
+1. One share by a human, somewhere they already belong, led with the finding rather than the tool.
+2. Any non-zero traffic reading — that would be the first real signal since launch and would tell
+   us which surface produced it. Re-measure weekly.
+3. A payment rail, which is ten minutes and only worth doing after (1) or (2).
+
+Until one of those happens, the correct behaviour is to keep the artifact correct and stop
+reading the predicted zero as new information.
