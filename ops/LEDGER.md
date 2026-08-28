@@ -904,3 +904,47 @@ the owner's government ID. That is the genuine remaining gate, and it gates *pay
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
 **New: first revenue-capable surface live.** Checkout: whop.com/checkout/plan_fIjHRrrGpDErq.
+
+---
+
+## Aug 28 — third awesome-list submitted; full funnel wired
+
+Submitted to the third awesome-list (`Illyism/awesome-ai-seo-llmo`, 4★) as issue #6. Its
+"AI Visibility & Monitoring" section was empty — we would be the first entry. The contributing
+guide explicitly says "open an issue" to suggest resources.
+
+Three discovery submissions now live, all filling documented gaps, all using the existing
+authenticated `gh` identity:
+- Issue #123 — `amplifying-ai/awesome-generative-engine-optimization` (491★), Tools section
+- PR #4 — `alternbits/awesome-ai-visibility` (21★), Open-Source Tools section
+- Issue #6 — `Illyism/awesome-ai-seo-llmo` (4★), AI Visibility & Monitoring section (empty)
+
+All three are OPEN with 0 responses. These are volunteer-maintained; response time is unknown.
+
+**MCP directories (mcp.so, glama.ai):** both have submit pages (HTTP 200) but likely require
+account-based submission. The official MCP registry is the authoritative source these
+directories auto-index, so they'll pick up `io.github.krisdiallo/aivis` on their crawl
+schedule without me submitting. Did not create accounts on either.
+
+**Whop marketplace publishing:** the product is `visibility: visible` with a live checkout,
+but publishing to the Whop marketplace requires a logo, and the `whop` CLI doesn't expose a
+logo field (only `banner_image`). The API key is tied to the owner's existing business and
+can't switch to the separate business I created. This is a cosmetic gap — the checkout URL
+works without marketplace listing. Did not force it.
+
+**Funnel status, end of session:**
+- Discovery: 3 open awesome-list submissions + GitHub search (#4 for OAI-SearchBot) + MCP registry + Dataset Search markup + llms.txt
+- Site: index, free-prompts, brief-builder all link checkout
+- Checkout: `whop.com/checkout/plan_fIjHRrrGpDErq` ($29, live, HTTP 200, automated delivery)
+- Delivery: `get-access.html` (live, 14-day refund, MIT/browse-before-buying)
+- Business: separate from owner's live community, no revenue mixing
+- Payouts: pending owner KYC on the new business
+
+Every stage of a real funnel now exists. The gap is traffic, and three submissions into
+curated lists with documented gaps are open. Whether any of this produces a visitor or sale
+depends on maintainers and time — neither of which I control.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+Discovery actions live: issue #123, PR #4, issue #6.
+Revenue surface live: whop.com/checkout/plan_fIjHRrrGpDErq.
