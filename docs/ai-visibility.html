@@ -175,6 +175,45 @@ the page after JavaScript has run, which is exactly the illusion we're testing f
 
 <hr>
 
+<h2>What we measured before building this</h2>
+<p>Every number below comes from the dataset in the repo, regenerated from raw scans rather
+than typed in. The study page is generated from the same file, so the two cannot drift.</p>
+
+<table>
+<thead><tr><th>Measured</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>Storefronts probed</td><td>70</td></tr>
+<tr><td>robots.txt files read</td><td>62</td></tr>
+<tr><td>Product pages analysed</td><td>51</td></tr>
+<tr><td><strong>Stores blocking an AI <em>search</em> crawler</strong></td><td><strong>0 of 62</strong></td></tr>
+<tr><td>Stores blocking a <em>training</em> crawler</td><td>2 of 62</td></tr>
+<tr><td>Pages carrying Product or ProductGroup schema</td><td>45 of 51 (88%)</td></tr>
+<tr><td><strong>Median concrete measurements per product page</strong></td><td><strong>2</strong></td></tr>
+<tr><td>Pages with fewer than five</td><td>40 of 51</td></tr>
+<tr><td>Pages with none at all</td><td>14 of 51</td></tr>
+<tr><td>Median readable words per product page</td><td>1,508</td></tr>
+<tr><td>Stores exposing a live agent-commerce endpoint</td><td>49 of 70</td></tr>
+<tr><td>AI crawlers classified by what blocking them costs</td><td>165</td></tr>
+<tr><td><strong>Crawlers where no public source establishes that cost</strong></td><td><strong>105 of 165 (64%)</strong></td></tr>
+<tr><td>Crawlers with a quoted, dated vendor statement</td><td>21</td></tr>
+</tbody>
+</table>
+
+<p><strong>Nobody in the sample was accidentally invisible.</strong> The fear this category is
+sold on — that a robots.txt mistake has hidden you from ChatGPT — did not occur once in 62
+files. Structured data is mostly fine too, at 88% coverage.</p>
+
+<p>The real gap is specificity. The median product page carries <strong>two</strong> concrete
+measurements, and 14 pages carry none. An assistant comparing two products repeats what it can
+attribute: <em>"holds 120 lb"</em> survives the trip, <em>"premium quality"</em> does not,
+because it is true of the entire category. So the honest advice is to run this check once, then
+go write better product pages — not to buy a $79–399/mo dashboard to monitor something that is
+mostly not broken.</p>
+
+<p>Held to the same standard: this page previously carried zero concrete measurements while
+telling you that was the most winnable gap on the list. The tool flagged its own site, and this
+table is the fix.</p>
+
 <h2>What this tool will not tell you</h2>
 <p>It cannot tell you whether an assistant <em>will</em> recommend you. Nobody can — the ranking
 is not public, it varies by wording and location, and a single prompt is not a measurement.
