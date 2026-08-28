@@ -35,4 +35,21 @@ for c in reg:
         print(f"FAIL: {c['token']} has no verified date")
         fail = True
 print("ok: every registry entry is either quoted or explicitly flagged unverified")
+
+# --- registry must validate against its own published schema ---
+try:
+    from jsonschema import Draft202012Validator as _V
+    _s = json.load(open("crawlers.schema.json"))
+    _V.check_schema(_s)
+    _errs = list(_V(_s).iter_errors(json.load(open("crawlers.json"))))
+    if _errs:
+        for _e in _errs[:5]:
+            print(f"FAIL: crawlers.json violates schema at {list(_e.path)}: {_e.message[:120]}")
+        sys.exit(1)
+    print("ok: crawlers.json validates against crawlers.schema.json")
+except ImportError:
+    print("skip: jsonschema not installed (schema validation not run)")
+
 sys.exit(1 if fail else 0)
+
+

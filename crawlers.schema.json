@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/crawlers.schema.json",
+  "title": "AI crawler registry",
+  "description": "Schema for crawlers.json — a sourced registry of AI crawler user-agent tokens and, crucially, what blocking each one actually costs you. Blocking a search crawler removes you from AI answers; blocking a training crawler does not. Most published robots.txt advice conflates the two.",
+  "type": "object",
+  "required": ["name", "version", "updated", "crawlers"],
+  "properties": {
+    "name": { "type": "string" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "updated": { "type": "string", "format": "date" },
+    "license": { "type": "string" },
+    "homepage": { "type": "string", "format": "uri" },
+    "about": { "type": "string" },
+    "enums": {
+      "type": "object",
+      "description": "Human-readable glossary of the allowed purpose and blocking_effect values.",
+      "additionalProperties": true
+    },
+    "crawlers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/crawler" }
+    }
+  },
+  "$defs": {
+    "crawler": {
+      "type": "object",
+      "required": ["token", "vendor", "purpose", "blocking_effect", "respects_robots_txt", "verified"],
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "The exact user-agent token as written in a robots.txt User-agent line. Case-insensitive when matching, but reproduced here as the vendor documents it."
+        },
+        "vendor": { "type": "string" },
+        "product": {
+          "type": "string",
+          "description": "The surface this crawler feeds, e.g. 'ChatGPT search' or 'foundation model training'."
+        },
+        "purpose": {
+          "enum": ["search", "training", "user_initiated", "preview", "ads"]
+        },
+        "blocking_effect": {
+          "enum": [
+            "removes_from_ai_answers",
+            "opts_out_of_training_only",
+            "may_be_ignored",
+            "breaks_link_previews",
+            "blocks_ad_review"
+          ],
+          "description": "The actionable field. This is what actually happens to you if you Disallow this token."
+        },
+        "respects_robots_txt": {
+          "type": "boolean",
+          "description": "False where the vendor states robots.txt may be bypassed or ignored, which is typical for user-initiated fetches."
+        },
+        "source": { "type": "string", "format": "uri" },
+        "source_quote": {
+          "type": "string",
+          "description": "The vendor's own wording. Entries without this MUST carry a `verification` flag rather than implying a first-party source."
+        },
+        "verified": {
+          "type": "string",
+          "format": "date",
+          "description": "When this entry was last checked against its source. A token's classification can change; treat an old date as a hypothesis."
+        },
+        "verification": {
+          "enum": ["listed_by_operator", "observed_not_vendor_documented"],
+          "description": "Present only when no first-party quote could be obtained. Its presence is the honest signal that the entry is weaker than the others."
+        },
+        "note": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "$comment": "Integrity rule: every entry is either quoted from the vendor or explicitly flagged as unverified. Nothing is allowed to look sourced when it isn't.",
+          "anyOf": [
+            { "required": ["source_quote"] },
+            { "required": ["verification"] }
+          ]
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}

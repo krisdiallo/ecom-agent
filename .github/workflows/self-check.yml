@@ -18,7 +18,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Registry and CLI must not drift
-        run: python3 research/test_consistency.py
+        run: |
+          pip install --quiet jsonschema
+          python3 research/test_consistency.py
 
       - name: Check our own site
         uses: ./
