@@ -225,20 +225,27 @@ def titles_agree(t, o):
 
 # ---------- report ----------
 class R:
-    def __init__(self):
+    def __init__(self, quiet=False):
         self.bad = self.warn = self.ok = 0
+        self.quiet = quiet
+        self.findings = []
 
     def f(self, lvl, title, body=""):
         col = {"bad": C["r"], "warn": C["y"], "ok": C["g"]}[lvl]
         mark = {"bad": "FAIL", "warn": "WARN", "ok": " OK "}[lvl]
-        setattr(self, {"bad": "bad", "warn": "warn", "ok": "ok"}[lvl],
-                getattr(self, {"bad": "bad", "warn": "warn", "ok": "ok"}[lvl]) + 1)
+        setattr(self, lvl, getattr(self, lvl) + 1)
+        self.findings.append({"level": lvl, "title": title, "detail": norm(body)})
+        if self.quiet:
+            return
         print(f"  {col}[{mark}]{C['x']} {C['b']}{title}{C['x']}")
         for line in body.split("\n") if body else []:
             if line.strip():
                 print(f"         {C['d']}{line.strip()}{C['x']}")
 
     def note(self, title, body=""):
+        self.findings.append({"level": "note", "title": title, "detail": norm(body)})
+        if self.quiet:
+            return
         print(f"  {C['d']}[note]{C['x']} {title}")
         for line in body.split("\n") if body else []:
             if line.strip():
@@ -246,7 +253,8 @@ class R:
 
 
 def check_robots(host, rep):
-    print(f"\n{C['b']}1. robots.txt — are you blocking the crawlers that recommend you?{C['x']}")
+    say = (lambda *a, **k: None) if rep.quiet else print
+    say(f"\n{C['b']}1. robots.txt — are you blocking the crawlers that recommend you?{C['x']}")
     st, _, txt = get(f"https://{host}/robots.txt")
     if st != 200 or not txt:
         if st in (403, 429):
@@ -327,7 +335,8 @@ def find_product_via_sitemap(host, budget=6):
 
 def check_product(host, rep, url=None):
     explicit = bool(url)
-    print(f"\n{C['b']}2. Product page — can a crawler read your facts?{C['x']}")
+    say = (lambda *a, **k: None) if rep.quiet else print
+    say(f"\n{C['b']}2. Product page — can a crawler read your facts?{C['x']}")
     if not url:
         st, _, js = get(f"https://{host}/products.json?limit=1")
         handle = None
@@ -380,7 +389,7 @@ def check_product(host, rep, url=None):
                  f"  python3 aivis.py {host} --url https://{host}/products/<handle>")
         return
 
-    print(f"  {C['d']}checked: {final}{C['x']}")
+    say(f"  {C['d']}checked: {final}{C['x']}")
     a = analyse(html)
 
     if a["js_injected"]:
@@ -450,6 +459,14 @@ def check_product(host, rep, url=None):
         rep.f("warn", "No canonical link", "Variant URLs can split how you are understood.")
 
 
+def exit_code(rep, fail_on):
+    if fail_on == "never":
+        return 0
+    if fail_on == "warning":
+        return 1 if (rep.bad or rep.warn) else 0
+    return 1 if rep.bad else 0
+
+
 def main():
     ap = argparse.ArgumentParser(
         prog="aivis", description="Check whether AI assistants can read your store.",
@@ -457,17 +474,30 @@ def main():
     ap.add_argument("store", help="your store domain, e.g. yourstore.com")
     ap.add_argument("--url", help="a specific product page to check")
     ap.add_argument("--no-color", action="store_true")
+    ap.add_argument("--json", action="store_true",
+                    help="machine-readable output (for CI)")
+    ap.add_argument("--fail-on", choices=["critical", "warning", "never"],
+                    default="critical",
+                    help="exit non-zero on this severity or worse (default: critical)")
     ap.add_argument("--version", action="version", version=f"aivis {__version__}")
     args = ap.parse_args()
-    paint(sys.stdout.isatty() and not args.no_color)
+    paint(sys.stdout.isatty() and not args.no_color and not args.json)
 
     host = re.sub(r"^https?://", "", args.store).strip("/").split("/")[0]
-    print(f"\n{C['b']}aivis {__version__}{C['x']} — can AI assistants read {C['b']}{host}{C['x']}?")
-    print(f"{C['d']}Nothing is uploaded. Reading your public pages directly.{C['x']}")
+    rep = R(quiet=args.json)
+    if not args.json:
+        print(f"\n{C['b']}aivis {__version__}{C['x']} — can AI assistants read {C['b']}{host}{C['x']}?")
+        print(f"{C['d']}Nothing is uploaded. Reading your public pages directly.{C['x']}")
 
-    rep = R()
     check_robots(host, rep)
     check_product(host, rep, args.url)
+
+    if args.json:
+        json.dump({"tool": "aivis", "version": __version__, "host": host,
+                   "critical": rep.bad, "warnings": rep.warn, "passed": rep.ok,
+                   "findings": rep.findings}, sys.stdout, indent=2)
+        print()
+        return exit_code(rep, args.fail_on)
 
     print(f"\n{C['b']}Summary:{C['x']} {C['r']}{rep.bad} critical{C['x']}  "
           f"{C['y']}{rep.warn} to review{C['x']}  {C['g']}{rep.ok} passed{C['x']}")
@@ -476,7 +506,7 @@ def main():
           f"mentions, which\nare probably the bigger factor. It checks the floor: whether you "
           f"are readable at all.\n\nMethod and the 70-store study: "
           f"https://github.com/krisdiallo/ecom-agent{C['x']}\n")
-    return 1 if rep.bad else 0
+    return exit_code(rep, args.fail_on)
 
 
 if __name__ == "__main__":

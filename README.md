@@ -30,6 +30,29 @@ independent fetches. Prefer a browser? Same checks, paste-based:
 
 ---
 
+## Or run it in CI
+
+Catch it on the deploy that breaks it, not months later when you wonder why an assistant
+never mentions you:
+
+```yaml
+- uses: krisdiallo/ecom-agent@v1
+  with:
+    site: yourstore.com
+    fail-on: critical        # critical | warning | never
+```
+
+Writes a findings table to the job summary, exposes `critical` / `warnings` / `passed` /
+`report` as step outputs, and fails the build on real problems. This repo
+[runs it against its own site](.github/workflows/self-check.yml) on every push — a tool that
+tells you to check your AI visibility should be checking its own, in public.
+
+`--json` works standalone too, if you'd rather wire it into something else:
+
+```bash
+python3 aivis.py yourstore.com --json --fail-on warning
+```
+
 ## The one thing most advice gets backwards
 
 There are two completely different kinds of AI crawler, and blocking them has **opposite**

@@ -1,0 +1,30 @@
+# Dogfooding: this repo runs its own action against its own site.
+# A tool that tells people to check their AI visibility should be checking its own,
+# in public, where anyone can read the result.
+name: AI visibility self-check
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # weekly, off the hour — regressions here would otherwise go unnoticed
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  self-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Registry and CLI must not drift
+        run: python3 research/test_consistency.py
+
+      - name: Check our own site
+        uses: ./
+        with:
+          site: krisdiallo.github.io
+          url: https://krisdiallo.github.io/ecom-agent/ai-visibility.html
+          # our own pages are not a product listing, so Product-schema findings
+          # are expected here; we watch for regressions rather than gate on them
+          fail-on: never

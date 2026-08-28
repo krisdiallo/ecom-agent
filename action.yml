@@ -1,0 +1,77 @@
+name: 'AI Visibility Check'
+description: 'Fail your build if AI assistants cannot read your store or site. Checks robots.txt AI-crawler rules and whether your product facts survive in raw HTML.'
+author: 'krisdiallo'
+branding:
+  icon: 'search'
+  color: 'blue'
+
+inputs:
+  site:
+    description: 'Domain to check, e.g. yourstore.com'
+    required: true
+  url:
+    description: 'Optional specific product page URL to check instead of auto-discovering one'
+    required: false
+    default: ''
+  fail-on:
+    description: 'Exit non-zero on this severity or worse: critical, warning, or never'
+    required: false
+    default: 'critical'
+
+outputs:
+  critical:
+    description: 'Number of critical findings'
+    value: ${{ steps.run.outputs.critical }}
+  warnings:
+    description: 'Number of warnings'
+    value: ${{ steps.run.outputs.warnings }}
+  passed:
+    description: 'Number of checks passed'
+    value: ${{ steps.run.outputs.passed }}
+  report:
+    description: 'Full findings as JSON'
+    value: ${{ steps.run.outputs.report }}
+
+runs:
+  using: 'composite'
+  steps:
+    - id: run
+      shell: bash
+      run: |
+        set -o pipefail
+        ARGS=("${{ inputs.site }}" --json --fail-on "${{ inputs.fail-on }}")
+        if [ -n "${{ inputs.url }}" ]; then ARGS+=(--url "${{ inputs.url }}"); fi
+
+        # Zero dependencies by design: the checker is a single stdlib-only file.
+        set +e
+        python3 "${{ github.action_path }}/aivis.py" "${ARGS[@]}" > report.json
+        CODE=$?
+        set -e
+
+        python3 - <<'PY' >> "$GITHUB_OUTPUT"
+        import json, os
+        d = json.load(open("report.json"))
+        print(f"critical={d['critical']}")
+        print(f"warnings={d['warnings']}")
+        print(f"passed={d['passed']}")
+        print("report<<AIVIS_EOF")
+        print(json.dumps(d))
+        print("AIVIS_EOF")
+        PY
+
+        python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+        import json
+        d = json.load(open("report.json"))
+        icon = {"bad": "🔴", "warn": "🟡", "ok": "🟢", "note": "⚪"}
+        print(f"## AI visibility — `{d['host']}`\n")
+        print(f"**{d['critical']} critical · {d['warnings']} to review · {d['passed']} passed**\n")
+        for f in d["findings"]:
+            print(f"{icon.get(f['level'],'⚪')} **{f['title']}**  ")
+            if f["detail"]:
+                print(f"<sub>{f['detail'][:400]}</sub>\n")
+        print("\n<sub>This cannot tell you whether an assistant *will* recommend you — nobody "
+              "can. It checks whether you are readable at all. "
+              "[Method + 70-brand study](https://github.com/krisdiallo/ecom-agent)</sub>")
+        PY
+
+        exit $CODE
