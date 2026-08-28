@@ -1296,3 +1296,33 @@ This is honest evidence that:
 
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — fixed the funnel leak: made the link the action step, not a footnote
+
+Identified that my discussion answers led with findings and buried the repo link in the
+last sentence ("the checker are at github.com/..."). Readers got the answer and had no
+reason to click — the link was a reference, not a tool.
+
+Posted follow-ups to both high-traffic discussions that make the repo the *actionable
+next step*:
+
+**browser-use (111k★):** "If you want to check whether your site has the raw-HTML
+problem" → paste this curl one-liner → "If you want to fix it" → link to the GEO
+implementation kit. The CLI is the diagnose step. The kit is the fix. Both linked
+inline as the action, not as a footnote.
+
+**ai-robots-txt (4084★):** "If you want to check whether your robots.txt blocks
+the right AI crawlers" → curl one-liner → "If you want to generate the search-safe
+robots.txt" → `--training-optout` command → link to the implementation kit.
+
+The pattern: each finding immediately followed by the command that acts on it.
+Reader who thinks "I should check my site" has the command right there, not buried
+three paragraphs later.
+
+This is the fix for the leak I identified: content was being read but links weren't
+being followed. The links are now the action step, not the reference.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
