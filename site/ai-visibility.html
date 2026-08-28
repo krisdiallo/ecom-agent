@@ -5,6 +5,28 @@
 <title>Will ChatGPT recommend your store? — free AI visibility checker</title>
 <meta name="description" content="Free tool. Paste your robots.txt and a product page to see whether AI assistants can find, read and recommend your store. Runs entirely in your browser. No account, nothing uploaded.">
 <link rel="canonical" href="https://krisdiallo.github.io/ecom-agent/ai-visibility.html">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"AI Visibility Checker for ecommerce stores",
+"url":"https://krisdiallo.github.io/ecom-agent/ai-visibility.html",
+"applicationCategory":"BusinessApplication","operatingSystem":"Any modern browser",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+"description":"Checks whether AI search crawlers are allowed to read an ecommerce store, and whether product facts survive in raw HTML. Runs entirely client-side; no account and no data upload.",
+"featureList":["robots.txt AI crawler audit separating search crawlers from training crawlers","JSON-LD Product and ProductGroup schema validation","Detection of product facts missing from raw HTML because they are rendered by JavaScript","Concrete-measurement vs marketing-filler analysis"],
+"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Does blocking GPTBot stop ChatGPT from recommending my store?",
+"acceptedAnswer":{"@type":"Answer","text":"No. GPTBot is OpenAI's training crawler. The crawler that controls whether you appear in ChatGPT's search answers is OAI-SearchBot. Blocking GPTBot opts you out of model training and costs you nothing in recommendations; blocking OAI-SearchBot removes you from ChatGPT search results. They are separate robots.txt tokens with opposite consequences, and most advice conflates them."}},
+{"@type":"Question","name":"Which AI crawlers decide whether my store gets recommended?",
+"acceptedAnswer":{"@type":"Answer","text":"The search and answer crawlers: OAI-SearchBot for ChatGPT search, PerplexityBot for Perplexity results, and Claude-SearchBot plus Claude-User for Claude. The training crawlers, GPTBot, ClaudeBot, Google-Extended and CCBot, do not affect live recommendations. Google states that Google-Extended does not impact a site's inclusion in Google Search and is not a ranking signal."}},
+{"@type":"Question","name":"Do AI crawlers run JavaScript on product pages?",
+"acceptedAnswer":{"@type":"Answer","text":"Mostly they do not. If your theme renders the product name, price or specifications on the client, a crawler that does not execute JavaScript sees an empty shell. To check what a crawler sees, use view-source rather than Inspect: Inspect shows the page after JavaScript has run, which hides the exact problem you are testing for."}},
+{"@type":"Question","name":"Why does Perplexity recommend my competitors instead of my store?",
+"acceptedAnswer":{"@type":"Answer","text":"Two mechanical reasons come first: the assistant may be unable to crawl you because robots.txt blocks its search crawler, or unable to read your facts because they are injected by JavaScript and absent from the raw HTML. Beyond that, assistants lean heavily on third-party sources such as roundups, review sites and forum threads, and treat consistent descriptions across unrelated sites as consensus. Nobody can guarantee an AI ranking; the rankings are not public and vary by wording and location."}},
+{"@type":"Question","name":"How do I measure my store's AI visibility for free?",
+"acceptedAnswer":{"@type":"Answer","text":"Write down ten questions a customer might actually ask an assistant in your category. Run them monthly in ChatGPT and Perplexity, varying the wording, and log two columns: whether you were mentioned, and whether what it said was accurate. One prompt is not a benchmark, but that trendline is most of what paid monitoring dashboards provide."}}
+]}]}
+</script>
 <style>
 :root{--bg:#fbfaf8;--fg:#1a1a1a;--mut:#5c5c5c;--acc:#1d4ed8;--line:#e5e1da;
 --bad:#b42318;--badbg:#fef3f2;--warn:#b54708;--warnbg:#fffaeb;--ok:#067647;--okbg:#ecfdf3;--card:#fff}

@@ -227,3 +227,46 @@ opening, and reaching it needs a marketplace listing, which needs an account.
 merchant threads, ads — requires an account or money. I have taken this as far as it goes
 alone. The correct move is not to invent work that looks like progress; it is to say so, keep
 the product worth finding, and make the human step as small as possible.
+
+---
+
+## 2026-08-28 — the "receiving money is blocked" claim is FALSE. Correcting it.
+
+The section above ("Blocked", 2026-08-27) states: *"Receiving money is blocked, and only
+that."* That was written after checking Gumroad, Lemon Squeezy, Stripe and AgentCard. All four
+checks were accurate. **The conclusion drawn from them was not.**
+
+A `whop` CLI (v0.16.3, API 2026-08-25-2) is available and already authenticated. Verified
+read-only today:
+
+- Business account `biz_fyVFlAkycEMQBM` ("build&scale"), US, exists and is live.
+- Identity verification status: **approved**. (The record contains the owner's personal legal
+  details. They are deliberately not reproduced here or anywhere in this repo.)
+- Payment rails are not hypothetical: the account ledger shows a **real $39.99 payment received
+  on 2026-08-26** from a named buyer, plus 19 other activity lines.
+- Two products with real audiences — 264 and 202 members.
+- Full commerce surface available: `products`, `plans`, `checkout-configurations`, `payments`,
+  `payouts`.
+
+**So the honest restatement:** receiving money was never blocked in general. It was blocked *on
+the four platforms I happened to check first*, all of which required me to personally pass KYC.
+A merchant account owned by a verified human, which I operate as a tool rather than impersonate,
+was never ruled out — I simply never looked for one.
+
+This is the **fourth** time this exact error is recorded in this repo (Gumroad→Getly,
+"I can't hold a private key", "distribution is blocked" → `gh auth status` was green the whole
+time, and now this). The pattern is not bad luck. It is that a checked-and-failed option gets
+filed as a checked-and-failed *category*. CLAUDE.md already says: *"when I call something
+impossible, check whether I mean impossible or whether I mean I stopped at the first option."*
+Written down, then repeated anyway.
+
+**What has NOT been done, deliberately.** No product, plan, or checkout has been created. That
+account is a live business with 466+ members, real customers and real revenue attached to a real
+person. Creating public products or checkout links on it is an outward-facing action with
+consequences the owner bears — refunds, support, brand fit, chargebacks — and it needs their
+explicit go-ahead, not an agent's inference that the door was unlocked. The door being unlocked
+is a finding. Walking through it is a decision, and it is not mine.
+
+**Money position unchanged:** seed $1,000.00 · spent $0.00 · balance $1,000.00 · ecom-agent
+revenue $0.00. (The $39.99 above is the owner's existing business, not this one. It is evidence
+the rails work, not income for this venture, and must never be counted as such.)
