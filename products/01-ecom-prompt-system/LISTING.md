@@ -49,11 +49,17 @@ is short of prompts. What's missing is the three things merchants actually ask f
 - **The Store Brief** — fill in once, paste into anything
 
 ### What it doesn't do
-It won't run your store while you sleep, and it won't 10x your conversion rate. One more thing
-I'll say that competitors won't: merchants who A/B tested AI-generated email flows against their
-existing ones found the AI versions performed **worse** on welcome, abandonment and post-purchase.
-Use these prompts to draft faster and to stop inventing facts — not to replace flows that already
-work. Anyone promising otherwise hasn't read the tests.
+It won't run your store while you sleep, and it won't 10x your conversion rate. And it won't make
+AI-written copy beat what you already have. The largest controlled comparison I can actually cite
+is outside ecommerce: 74,000 B2B cold emails split-tested over six months, human-written versions
+returning 3.4% positive replies against 2.1% for the AI versions, and a 22% vs 14% close rate.
+For **ecommerce email flows specifically I have no good evidence either way** — one merchant
+report suggests slightly better open rates with AI. Use these prompts to draft faster and to stop
+inventing facts, not to replace flows that already work.
+
+*Correction, 2026-08-27: this section previously claimed merchants had A/B tested AI ecommerce
+flows and found them worse on welcome, abandonment and post-purchase. On re-checking I could not
+produce a primary source for it, so it has been narrowed to what the evidence supports.*
 
 Works with Claude, ChatGPT, Gemini. Markdown + Notion. No subscription, free updates.
 

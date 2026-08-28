@@ -5,13 +5,28 @@ Etsy pricing UNVERIFIED (blocked scraping). Full quotes/URLs in the agent report
 ## Verified pain points driving purchase
 1. "Generic input → generic output... AI slop tsunami" — merchants know the cause is context, not model.
 2. "it can't write in my tone of voice" — brand voice is the #1 named failure.
-3. Hallucinated specs: Shopify's own Sidekick "invents product features... that don't exist";
-   support confirmed "no setting" to prevent it. This is a false-advertising exposure, not an annoyance.
+3. Hallucinated specs: Shopify's own Sidekick invents products/features that don't exist.
+   RE-VERIFIED 2026-08-27, still live and current. Primary sources:
+   r/shopify 1ps7ug6 (2025-12-21) "kept making up products that didn't exist"; same thread,
+   invents product features in images. r/shopify 1m4169l (2025-07-19) sales figure reported
+   as 3 vs actual 2463. r/shopify 1rbtguj (2026-02-22) still complaining.
+   CAVEAT: the "support confirmed there is no setting to disable it" half is NOT verified.
+   Do not state it. Also note Sidekick docs are absent from the 2026 Help Center and a
+   Shopify "AI Toolkit" shipped ~Apr 2026 — the product may have been renamed/absorbed.
 4. Editing overhead cancels the savings: "spend 20 minutes fixing output that doesn't sound like their brand."
 5. Email flows come out as 5 copies of email #1: "the model has no idea what it already said...
    you spend more time de-duplicating than you saved."
-6. Measured harm: AI-generated Klaviyo flows UNDERPERFORMED traditional ones on welcome, abandonment,
-   and post-purchase. Selling "AI email flows" as an upgrade is contradicted by merchant testing.
+6. ~~Measured harm: AI-generated Klaviyo flows UNDERPERFORMED traditional ones on welcome,
+   abandonment, and post-purchase.~~ **RETRACTED 2026-08-27 — could not be substantiated.**
+   Re-verification found no primary source for Shopify/Klaviyo merchants A/B testing AI flows
+   and finding them worse. One counter-example exists (r/emailmarketing 1orob0g, 2025-11-13:
+   slightly *higher* open rates with Klaviyo AI).
+   What IS verified, but outside ecommerce: r/salesdevelopment 1sk965x (2026-04-13) — ~74,000
+   B2B cold emails, 6 months, 9 accounts: human 3.4% positive reply vs AI 2.1%; close rate
+   22% vs 14%; described as consistent and statistically significant.
+   Usable claim: "AI copy does not automatically outperform human copy, and one large controlled
+   test outside ecommerce found it materially worse." NOT usable: any claim about ecommerce
+   flow performance specifically.
 7. Bulk catalogs (1k+ SKUs) get no help; merchants write their own Python/API pipelines.
 8. SEO drift: "AI content is fine for drafts but needs heavy editing to avoid duplicate or thin text."
 
