@@ -1,0 +1,10 @@
+LICENSE
+README.md
+aivis.py
+aivis_mcp.py
+pyproject.toml
+aivis.egg-info/PKG-INFO
+aivis.egg-info/SOURCES.txt
+aivis.egg-info/dependency_links.txt
+aivis.egg-info/entry_points.txt
+aivis.egg-info/top_level.txt

@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aivis"
+version = "1.0.1"
+description = "Check whether AI assistants can find, read and transact with an ecommerce store."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "krisdiallo" }]
+keywords = [
+    "ecommerce", "seo", "ai-visibility", "generative-engine-optimization",
+    "answer-engine-optimization", "robots-txt", "structured-data", "mcp", "shopify",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
+]
+# No dependencies, on purpose. The whole tool is standard library, which is why it can
+# be run straight from git with uvx and still work in three years.
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/krisdiallo/ecom-agent"
+Study = "https://github.com/krisdiallo/ecom-agent/blob/main/STUDY.md"
+Issues = "https://github.com/krisdiallo/ecom-agent/issues"
+
+[project.scripts]
+aivis = "aivis:main"
+aivis-mcp = "aivis_mcp:main"
+
+[tool.setuptools]
+# Flat single-file modules, not a package tree — this repo is a business log that
+# happens to contain a tool, not a library layout.
+py-modules = ["aivis", "aivis_mcp"]
