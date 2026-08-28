@@ -22,7 +22,6 @@
     {
       "registryType": "oci",
       "identifier": "ghcr.io/krisdiallo/aivis:1.1.2",
-      "version": "1.1.2",
       "transport": {
         "type": "stdio"
       }
