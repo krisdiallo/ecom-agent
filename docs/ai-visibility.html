@@ -391,7 +391,15 @@ $("go2").onclick=function(){
   var product=candidates.filter(function(n){return n.offers})[0]||candidates[0];
   var isGroup=product&&/ProductGroup/i.test(typeOf(product));
 
-  if(!blocks.length){
+  if(!blocks.length&&/application\/ld\+json/i.test(src)){
+    bad++;
+    h+=fi("bad","Your structured data is injected by JavaScript, so crawlers never see it",
+      "The string <code>application/ld+json</code> appears on this page, but only inside JavaScript — there is no "+
+      "actual <code>&lt;script type=\"application/ld+json\"&gt;</code> element in the served HTML. Your schema is "+
+      "built after the page loads. It will look perfect in Inspect and in Google's Rich Results Test (both run JS) "+
+      "while being completely invisible to every assistant that doesn't. This is the most deceptive failure on this "+
+      "list, because every tool you'd normally check with will tell you it's fine. Render the JSON-LD server-side.");
+  } else if(!blocks.length){
     bad++;
     h+=fi("bad","No structured data at all",
       "There is no <code>application/ld+json</code> on this page. Structured data is the most reliable way "+
@@ -500,9 +508,32 @@ $("go2").onclick=function(){
   if(!/<link[^>]+rel=["']canonical["']/i.test(src)){warn++;
     h+=fi("warn","No canonical link","Duplicate variant URLs can split how you're understood. Add <code>&lt;link rel=\"canonical\"&gt;</code>.");
   } else good++;
+  function unesc(s){var d=document.createElement("textarea");d.innerHTML=s;return d.value}
+  function fold(s){return unesc(s||"").toLowerCase().replace(/[‘’]/g,"'")
+    .replace(/[^a-z0-9]+/g," ").trim()}
   var ttl=(src.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[])[1];
-  if(!ttl||!ttl.trim()){bad++; h+=fi("bad","No page title","The title is the strongest short summary a crawler gets.");}
-  else good++;
+  ttl=ttl?unesc(ttl).replace(/\s+/g," ").trim():"";
+  var ogm=src.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)/i);
+  var ogt=ogm?unesc(ogm[1]).replace(/\s+/g," ").trim():"";
+  if(!ttl){bad++; h+=fi("bad","No page title","The title is the strongest short summary a crawler gets.");}
+  else {
+    good++;
+    // Found in the wild on a major DTC brand: <title> named a completely different
+    // product while og:title and canonical were both correct.
+    var mism=false, why="";
+    if(pname&&fold(ttl).indexOf(fold(pname))<0&&fold(pname).indexOf(fold(ttl).split(" | ")[0])<0){
+      mism=true; why="Your title is <em>"+esc(ttl)+"</em> but you told us the product is <em>"+esc(pname)+"</em>.";
+    } else if(ogt&&fold(ttl).indexOf(fold(ogt))<0&&fold(ogt).indexOf(fold(ttl))<0){
+      mism=true; why="Your <code>&lt;title&gt;</code> is <em>"+esc(ttl)+"</em> but your <code>og:title</code> is <em>"+esc(ogt)+"</em>. They describe different things.";
+    }
+    if(mism){
+      bad++;
+      h+=fi("bad","Your page title may name the wrong product",why+
+        "<br>The title is the single strongest summary signal a crawler has. If it names a different product, "+
+        "assistants can learn your page as being about that other product — while the page looks completely "+
+        "correct to a human, because the visible heading is rendered separately. Usually a caching or template bug.");
+    }
+  }
 
   out.innerHTML="<h3>Product page results</h3>"+tally(bad,warn,good)+h+
     '<p class="note">Every check above runs against the text you pasted. Nothing was sent anywhere.</p>';
