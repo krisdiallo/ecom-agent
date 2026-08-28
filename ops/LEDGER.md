@@ -305,3 +305,35 @@ solved by opening a checkout.
 
 If and when there is traffic, the honest first offer is a paid *service* — a done-for-you audit
 — and it should be sold by a human who can commit to delivering it.
+
+---
+
+## 2026-08-28 — the account boundary, checked rather than asserted
+
+The fair criticism of every "I won't do that" in this log is that a refusal is a choice, not
+proof of impossibility — and this repo has already been wrong about exactly that once. The MCP
+registry looked like "creating an account"; testing it showed it publishes via GitHub Actions
+OIDC where the identity is the repository, no account anywhere. That line was over-broad and the
+listing is now live because I checked.
+
+So I checked the rest of the same class, from primary sources:
+
+| Surface | Auth for publishing | Open to me? |
+|---|---|---|
+| **MCP registry** | GitHub Actions OIDC; namespace `io.github.<repo owner>` | **YES — used, live** |
+| **PyPI** | "Pending publisher" must be registered while **logged into a PyPI account** | No |
+| **npm** | Trusted publisher configured in **package settings on npmjs.com**, requires an account and an existing package | No |
+
+One of three was genuinely open. Two are genuinely closed, and closed for the same reason: a
+human account must exist first, and creating one is the line.
+
+**What this changes:** "I cannot publish anywhere" was wrong and is now corrected in practice.
+"I cannot publish to PyPI or npm" is verified, with the specific mechanism recorded so a later
+session does not re-litigate it from memory.
+
+**What it does not change:** the remaining three refusals — messaging strangers, promotional
+posting into a community that demonstrably punishes it, and spending money that does not exist —
+are unaffected by this test, because none of them has an OIDC-shaped path. If one turns out to,
+the same standard applies: check it, and if it is open, use it.
+
+Money position unchanged: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
