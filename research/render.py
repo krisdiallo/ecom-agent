@@ -55,15 +55,37 @@ def _tok(s):
 # Token overlap is the honest comparison: two titles for the same product share most
 # of their content words even when the suffixes differ. Threshold is deliberately
 # permissive so only an unmistakable contradiction counts.
+def _lead(s, n=4):
+    out = []
+    for w in re.sub(r"[^a-z0-9]+", " ", (s or "").lower()).split():
+        if len(w) > 1 and w not in {"the", "a", "an", "for", "and", "with", "in", "of",
+                                    "to", "by", "on", "oz", "ml", "g", "kg", "pack",
+                                    "set", "size", "new", "our"}:
+            out.append(w)
+        if len(out) >= n:
+            break
+    return out
+
+
 def _title_consistent(r):
+    """Flag only when the leading words share nothing at all.
+
+    A 50%-overlap threshold flagged Allbirds twice on a pattern that is not a defect:
+    an SEO <title> ("Women's Dasher NZ Sneakers | Lightweight Running…") beside a
+    variant-specific og:title ("Women's Dasher NZ - Blizzard/Deep Navy"). Same product,
+    different specificity. Telling a healthy store it is broken costs far more than
+    missing a marginal case, so this only catches an outright contradiction.
+    """
     t, o = r.get("title"), r.get("og_title")
     if not t or not o:
         return None
     a, b = _tok(t), _tok(o)
     if not a or not b:
         return None
-    small = min(len(a), len(b))
-    return (len(a & b) / small) >= 0.5
+    la, lb = _lead(t), _lead(o)
+    if not la or not lb:
+        return None
+    return bool(set(la) & b or set(lb) & a)
 
 
 
@@ -261,8 +283,16 @@ assistant is most likely to want when it compares you to somebody else.</p>
 load, so it is perfect in dev tools and absent from what a non-JS crawler receives.
 {len(malformed)} pages served JSON-LD that failed to parse, which consumers skip entirely.</p>
 <p>{len(tm_bad)} of {len(tm)} pages had a <code>&lt;title&gt;</code> that contradicted their own
-<code>og:title</code> — in the clearest case, a bath towel product page whose title announced a
-sheet set. The visible heading was correct, so nothing looks wrong to a human.</p>
+<code>og:title</code>: a bath towel product page whose title announced a sheet set. The visible
+heading was correct, so nothing looks wrong to a human.</p>
+<p class="note">That figure is deliberately conservative. Earlier versions of this check flagged
+four pages, then three, then two — and each time the extra flags turned out to be legitimate
+variation rather than defects: a store using a different internal product name from its display
+title, a title carrying a bracketed suffix containing a <code>|</code>, and an SEO-style title
+sitting beside a variant-specific <code>og:title</code> ("Women's Dasher NZ Sneakers …" vs
+"Women's Dasher NZ – Blizzard/Deep Navy"). The check now fires only when the two share no
+leading words at all. Telling a healthy store it is broken is a more expensive error than
+missing a marginal case.</p>
 <p>These failures share a property: <strong>every tool an owner would normally check with runs
 JavaScript</strong>, so all of them report success.</p>
 

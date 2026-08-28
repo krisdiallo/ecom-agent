@@ -28,6 +28,18 @@ That output is real, from a live page on a major DTC brand, reproduced across th
 independent fetches. Prefer a browser? Same checks, paste-based:
 **[the web version](https://krisdiallo.github.io/ecom-agent/ai-visibility.html)**.
 
+One page is an anecdote. Sample your catalogue to see whether a problem is systemic:
+
+```bash
+python3 aivis.py yourstore.com --pages 10
+```
+
+```
+[FAIL] Structured data injected by JavaScript (7/10 pages)
+[WARN] Fewer than 5 concrete measurements (9/10 pages)
+[ OK ] 1/10 pages clean on every check
+```
+
 ---
 
 ## Or run it in CI

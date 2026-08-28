@@ -214,13 +214,43 @@ def toks(s):
     return {w for w in fold(s).split() if len(w) > 1 and w not in STOP}
 
 
+def lead(s, n=4):
+    """Leading content words — where the product's identity actually lives.
+    Both an SEO title and an og:title normally open with the product name."""
+    out = []
+    for w in fold(s).split():
+        if len(w) > 1 and w not in STOP:
+            out.append(w)
+        if len(out) >= n:
+            break
+    return out
+
+
 def titles_agree(t, o):
-    """Token overlap, not substring: a title carrying a bracketed suffix with a '|'
-    is not a contradiction, and substring matching called that a failure."""
+    """Do <title> and og:title name the same product?
+
+    Deliberately conservative, after three iterations of this check crying wolf:
+      v1 compared <title> to the internal products.json name  -> 3 false positives
+         in 4 (merchants use different internal vs display names).
+      v2 used substring matching                               -> flagged a title whose
+         bracketed suffix contained a '|'.
+      v3 used 50% token overlap                                -> flagged Allbirds twice,
+         where the title is an SEO phrase and og:title is the variant
+         ("Women's Dasher NZ Sneakers | ..." vs "Women's Dasher NZ - Blizzard/Deep Navy").
+         Same product, different specificity. Not a defect.
+
+    So: flag only when the leading words share NOTHING at all. That catches the real
+    case — a bath-towel page whose title announces a sheet set — and stays quiet on
+    every legitimate variation seen across 70 live stores. Under-reporting here is
+    much cheaper than telling a healthy store it is broken.
+    """
     a, b = toks(t), toks(o)
     if not a or not b:
         return None
-    return len(a & b) / min(len(a), len(b)) >= 0.5
+    la, lb = lead(t), lead(o)
+    if not la or not lb:
+        return None
+    return bool(set(la) & b or set(lb) & a)
 
 
 # ---------- report ----------
@@ -332,9 +362,63 @@ def check_sitemap(host, rep, robots_txt=""):
 PROD_PAT = re.compile(r"/(products?|shop|item|p|dp|collections/[^/]+/products)/[^/\s<]+", re.I)
 
 
+def find_products(host, want=1, budget=6):
+    """Collect up to `want` product URLs. One page is an anecdote; a catalogue tells
+    you whether a problem is systemic or a one-off on the page you happened to open."""
+    urls = []
+    st, _, js = get(f"https://{host}/products.json?limit={max(want, 1)}")
+    if st == 200 and js:
+        try:
+            for p in json.loads(js).get("products", [])[:want]:
+                if p.get("handle"):
+                    urls.append((f"https://{host}/products/{p['handle']}",
+                                 p.get("title"),
+                                 (p.get("variants") or [{}])[0].get("price")))
+        except Exception:
+            pass
+    if len(urls) < want:
+        for u in sitemap_product_urls(host, want - len(urls), budget):
+            if all(u != x[0] for x in urls):
+                urls.append((u, None, None))
+    return urls[:want]
+
+
+def sitemap_product_urls(host, want=1, budget=6):
+    seen, queue, found = set(), [], []
+    st, _, robots = get(f"https://{host}/robots.txt")
+    queue += re.findall(r"(?im)^\s*sitemap:\s*(\S+)", robots or "")
+    queue += [f"https://{host}/sitemap.xml", f"https://{host}/sitemap_index.xml",
+              f"https://{host}/product-sitemap.xml",
+              f"https://{host}/sitemap_products_1.xml?from=1&to=999999999"]
+    while queue and budget > 0 and len(found) < want:
+        sm = queue.pop(0)
+        if sm in seen:
+            continue
+        seen.add(sm)
+        budget -= 1
+        st, _, xml = get(sm, timeout=20)
+        if st != 200 or not xml:
+            continue
+        locs = re.findall(r"<loc>\s*([^<\s]+?)\s*</loc>", xml)
+        for u in locs:
+            if PROD_PAT.search(u) and u not in found:
+                found.append(u)
+                if len(found) >= want:
+                    break
+        children = [u for u in locs if u.lower().endswith((".xml", ".xml.gz"))]
+        children.sort(key=lambda u: 0 if re.search(r"product|item|shop", u, re.I) else 1)
+        queue = children[:4] + queue
+    return found
+
+
 def find_product_via_sitemap(host, budget=6):
-    """Walk sitemaps (including sitemap indexes) looking for something product-shaped.
-    Platform-agnostic on purpose: Shopify is only ~3 in 4 of the stores we sampled."""
+    """Single-URL convenience wrapper. Platform-agnostic on purpose: Shopify is only
+    about 3 in 4 of the stores we sampled."""
+    r = sitemap_product_urls(host, 1, budget)
+    return r[0] if r else None
+
+
+def _legacy_find(host, budget=6):
     seen, queue = set(), []
     st, _, robots = get(f"https://{host}/robots.txt")
     queue += re.findall(r"(?im)^\s*sitemap:\s*(\S+)", robots or "")
@@ -359,6 +443,68 @@ def find_product_via_sitemap(host, budget=6):
         children.sort(key=lambda u: 0 if re.search(r"product|item|shop", u, re.I) else 1)
         queue = children[:4] + queue
     return None
+
+
+def check_catalogue(host, rep, n):
+    """Sample n product pages and report whether problems are systemic or one-offs."""
+    say = (lambda *a, **k: None) if rep.quiet else print
+    say(f"\n{C['b']}2. Product pages — sampling {n} across the catalogue{C['x']}")
+    items = find_products(host, want=n)
+    if not items:
+        rep.note("Could not find product pages automatically",
+                 f"Try a single page:  python3 aivis.py {host} --url https://{host}/<product>")
+        return
+    rows, issues = [], {"no_schema": [], "js_injected": [], "thin": [],
+                        "few_meas": [], "title_clash": [], "no_offers": []}
+    for url, _title, _price in items:
+        st, final, html = get(url)
+        if st != 200 or not html:
+            continue
+        a = analyse(html)
+        rows.append((final, a))
+        if a["js_injected"]:
+            issues["js_injected"].append(final)
+        elif not a["product"]:
+            issues["no_schema"].append(final)
+        elif not a.get("offers"):
+            issues["no_offers"].append(final)
+        if a["words"] < 300:
+            issues["thin"].append(final)
+        if len(a["meas"]) < 5:
+            issues["few_meas"].append(final)
+        if a["title"] and a["og"] and titles_agree(a["title"], a["og"]) is False:
+            issues["title_clash"].append(final)
+    if not rows:
+        rep.note("Found product URLs but could not fetch any of them")
+        return
+    t = len(rows)
+    say(f"  {C['d']}checked {t} page(s){C['x']}")
+
+    def report(key, lvl, label, detail):
+        hits = issues[key]
+        if not hits:
+            return
+        frac = f"{len(hits)}/{t} pages"
+        rep.f(lvl, f"{label} ({frac})",
+              detail + "\n" + "\n".join("· " + u for u in hits[:4]) +
+              (f"\n… and {len(hits)-4} more" if len(hits) > 4 else ""))
+
+    report("js_injected", "bad", "Structured data injected by JavaScript",
+           "Invisible to crawlers that don't run JS, while looking perfect in dev tools.")
+    report("no_schema", "bad", "No Product schema in raw HTML",
+           "Nothing hands an assistant unambiguous name/price/availability.")
+    report("no_offers", "warn", "Product schema without an offers object",
+           "No machine-readable price or availability.")
+    report("title_clash", "bad", "<title> contradicts og:title",
+           "The page disagrees with itself about what it sells.")
+    report("thin", "warn", "Under 300 readable words in raw HTML",
+           "Little for an assistant to quote.")
+    report("few_meas", "warn", "Fewer than 5 concrete measurements",
+           "Across 70 brands we scanned the median was 2 — this is the most common gap. "
+           "Assistants repeat facts, not adjectives.")
+    clean = t - len({u for k in issues for u in issues[k]})
+    if clean:
+        rep.f("ok", f"{clean}/{t} pages clean on every check", "")
 
 
 def check_product(host, rep, url=None):
@@ -501,6 +647,9 @@ def main():
         epilog="Example:  python3 aivis.py allbirds.com")
     ap.add_argument("store", help="your store domain, e.g. yourstore.com")
     ap.add_argument("--url", help="a specific product page to check")
+    ap.add_argument("--pages", type=int, default=1, metavar="N",
+                    help="sample N product pages instead of one, and report whether "
+                         "problems are systemic (default: 1)")
     ap.add_argument("--no-color", action="store_true")
     ap.add_argument("--json", action="store_true",
                     help="machine-readable output (for CI)")
@@ -518,7 +667,10 @@ def main():
         print(f"{C['d']}Nothing is uploaded. Reading your public pages directly.{C['x']}")
 
     check_robots(host, rep)
-    check_product(host, rep, args.url)
+    if args.pages > 1 and not args.url:
+        check_catalogue(host, rep, min(args.pages, 25))
+    else:
+        check_product(host, rep, args.url)
 
     if args.json:
         json.dump({"tool": "aivis", "version": __version__, "host": host,

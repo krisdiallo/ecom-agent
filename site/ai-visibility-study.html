@@ -107,9 +107,17 @@ assistant is most likely to want when it compares you to somebody else.</p>
 <code>application/ld+json</code> only inside JavaScript: the structured data is constructed after
 load, so it is perfect in dev tools and absent from what a non-JS crawler receives.
 3 pages served JSON-LD that failed to parse, which consumers skip entirely.</p>
-<p>2 of 49 pages had a <code>&lt;title&gt;</code> that contradicted their own
-<code>og:title</code> — in the clearest case, a bath towel product page whose title announced a
-sheet set. The visible heading was correct, so nothing looks wrong to a human.</p>
+<p>1 of 49 pages had a <code>&lt;title&gt;</code> that contradicted their own
+<code>og:title</code>: a bath towel product page whose title announced a sheet set. The visible
+heading was correct, so nothing looks wrong to a human.</p>
+<p class="note">That figure is deliberately conservative. Earlier versions of this check flagged
+four pages, then three, then two — and each time the extra flags turned out to be legitimate
+variation rather than defects: a store using a different internal product name from its display
+title, a title carrying a bracketed suffix containing a <code>|</code>, and an SEO-style title
+sitting beside a variant-specific <code>og:title</code> ("Women's Dasher NZ Sneakers …" vs
+"Women's Dasher NZ – Blizzard/Deep Navy"). The check now fires only when the two share no
+leading words at all. Telling a healthy store it is broken is a more expensive error than
+missing a marginal case.</p>
 <p>These failures share a property: <strong>every tool an owner would normally check with runs
 JavaScript</strong>, so all of them report success.</p>
 
