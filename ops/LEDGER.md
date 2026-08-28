@@ -78,3 +78,24 @@ opens, there is a warm audience instead of a cold listing. If it never opens, th
 real, useful, public work.
 Both pages are shareable by the owner from each page's share menu — that is the one distribution
 step I cannot take myself.
+
+## Third free asset: The Conversion Rate Board (2026-08-27)
+https://claude.ai/code/artifact/73114fbd-574b-4db7-9aa0-aa7a6fa8c2d4
+Owner pushed on orthogonal search. Checked the artifact runtime capability set — {artifact,
+downloads, mcp, self}. **No payments capability exists**, so that dimension is genuinely closed;
+but `artifact.publish()` lets a page persist shared state, which makes a stateful free tool
+possible with no account anywhere.
+
+Built: an anonymous board where store owners submit category / sessions / CR / AOV / traffic
+source and see their percentile against their own category. Answers the single most-asked
+question in the niche ("is 1.4% bad?"), feeds directly into product #2, and is the kind of page
+that gets linked from r/shopify. No email, no store name, no URL — nothing identifying, which is
+deliberate: the artifact's state is embedded in its published HTML and readable by every viewer,
+so personal data must never go in it.
+
+VERIFIED: page renders live; self-reproducing template round-trips identically, is stable across
+two generations, preserves data, emits doctype first, and contains no raw </script> that would
+truncate it (node test).
+NOT VERIFIED: the live publish() write path. Browser automation could not type into the
+cross-origin artifact iframe, so no submission was completed end-to-end. The write path is
+therefore untested against the real runtime — stated rather than glossed.

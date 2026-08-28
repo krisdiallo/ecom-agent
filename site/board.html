@@ -1,0 +1,183 @@
+<title>The Conversion Rate Board</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
+<div id="app"></div>
+<script id="data" type="application/json">[]</script>
+<script id="src" type="text/plain">
+var STYLE = `
+:root{--paper:#F5F6F8;--card:#FFF;--ink:#14181F;--ink2:#4A535F;--ink3:#7B858F;
+--line:#DCE1E7;--line2:#EDF0F3;--accent:#1C6B58;--soft:#E4EFEB;--warn:#A64C0B;--warnsoft:#F8ECE0;
+--shadow:0 1px 2px rgba(20,24,31,.06),0 4px 16px rgba(20,24,31,.04);}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#101318;--card:#171B22;
+--ink:#E7EAEE;--ink2:#A2ACB8;--ink3:#6E7884;--line:#2A3039;--line2:#21262E;--accent:#5DBBA0;
+--soft:#172A25;--warn:#E09551;--warnsoft:#2A1F14;--shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.25);}}
+:root[data-theme="dark"]{--paper:#101318;--card:#171B22;--ink:#E7EAEE;--ink2:#A2ACB8;--ink3:#6E7884;
+--line:#2A3039;--line2:#21262E;--accent:#5DBBA0;--soft:#172A25;--warn:#E09551;--warnsoft:#2A1F14;
+--shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.25);}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15.5px/1.6 "IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.w{max-width:760px;margin:0 auto;padding:0 22px 80px}
+header{padding:54px 0 28px;border-bottom:1px solid var(--line)}
+.eyebrow{font:500 11px/1 "IBM Plex Mono",monospace;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:13px}
+h1{font:600 clamp(28px,4.5vw,40px)/1.13 "IBM Plex Serif",Georgia,serif;letter-spacing:-.02em;margin:0 0 14px;text-wrap:balance}
+.sub{color:var(--ink2);margin:0;max-width:60ch}
+h2{font:600 12px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:22px;margin-top:24px;box-shadow:var(--shadow)}
+.grid{display:grid;grid-template-columns:1fr;gap:13px}
+@media(min-width:620px){.grid{grid-template-columns:1fr 1fr}}
+.f{display:flex;flex-direction:column;gap:5px}
+label{font-size:13px;font-weight:500}
+select,input{width:100%;font:400 14px/1.5 "IBM Plex Sans",sans-serif;color:var(--ink);background:var(--paper);
+border:1px solid var(--line);border-radius:5px;padding:9px 11px}
+select:focus,input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--soft)}
+button{font:500 14px/1 "IBM Plex Sans",sans-serif;color:var(--card);background:var(--accent);border:0;
+border-radius:5px;padding:11px 20px;cursor:pointer;margin-top:16px}
+button:hover{opacity:.88}button:disabled{opacity:.45;cursor:default}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font:500 11px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;
+color:var(--ink3);padding:0 8px 9px 0;border-bottom:1px solid var(--line)}
+td{padding:9px 8px 9px 0;border-bottom:1px solid var(--line2);font-variant-numeric:tabular-nums;color:var(--ink2)}
+td:first-child{color:var(--ink)}
+.scroll{overflow-x:auto}
+.verdict{font:500 21px/1.35 "IBM Plex Serif",Georgia,serif;color:var(--ink);margin:0 0 8px}
+.verdict em{color:var(--accent);font-style:normal}
+.small{font-size:13.5px;color:var(--ink3)}
+.note{background:var(--warnsoft);border:1px solid color-mix(in srgb,var(--warn) 22%,transparent);
+border-radius:6px;padding:13px 15px;margin-top:22px;font-size:13.5px;color:var(--ink2)}
+.bar{height:5px;background:var(--line2);border-radius:99px;overflow:hidden;margin:10px 0 6px}
+.bar span{display:block;height:100%;background:var(--accent);border-radius:99px}
+footer{margin-top:50px;padding-top:22px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink3)}
+`;
+
+var CATS=["Apparel & accessories","Home & furniture","Beauty & personal care","Food & drink",
+"Electronics & gadgets","Health & supplements","Jewellery","Pet","Sports & outdoors",
+"Toys & baby","Digital products","Other"];
+var SESS=["under 1k","1k-5k","5k-20k","20k-100k","100k+"];
+var SRCS=["Organic search","Paid social","Paid search","Email","Social organic","Marketplace","Direct/repeat"];
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function med(a){if(!a.length)return null;var b=a.slice().sort(function(x,y){return x-y});
+var m=Math.floor(b.length/2);return b.length%2?b[m]:(b[m-1]+b[m])/2;}
+
+function getData(){try{return JSON.parse(document.getElementById("data").textContent)||[]}catch(e){return[]}}
+
+function buildDoc(rows){
+  var src=document.getElementById("src").textContent;
+  return '<!doctype html><html><head><meta charset="utf-8">'
+    +'<meta name="viewport" content="width=device-width,initial-scale=1">'
+    +'<title>The Conversion Rate Board<\/title>'
+    +'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">'
+    +'<\/head><body><div id="app"><\/div>'
+    +'<script id="data" type="application/json">'+JSON.stringify(rows)+'<\/script>'
+    +'<script id="src" type="text/plain">'+src+'<\/script>'
+    +'<script>eval(document.getElementById("src").textContent)<\/script>'
+    +'<\/body><\/html>';
+}
+
+var readOnly=false, mine=null;
+
+function render(){
+  var rows=getData();
+  var s=document.createElement("style"); s.textContent=STYLE;
+  var app=document.getElementById("app");
+  app.innerHTML="";
+  document.head.appendChild(s);
+
+  var byCat={};
+  rows.forEach(function(r){ (byCat[r.c]=byCat[r.c]||[]).push(r.cr); });
+  var cats=Object.keys(byCat).sort(function(a,b){return byCat[b].length-byCat[a].length});
+
+  var verdict="";
+  if(mine){
+    var peers=(byCat[mine.c]||[]).slice();
+    var below=peers.filter(function(v){return v<mine.cr}).length;
+    var pct=peers.length>1?Math.round(below/(peers.length-1)*100):null;
+    verdict='<div class="card"><h2>Your result</h2>'
+      +'<p class="verdict">'+(pct===null
+        ? 'You are the first '+esc(mine.c)+' store on the board.'
+        : 'Your '+mine.cr.toFixed(2)+'% beats <em>'+pct+'%</em> of '+esc(mine.c)+' stores here.')
+      +'</p>'
+      +(pct===null?'<p class="small">Come back once a few more join, or share it with someone in your category.</p>'
+        :'<div class="bar"><span style="width:'+pct+'%"></span></div>'
+         +'<p class="small">'+peers.length+' '+esc(mine.c)+' '+(peers.length===1?'store':'stores')+' submitted. '
+         +'Median '+med(peers).toFixed(2)+'%.</p>')
+      +'</div>';
+  }
+
+  var table="";
+  if(cats.length){
+    table='<div class="card"><h2>Median by category</h2><div class="scroll"><table><thead><tr>'
+      +'<th>Category</th><th>Median CR</th><th>Median AOV</th><th>Stores</th></tr></thead><tbody>';
+    cats.forEach(function(c){
+      var crs=byCat[c];
+      var aovs=rows.filter(function(r){return r.c===c&&r.aov}).map(function(r){return r.aov});
+      table+='<tr><td>'+esc(c)+'</td><td>'+med(crs).toFixed(2)+'%</td><td>'
+        +(aovs.length?'$'+med(aovs).toFixed(0):'—')+'</td><td>'+crs.length+'</td></tr>';
+    });
+    table+='</tbody></table></div><p class="small" style="margin-top:12px">'
+      +'A median over a handful of stores is a hint, not a benchmark. Read it as "am I wildly off?", '
+      +'not as a target.</p></div>';
+  }
+
+  var form=readOnly?'<div class="card"><h2>Read-only</h2><p class="small">'
+      +'This view can read the board but not add to it.</p></div>'
+    :'<div class="card"><h2>Add yours — anonymous</h2><div class="grid">'
+      +'<div class="f"><label for="c">Category</label><select id="c">'
+        +CATS.map(function(x){return '<option>'+esc(x)+'</option>'}).join("")+'</select></div>'
+      +'<div class="f"><label for="s">Monthly sessions</label><select id="s">'
+        +SESS.map(function(x){return '<option>'+esc(x)+'</option>'}).join("")+'</select></div>'
+      +'<div class="f"><label for="cr">Conversion rate %</label>'
+        +'<input id="cr" type="number" step="0.01" min="0" max="100" placeholder="1.40"></div>'
+      +'<div class="f"><label for="aov">Average order value $</label>'
+        +'<input id="aov" type="number" step="1" min="0" placeholder="61"></div>'
+      +'<div class="f"><label for="t">Main traffic source</label><select id="t">'
+        +SRCS.map(function(x){return '<option>'+esc(x)+'</option>'}).join("")+'</select></div>'
+      +'</div><button id="go">Add and see where I land</button>'
+      +'<p class="small" style="margin-top:10px">No email, no store name, no URL. Nothing here identifies you.</p></div>';
+
+  app.innerHTML='<div class="w"><header><div class="eyebrow">Free · anonymous · '+rows.length+' stores</div>'
+    +'<h1>Is 1.4% bad?</h1>'
+    +'<p class="sub">Every store owner asks it and the honest answer is "compared to what?". '
+    +'Published benchmarks are vendor marketing. This is a pile of self-reported numbers from '
+    +'people in the same position as you — worse than a real study, better than a vendor blog.</p>'
+    +'</header>'+verdict+form+table
+    +'<div class="note"><b>How to read this.</b> Self-reported, unverified, and small. '
+    +'It cannot tell you your page is broken — only whether you are wildly outside your category. '
+    +'Your own trend over time beats every number here: a store going 1.2% to 1.6% is winning '
+    +'no matter what the median says.</div>'
+    +'<footer>Built by an AI agent running a business on a $1,000 budget, in public. '
+    +'The board is free and stays free.</footer></div>';
+
+  var go=document.getElementById("go");
+  if(go) go.addEventListener("click",submit);
+}
+
+function submit(){
+  var cr=parseFloat(document.getElementById("cr").value);
+  if(!(cr>0&&cr<=100)){document.getElementById("cr").focus();return;}
+  var aov=parseFloat(document.getElementById("aov").value);
+  var entry={c:document.getElementById("c").value,s:document.getElementById("s").value,
+    cr:Math.round(cr*100)/100,aov:aov>0?Math.round(aov):null,
+    t:document.getElementById("t").value,ts:Date.now()};
+  var btn=document.getElementById("go");
+  btn.disabled=true; btn.textContent="Saving…";
+  var rows=getData(); rows.push(entry);
+  mine=entry;
+  try{sessionStorage.setItem("crb.mine",JSON.stringify(entry));}catch(e){}
+  claude.use("artifact").then(function(a){
+    if(!a){readOnly=true;btn.disabled=false;render();return;}
+    return a.publish(buildDoc(rows)).then(function(){
+      document.getElementById("data").textContent=JSON.stringify(rows);
+      render();
+    },function(err){
+      if(err&&(err.code==="not_writer"||err.code==="not_granted")){readOnly=true;}
+      else if(err&&err.code==="conflict"){return;}
+      btn.disabled=false; render();
+    });
+  },function(){readOnly=true;btn.disabled=false;render();});
+}
+
+try{var m=sessionStorage.getItem("crb.mine"); if(m) mine=JSON.parse(m);}catch(e){}
+render();
+</script>
+<script>eval(document.getElementById("src").textContent)</script>
