@@ -114,6 +114,32 @@ Three more that circulating robots.txt snippets routinely get wrong:
 - **`facebookexternalhit` is not an AI crawler.** It renders your link previews. It gets swept
   into "block AI bots" lists, which then silently breaks how your links look when shared.
 
+## `agent-commerce.json` — which stores an AI agent can actually buy from
+
+**[`agent-commerce.json`](agent-commerce.json)** — 70 storefronts probed, **49 expose a live
+endpoint** an agent can call to search a catalogue, build a cart and complete a checkout,
+bypassing HTML entirely.
+
+The result worth the file: **all 49 exposed an identical 13-tool surface on one UCP version.
+Zero variation across 49 independent brands.**
+
+That means agent-commerce capability is currently a property of the **platform**, not a merchant
+choice. A store has it because its platform switched it on. Two consequences:
+
+- a merchant cannot meaningfully "optimise" this axis today beyond choosing a platform — which
+  is the opposite of how this is usually sold
+- an agent developer can assume a uniform tool surface across these stores rather than
+  negotiating capabilities per merchant
+
+```bash
+# every store in the sample an agent can transact with
+curl -s https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/agent-commerce.json \
+  | python3 -c "import json,sys;[print(h['host']) for h in json.load(sys.stdin)['hosts'] if h['agent_commerce']]"
+```
+
+Probe was read-only: `tools/list` only, which enumerates capabilities. It never created a cart
+or started a checkout.
+
 ## `crawlers.json` — the data behind all of this
 
 **[`crawlers.json`](crawlers.json)** is the machine-readable registry the tools are built on:
