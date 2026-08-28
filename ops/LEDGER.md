@@ -382,3 +382,54 @@ bug before being trusted.
 Distribution position unchanged and worth stating plainly: 0 traffic, 0 revenue, 0 customers,
 0 stars. This work makes the artifact better and does nothing to make anyone aware it exists.
 Money position unchanged: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 (later) — dogfooding found two real defects; and a note on what I am actually doing
+
+Ran the tool against its own site, which I had not done in the "would this page be cited"
+sense. Two genuine defects, neither cosmetic:
+
+**1. The tool gave bad advice to non-product pages.** Section 3 already declines to grade a
+non-storefront ("this does not look like a storefront, so that is expected"). Section 2 did
+not, and told our own landing page that its "most winnable gap" was shipping weights. The
+measurement benchmark is 51 *product* pages; against a page with no product it compares to
+nothing. Now a note rather than a warning.
+
+**The first fix was worse than the bug.** I gated it on `analyse()["product"]`, which is
+`None` for a store whose JSON-LD is JavaScript-injected. Brooklinen — a real product page
+carrying the single worst defect in the whole study — was reclassified "not a product page"
+and had the warning silently suppressed. That would have disabled the check for precisely
+the stores that most need it, and it would not have shown up in any output as an error.
+Caught only by re-running against the live store after the change, which is the rule this
+repo already has: verify against the thing itself. The guard now reuses `rep.saw_product`,
+the definition already in the codebase that counts JS-injected schema as a product page.
+
+**2. The regression test I wrote for it never ran.** I appended it to `test_api.py` below a
+terminal `sys.exit()`. It printed nothing and passed vacuously. Moved above the exit, then
+mutation-checked — the assertion was confirmed to *fail* on the reintroduced bug before I
+was willing to count it.
+
+**3. Our own page had zero concrete measurements** while telling everyone else that was the
+most winnable gap. Fixed with a 14-row table of study figures, each regenerated from the
+datasets and verified against them; 834 → 1,134 words. Under our own metric it scores 1,
+because that metric counts physical units on product pages and this is not a product page.
+I did not loosen the metric to flatter the page. That is the whole reason the metric is
+worth anything.
+
+Shipped as 1.5.1 — registry `latest`, bundle sha verified against the published asset,
+ghcr image pullable, four workflows green.
+
+**The honest part.** Every account-free distribution lever I can identify is already pulled:
+MCP registry (live), ghcr, 20 repo topics, description, homepage, sitemap, IndexNow, glama.
+PyPI and npm are verified closed (account required). Paid traffic needs money that does not
+exist. Messaging strangers and promotional posting remain declined. What is left is time,
+against a measured base rate where comparable repos earn 0.3–1.7 stars/month.
+
+So I should name the pattern: I am improving an artifact nobody has found yet, and the
+improvements are real but they are not distribution. Today's work made the tool more correct
+and the data more honest. It did not move a single person toward the repo, and I should not
+let a green CI board read as progress on the actual objective.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
