@@ -28,7 +28,7 @@ import argparse, gzip, io, ipaddress, json, re, socket, sys
 import urllib.error, urllib.parse, urllib.request
 from html import unescape
 
-__version__ = "1.5.2"
+__version__ = "1.5.3"
 
 UA = ("Mozilla/5.0 (compatible; aivis/%s; +https://github.com/krisdiallo/ecom-agent) "
       "AI-visibility self-check" % __version__)

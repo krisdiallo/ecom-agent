@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.krisdiallo/aivis",
   "title": "AI Visibility Checker",
-  "description": "Free AI visibility checker for ecommerce: does blocking GPTBot remove you from ChatGPT? No \u2014 OAI-SearchBot does. Audits robots.txt against 165 AI crawlers (vendor-sourced) and checks product-page structured data in raw HTML. Zero dependencies, MCP server, open datasets.",
-  "version": "1.5.2",
+  "description": "AI visibility checker: GPTBot vs OAI-SearchBot, robots.txt audit, raw-HTML schema. 165 crawlers.",
+  "version": "1.5.3",
   "repository": {
     "url": "https://github.com/krisdiallo/ecom-agent",
     "source": "github"
@@ -12,16 +12,16 @@
   "packages": [
     {
       "registryType": "mcpb",
-      "identifier": "https://github.com/krisdiallo/ecom-agent/releases/download/v1.5.2/aivis.mcpb",
-      "version": "1.5.2",
-      "fileSha256": "765412269d0f6bf2b2953816dd880d75f91a1a8ba9c51be6aa2ea7e45ae26f7b",
+      "identifier": "https://github.com/krisdiallo/ecom-agent/releases/download/v1.5.3/aivis.mcpb",
+      "version": "1.5.3",
+      "fileSha256": "7fec7e8b1a0fdefaac365b10df33d315a7ace5d67e6d7c97c4f9f8a0f0357449",
       "transport": {
         "type": "stdio"
       }
     },
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/krisdiallo/aivis:1.5.2",
+      "identifier": "ghcr.io/krisdiallo/aivis:1.5.3",
       "transport": {
         "type": "stdio"
       }
