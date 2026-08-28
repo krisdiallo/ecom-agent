@@ -1,0 +1,64 @@
+# WordPress/WooCommerce robots.txt — search-safe AI crawler rules
+#
+# Place at the root of your WordPress installation (or via Yoast/RankMath robots.txt editor).
+# BLOCKS training crawlers, ALLOWS search/answer crawlers.
+#
+# Verified against 165 vendor-sourced crawlers.
+# See: https://github.com/krisdiallo/ecom-agent/blob/main/crawlers.json
+
+# ---- TRAINING CRAWLERS: block ----
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+# ---- SEARCH/ANSWER CRAWLERS: allow ----
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Amzn-SearchBot
+Allow: /
+
+User-agent: Amzn-User
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# ---- WORDPRESS-SPECIFIC PATHS ----
+User-agent: *
+Disallow: /wp-admin/
+Disallow: /wp-includes/
+Disallow: /wp-login.php
+Disallow: /?p=
+
+# Sitemap (Yoast/RankMath generates this)
+# Sitemap: https://YOUR-DOMAIN.com/sitemap_index.xml

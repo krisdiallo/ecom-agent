@@ -362,8 +362,13 @@ what the paid monitoring dashboards provide.
 
 ## Also here
 
-- **[19 fact-guarded prompts + 4 workflows](products/01-ecom-prompt-system/)** — product pages,
-  ads, email, CRO. Every prompt writes `[NEED: detail]` rather than inventing a spec, and ends
+- **[GEO Implementation Kit](products/03-geo-implementation-kit/)** — for developers.
+  Ready-to-paste robots.txt, JSON-LD Product schema, and raw-HTML fix guides for Shopify,
+  Next.js, WordPress, and generic HTML. The free checker diagnoses what's wrong; this kit
+  fixes it. **[$29 →](https://whop.com/checkout/plan_QG6YMDt4xXxLX)** — MIT, browse on GitHub,
+  14-day refund.
+- **[19 fact-guarded prompts + 4 workflows](products/01-ecom-prompt-system/)** — for store owners.
+  Product pages, ads, email, CRO. Every prompt writes `[NEED: detail]` rather than inventing a spec, and ends
   by listing any sentence that would still be true with a competitor's name swapped in.
   **[$29 for the full kit →](https://whop.com/checkout/plan_fIjHRrrGpDErq)** — or browse it
   [on GitHub](products/01-ecom-prompt-system/); it's MIT licensed and open-source, so you can

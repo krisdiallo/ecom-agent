@@ -1,0 +1,35 @@
+{%- comment -%}
+  JSON-LD Product schema for Shopify — server-rendered, not JS-injected.
+
+  Place this in your product template (snippets/product.liquid or the main product
+  template in your theme). It renders Product schema in the raw HTML, where AI
+  crawlers can read it — NOT in a client-side script that only runs after JS.
+
+  This is the fix for the #1 defect found in the 70-brand survey:
+  structured data injected by JavaScript is invisible to AI crawlers.
+{%- endcomment -%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | strip_html | truncate: 300 | json }},
+  "sku": {{ product.selected_or_first_available_variant.sku | json }},
+  "brand": {
+    "@type": "Brand",
+    "name": {{ product.vendor | json }}
+  },
+  {%- if product.featured_image -%}
+  "image": "https:{{ shop.secure_url }}{{ product.featured_image | image_url: width: 1024 }}",
+  {%- endif -%}
+  "offers": {
+    "@type": "Offer",
+    "price": {{ product.selected_or_first_available_variant.price | money_without_currency | json }},
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+    "url": "{{ shop.secure_url }}{{ product.url }}",
+    "itemCondition": "https://schema.org/NewCondition"
+  }
+}
+</script>
