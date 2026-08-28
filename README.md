@@ -37,17 +37,43 @@ consequences:
 
 | Kind | Tokens | If you block it |
 |---|---|---|
-| **Search / answer** | `OAI-SearchBot` `PerplexityBot` `Claude-SearchBot` `Claude-User` | **You disappear from AI answers.** |
-| **Training** | `GPTBot` `ClaudeBot` `Google-Extended` `CCBot` | Nothing changes in recommendations. A legitimate choice. |
+| **Search / answer** | `OAI-SearchBot` `PerplexityBot` `Claude-SearchBot` `Claude-User` `Amzn-SearchBot` `Amzn-User` `Applebot` | **You disappear from AI answers.** |
+| **Training** | `GPTBot` `ClaudeBot` `Google-Extended` `CCBot` `Amazonbot` `Applebot-Extended` `meta-externalagent` | Nothing changes in recommendations. A legitimate choice. |
 
 **Blocking `GPTBot` does not remove you from ChatGPT's recommendations.** `OAI-SearchBot` is
-the token that does. The "block AI scrapers" wave conflated these, and a lot of stores opted
-out of training thinking they were protecting something else.
+the token that does. The "block AI scrapers" wave conflated these, and a lot of sites opted out
+of training thinking they were protecting something else.
 
-Every token above was read from the vendor's own documentation — OpenAI states `OAI-SearchBot`
-is "used to surface sites in ChatGPT's search results"; Perplexity states `PerplexityBot` "is
-not used to crawl content for AI foundation models"; Google states `Google-Extended` "does not
-impact a site's inclusion in Google Search."
+Three more that circulating robots.txt snippets routinely get wrong:
+
+- **`Amazonbot` vs `Amzn-SearchBot`.** Amazon splits the roles. `Amazonbot` "may be used to
+  train Amazon AI models"; `Amzn-SearchBot` is what makes you "eligible to appear in search
+  experiences such as Alexa" and "does not crawl content for generative AI model training."
+  Most guides name only the first. Block the wrong one and you lose Alexa for nothing.
+- **`Applebot-Extended` does not crawl anything.** It is purely an opt-out signal. Apple states
+  pages that disallow it "can still be included in search results."
+- **`facebookexternalhit` is not an AI crawler.** It renders your link previews. It gets swept
+  into "block AI bots" lists, which then silently breaks how your links look when shared.
+
+## `crawlers.json` — the data behind all of this
+
+**[`crawlers.json`](crawlers.json)** is the machine-readable registry the tools are built on:
+19 tokens, each with its vendor, purpose, what blocking it actually does, whether it honours
+robots.txt, **the vendor's own words, a source URL, and the date it was checked.**
+
+```bash
+# every token whose blocking removes you from AI answers
+curl -s https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/crawlers.json \
+  | python3 -c "import json,sys;[print(c['token']) for c in json.load(sys.stdin)['crawlers'] \
+    if c['blocking_effect']=='removes_from_ai_answers']"
+```
+
+Three entries (`CCBot`, `Bytespider`, `Amazonbot`'s siblings aside) could not be tied to a
+first-party quote; those carry an explicit `verification` flag rather than being dressed up as
+sourced. `research/test_consistency.py` fails the build if the CLI and the registry ever
+disagree — which is how the Amazon misclassification above was caught before publication.
+
+MIT. Use it in your own tool; a link back is welcome but not required.
 
 ## What it checks
 

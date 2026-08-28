@@ -37,6 +37,9 @@ SEARCH_BOTS = [
     ("PerplexityBot", "Perplexity results"),
     ("Claude-SearchBot", "Claude search quality"),
     ("Claude-User", "Claude user-initiated retrieval"),
+    ("Amzn-SearchBot", "Alexa / Amazon search experiences"),
+    ("Amzn-User", "Alexa live query fetches"),
+    ("Applebot", "Spotlight, Siri, Safari"),
 ]
 TRAIN_BOTS = [
     ("GPTBot", "OpenAI training"), ("ClaudeBot", "Anthropic training"),

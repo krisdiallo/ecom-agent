@@ -1,0 +1,271 @@
+{
+  "$schema": "https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/crawlers.schema.json",
+  "name": "ai-crawlers",
+  "version": "1.0.0",
+  "updated": "2026-08-28",
+  "license": "MIT",
+  "homepage": "https://github.com/krisdiallo/ecom-agent",
+  "about": "Every AI crawler token below carries the vendor's own wording and the date it was checked. The field that matters is blocking_effect: blocking a search crawler removes you from AI answers, blocking a training crawler does not. Most published advice, and most robots.txt 'block AI' snippets, treat these as one thing. They are opposite decisions.",
+  "enums": {
+    "purpose": {
+      "search": "Indexes or retrieves pages so the assistant can surface and cite them.",
+      "training": "Collects content for training foundation models.",
+      "user_initiated": "Fetches a page because a user asked for it, in real time.",
+      "preview": "Generates link previews / unfurls.",
+      "ads": "Validates advertiser landing pages."
+    },
+    "blocking_effect": {
+      "removes_from_ai_answers": "Blocking this makes you ineligible to be surfaced or cited by that assistant.",
+      "opts_out_of_training_only": "Blocking this has no effect on whether you are recommended today.",
+      "may_be_ignored": "Vendor states robots.txt may not apply, because the fetch is user-initiated.",
+      "breaks_link_previews": "Blocking this degrades how shared links render.",
+      "blocks_ad_review": "Blocking this can interfere with ad landing-page review."
+    }
+  },
+  "crawlers": [
+    {
+      "token": "OAI-SearchBot",
+      "vendor": "OpenAI",
+      "product": "ChatGPT search",
+      "purpose": "search",
+      "blocking_effect": "removes_from_ai_answers",
+      "respects_robots_txt": true,
+      "source_quote": "used to surface sites in ChatGPT's search results",
+      "source": "https://developers.openai.com/api/docs/bots",
+      "verified": "2026-08-28"
+    },
+    {
+      "token": "GPTBot",
+      "vendor": "OpenAI",
+      "product": "foundation model training",
+      "purpose": "training",
+      "blocking_effect": "opts_out_of_training_only",
+      "respects_robots_txt": true,
+      "source_quote": "may be used in training our generative AI foundation models",
+      "source": "https://developers.openai.com/api/docs/bots",
+      "verified": "2026-08-28",
+      "note": "Blocking GPTBot does NOT remove you from ChatGPT recommendations. This is the single most common misunderstanding in the category."
+    },
+    {
+      "token": "ChatGPT-User",
+      "vendor": "OpenAI",
+      "product": "ChatGPT browsing / GPT Actions",
+      "purpose": "user_initiated",
+      "blocking_effect": "may_be_ignored",
+      "respects_robots_txt": false,
+      "source_quote": "not used for crawling the web in an automatic fashion",
+      "source": "https://developers.openai.com/api/docs/bots",
+      "verified": "2026-08-28",
+      "note": "Vendor states robots.txt rules may not apply, and it does not control Search appearance."
+    },
+    {
+      "token": "OAI-AdsBot",
+      "vendor": "OpenAI",
+      "product": "ChatGPT ads review",
+      "purpose": "ads",
+      "blocking_effect": "blocks_ad_review",
+      "respects_robots_txt": true,
+      "source_quote": "only visits pages submitted as ads",
+      "source": "https://developers.openai.com/api/docs/bots",
+      "verified": "2026-08-28"
+    },
+    {
+      "token": "Claude-SearchBot",
+      "vendor": "Anthropic",
+      "product": "Claude search",
+      "purpose": "search",
+      "blocking_effect": "removes_from_ai_answers",
+      "respects_robots_txt": true,
+      "source_quote": "navigates the web to improve search result quality for users",
+      "source": "https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler",
+      "verified": "2026-08-28"
+    },
+    {
+      "token": "Claude-User",
+      "vendor": "Anthropic",
+      "product": "Claude user requests",
+      "purpose": "user_initiated",
+      "blocking_effect": "removes_from_ai_answers",
+      "respects_robots_txt": true,
+      "source_quote": "supports Claude AI users",
+      "source": "https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler",
+      "verified": "2026-08-28",
+      "note": "Unlike OpenAI's and Perplexity's user-initiated agents, Anthropic documents this one as honoring robots.txt, and states blocking it may reduce visibility for user-directed web search."
+    },
+    {
+      "token": "ClaudeBot",
+      "vendor": "Anthropic",
+      "product": "foundation model training",
+      "purpose": "training",
+      "blocking_effect": "opts_out_of_training_only",
+      "respects_robots_txt": true,
+      "source_quote": "collecting web content that could potentially contribute to their training",
+      "source": "https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler",
+      "verified": "2026-08-28"
+    },
+    {
+      "token": "PerplexityBot",
+      "vendor": "Perplexity",
+      "product": "Perplexity search",
+      "purpose": "search",
+      "blocking_effect": "removes_from_ai_answers",
+      "respects_robots_txt": true,
+      "source_quote": "is not used to crawl content for AI foundation models",
+      "source": "https://docs.perplexity.ai/guides/bots",
+      "verified": "2026-08-28",
+      "note": "Designed to surface and link websites in Perplexity search results."
+    },
+    {
+      "token": "Perplexity-User",
+      "vendor": "Perplexity",
+      "product": "Perplexity user actions",
+      "purpose": "user_initiated",
+      "blocking_effect": "may_be_ignored",
+      "respects_robots_txt": false,
+      "source_quote": "generally ignores robots.txt rules",
+      "source": "https://docs.perplexity.ai/guides/bots",
+      "verified": "2026-08-28"
+    },
+    {
+      "token": "Google-Extended",
+      "vendor": "Google",
+      "product": "Gemini training and grounding",
+      "purpose": "training",
+      "blocking_effect": "opts_out_of_training_only",
+      "respects_robots_txt": true,
+      "source_quote": "does not impact a site's inclusion in Google Search nor is it used as a ranking signal in Google Search",
+      "source": "https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers",
+      "verified": "2026-08-28",
+      "note": "Has no distinct HTTP user agent; it functions purely as a robots.txt control token. Google's documentation does not address AI Overviews, so no claim is made here either way."
+    },
+    {
+      "token": "Googlebot",
+      "vendor": "Google",
+      "product": "Google Search",
+      "purpose": "search",
+      "blocking_effect": "removes_from_ai_answers",
+      "respects_robots_txt": true,
+      "source_quote": "affects Search, Discover, Images, Video, News, and other products",
+      "source": "https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers",
+      "verified": "2026-08-28",
+      "note": "Included because conventional search still handles the overwhelming majority of shopping queries. Blocking it is far more damaging than any AI-specific token."
+    },
+    {
+      "token": "Applebot",
+      "vendor": "Apple",
+      "product": "Spotlight, Siri, Safari, Apple Intelligence",
+      "purpose": "search",
+      "blocking_effect": "removes_from_ai_answers",
+      "respects_robots_txt": true,
+      "source_quote": "powers search features across Apple's ecosystem",
+      "source": "https://support.apple.com/en-us/119829",
+      "verified": "2026-08-28",
+      "note": "Blocking Applebot removes you from Spotlight, Siri and Safari suggestions, not only from AI answers."
+    },
+    {
+      "token": "Applebot-Extended",
+      "vendor": "Apple",
+      "product": "Apple foundation model training opt-out",
+      "purpose": "training",
+      "blocking_effect": "opts_out_of_training_only",
+      "respects_robots_txt": true,
+      "source_quote": "Applebot-Extended does not crawl webpages. Webpages that disallow Applebot-Extended can still be included in search results.",
+      "source": "https://support.apple.com/en-us/119829",
+      "verified": "2026-08-28",
+      "note": "Not a crawler at all — it exists purely as an opt-out signal. Blocking it costs nothing in visibility."
+    },
+    {
+      "token": "meta-externalagent",
+      "vendor": "Meta",
+      "product": "Meta AI training and indexing",
+      "purpose": "training",
+      "blocking_effect": "opts_out_of_training_only",
+      "respects_robots_txt": true,
+      "source_quote": "crawls the web for use cases such as training foundation AI models or improving products by indexing content directly",
+      "source": "https://developers.facebook.com/docs/sharing/webmasters/web-crawlers/",
+      "verified": "2026-08-28"
+    },
+    {
+      "token": "meta-externalfetcher",
+      "vendor": "Meta",
+      "product": "Meta agentic AI live fetch",
+      "purpose": "user_initiated",
+      "blocking_effect": "may_be_ignored",
+      "respects_robots_txt": false,
+      "source_quote": "may bypass robots.txt rules",
+      "source": "https://developers.facebook.com/docs/sharing/webmasters/web-crawlers/",
+      "verified": "2026-08-28",
+      "note": "Fetches individual links at a user's request, supporting agentic AI completing tasks for users."
+    },
+    {
+      "token": "facebookexternalhit",
+      "vendor": "Meta",
+      "product": "link previews on Facebook, Instagram, Messenger",
+      "purpose": "preview",
+      "blocking_effect": "breaks_link_previews",
+      "respects_robots_txt": true,
+      "source_quote": "might bypass robots.txt when performing security or integrity checks",
+      "source": "https://developers.facebook.com/docs/sharing/webmasters/web-crawlers/",
+      "verified": "2026-08-28",
+      "note": "Not an AI crawler. Listed because it is frequently swept up in 'block AI bots' robots.txt snippets, which then silently breaks how your links render when shared."
+    },
+    {
+      "token": "CCBot",
+      "vendor": "Common Crawl",
+      "product": "Common Crawl corpus",
+      "purpose": "training",
+      "blocking_effect": "opts_out_of_training_only",
+      "respects_robots_txt": true,
+      "source": "https://commoncrawl.org/ccbot",
+      "verified": "2026-08-28",
+      "verification": "listed_by_operator",
+      "note": "Not itself an AI vendor. Its archive is widely used as a training corpus, which is why blocking it is a common training opt-out."
+    },
+    {
+      "token": "Bytespider",
+      "vendor": "ByteDance",
+      "product": "ByteDance AI",
+      "purpose": "training",
+      "blocking_effect": "opts_out_of_training_only",
+      "respects_robots_txt": true,
+      "verified": "2026-08-28",
+      "verification": "observed_not_vendor_documented",
+      "note": "Widely observed in server logs and commonly included in AI opt-out lists. We could not locate first-party vendor documentation stating its purpose, so this entry is marked as unverified rather than presented as sourced."
+    },
+    {
+      "token": "Amazonbot",
+      "vendor": "Amazon",
+      "product": "Amazon products and services",
+      "purpose": "training",
+      "blocking_effect": "opts_out_of_training_only",
+      "respects_robots_txt": true,
+      "source_quote": "Amazonbot is used to improve our products and services. This helps us provide more accurate information to customers and may be used to train Amazon AI models.",
+      "source": "https://developer.amazon.com/amazonbot",
+      "verified": "2026-08-28",
+      "note": "An earlier draft of this file classified Amazonbot as a search crawler. That was wrong: Amazon splits the roles across three tokens, and Alexa search indexing belongs to Amzn-SearchBot, not this one."
+    },
+    {
+      "token": "Amzn-SearchBot",
+      "vendor": "Amazon",
+      "product": "Amazon and Alexa search experiences",
+      "purpose": "search",
+      "blocking_effect": "removes_from_ai_answers",
+      "respects_robots_txt": true,
+      "source_quote": "to improve search experiences in Amazon products and services ... does not crawl content for generative AI model training",
+      "source": "https://developer.amazon.com/amazonbot",
+      "verified": "2026-08-28",
+      "note": "This is the token that makes content eligible to appear in search experiences such as Alexa. Blocking it costs you Alexa visibility. It is frequently missing from 'block AI bots' guides, which name only Amazonbot."
+    },
+    {
+      "token": "Amzn-User",
+      "vendor": "Amazon",
+      "product": "Alexa live query fetches",
+      "purpose": "user_initiated",
+      "blocking_effect": "removes_from_ai_answers",
+      "respects_robots_txt": true,
+      "source_quote": "supports user actions, such as responding to Alexa queries that require up-to-date information ... does not crawl content for generative AI model training",
+      "source": "https://developer.amazon.com/amazonbot",
+      "verified": "2026-08-28"
+    }
+  ]
+}

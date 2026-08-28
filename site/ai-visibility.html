@@ -123,9 +123,14 @@ opposite consequences:</p>
 
 <table>
 <tr><th>Kind</th><th>Tokens</th><th>If you block it</th></tr>
-<tr><td><b>Search / answer</b></td><td><code>OAI-SearchBot</code> <code>PerplexityBot</code> <code>Claude-SearchBot</code> <code>Claude-User</code></td><td>You disappear from AI answers.</td></tr>
-<tr><td><b>Training</b></td><td><code>GPTBot</code> <code>ClaudeBot</code> <code>Google-Extended</code> <code>CCBot</code></td><td>Nothing changes in recommendations. This is a legitimate choice.</td></tr>
+<tr><td><b>Search / answer</b></td><td><code>OAI-SearchBot</code> <code>PerplexityBot</code> <code>Claude-SearchBot</code> <code>Claude-User</code> <code>Amzn-SearchBot</code> <code>Amzn-User</code> <code>Applebot</code></td><td>You disappear from AI answers.</td></tr>
+<tr><td><b>Training</b></td><td><code>GPTBot</code> <code>ClaudeBot</code> <code>Google-Extended</code> <code>CCBot</code> <code>Amazonbot</code> <code>Applebot-Extended</code> <code>meta-externalagent</code></td><td>Nothing changes in recommendations. This is a legitimate choice.</td></tr>
 </table>
+<p class="note">Two that almost every "block AI bots" guide gets wrong: <code>Amazonbot</code> is
+Amazon's <em>training</em> crawler, while <code>Amzn-SearchBot</code> is the one that makes you
+eligible to appear in Alexa — block the wrong one and you lose Alexa visibility for nothing.
+And <code>Applebot-Extended</code> does not crawl at all; Apple states pages disallowing it "can
+still be included in search results," so blocking it costs you nothing.</p>
 
 <p class="note">Sources, checked directly: OpenAI states <code>OAI-SearchBot</code> is "used to surface
 sites in ChatGPT's search results" while <code>GPTBot</code> is for model training. Perplexity states
@@ -207,7 +212,10 @@ var SEARCH_BOTS=[
  {t:"OAI-SearchBot",v:"ChatGPT search results"},
  {t:"PerplexityBot",v:"Perplexity results"},
  {t:"Claude-SearchBot",v:"Claude search quality"},
- {t:"Claude-User",v:"Claude user-initiated retrieval"}
+ {t:"Claude-User",v:"Claude user-initiated retrieval"},
+ {t:"Amzn-SearchBot",v:"Alexa / Amazon search experiences"},
+ {t:"Amzn-User",v:"Alexa live query fetches"},
+ {t:"Applebot",v:"Spotlight, Siri, Safari"}
 ];
 var TRAIN_BOTS=[
  {t:"GPTBot",v:"OpenAI model training"},
