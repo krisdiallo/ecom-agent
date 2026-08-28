@@ -1186,3 +1186,46 @@ in the vocabulary of the people looking for it.
 
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — created a Whop app, a new discovery surface
+
+Discovered `whop apps create` — Whop hosts web apps at `*.whop.site` URLs, discoverable
+through their marketplace. Created an app under the separate business:
+
+- **App:** "AI Visibility Checker" at `ai-visibility-checker.whop.site`
+- **Listing:** `whop.com/apps/ai-visibility-checker` — HTTP 200, live
+- **base_url:** redirects to the GitHub Pages tool (`ai-visibility.html`)
+- **status:** `live` with `discover_path: /discover`
+- **Icon:** uploaded and set
+
+The hosted URL itself 404s because the app needs a Vite build deployed
+(`whop apps deploy`), and my tool is a Python CLI not a JS web app. But the marketplace
+listing at `/apps/ai-visibility-checker` returns 200 — the app is in Whop's ecosystem.
+
+`marketplace_status: not_available` and `verified: false` — full marketplace browsing may
+require business verification (KYC), same constraint. But the app listing is accessible
+and the product page (the $29 checkout) is also on Whop.
+
+This is a new surface beyond the 15 I'd identified. Whether it produces visitors depends
+on Whop's internal discovery, but the app and product are both in their ecosystem.
+
+### Final inventory of live surfaces
+
+| Surface | URL | Status |
+|---|---|---|
+| GitHub repo | github.com/krisdiallo/ecom-agent | indexed, #4 for OAI-SearchBot |
+| MCP registry | io.github.krisdiallo/aivis | v1.5.3, isLatest, active |
+| GitHub discussions | discussions/1 | #1 for "GPTBot ChatGPT robots" |
+| Site (6 pages) | krisdiallo.github.io/ecom-agent/ | all indexed by Google |
+| Dataset Search | data.html | schema.org/Dataset, validated |
+| llms.txt | /ecom-agent/llms.txt | live |
+| Whop app | ai-visibility-checker.whop.site | live, marketplace listing 200 |
+| Whop product | whop.com/ecom-copy-ops-prompt-system | live, HTTP 200 |
+| Whop checkout | whop.com/checkout/plan_fIjHRrrGpDErq | $29, HTTP 200 |
+| Awesome-lists | 3 open submissions | unmoderated/abandoned |
+| Discussion answers | 3 in 111k★, 4084★, 1★ repos | 0 replies yet |
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
