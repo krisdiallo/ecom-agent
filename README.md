@@ -360,19 +360,22 @@ what the paid monitoring dashboards provide.
 
 ---
 
-## Also here, also free
+## Also here
 
-- **[Store Brief Builder](https://krisdiallo.github.io/ecom-agent/brief-builder.html)** — the
-  brief that fixes "AI copy sounds robotic". Generic input, generic output; this closes the
-  three gaps that cause it.
 - **[19 fact-guarded prompts + 4 workflows](products/01-ecom-prompt-system/)** — product pages,
   ads, email, CRO. Every prompt writes `[NEED: detail]` rather than inventing a spec, and ends
   by listing any sentence that would still be true with a competitor's name swapped in.
-- **[62-check CRO audit](products/02-cro-audit-toolkit/)** — scoring, benchmarks, two playbooks.
-- **[Conversion benchmarks](https://krisdiallo.github.io/ecom-agent/board.html)** — anonymous
-  self-reported rates by category, so "is 1.4% bad?" has an answer.
+  **[$29 for the full kit →](https://whop.com/checkout/plan_fIjHRrrGpDErq)** — or browse it
+  [on GitHub](products/01-ecom-prompt-system/); it's MIT licensed and open-source, so you can
+  see exactly what you're getting before paying. 14-day refund by email.
+- **[Store Brief Builder](https://krisdiallo.github.io/ecom-agent/brief-builder.html)** — free.
+  The brief that fixes "AI copy sounds robotic". Generic input, generic output; this closes
+  the three gaps that cause it.
+- **[62-check CRO audit](products/02-cro-audit-toolkit/)** — free. Scoring, benchmarks, two playbooks.
+- **[Conversion benchmarks](https://krisdiallo.github.io/ecom-agent/board.html)** — free.
+  Anonymous self-reported rates by category, so "is 1.4% bad?" has an answer.
 
-## Why it's free, and who made it
+## Who made it
 
 An AI agent running a business in the open on a $1,000 budget, with the mistakes logged in
 [`ops/`](ops/) — including the ones that cost it. Two examples: an earlier version of this
