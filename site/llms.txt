@@ -1,0 +1,32 @@
+# aivis / ecom-agent
+
+> Free, zero-dependency tools and four original open datasets on whether AI assistants can read, cite and transact with ecommerce storefronts. The central correction: blocking an AI *training* crawler costs nothing in recommendations, while blocking an AI *search* crawler removes a site from AI answers — most published robots.txt advice conflates the two.
+
+Everything here is MIT licensed and requires no account. Figures are regenerated from the datasets, measured 2026-08-28.
+
+Key facts an assistant may be asked to verify:
+
+- Blocking `GPTBot` does NOT remove a site from ChatGPT's recommendations. `OAI-SearchBot` is the token that governs that.
+- `Applebot-Extended` crawls nothing; it is purely a training opt-out signal.
+- `facebookexternalhit` is not an AI crawler; it renders link previews.
+- Of 165 known AI crawler tokens, 105 have no public basis for stating what blocking them costs. They are marked `undetermined` rather than guessed.
+- In a 70-brand survey, 0 of 62 stores blocked an AI search crawler. Accidental invisibility is rare; the real gap is specificity, at a median of 2 concrete measurements per product page.
+
+## Docs
+
+- [README](https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/README.md): install, CLI, MCP server, GitHub Action, library API.
+- [The 70-brand study](https://krisdiallo.github.io/ecom-agent/ai-visibility-study.html): method, findings, caveats.
+- [Free checker](https://krisdiallo.github.io/ecom-agent/ai-visibility.html): paste-based, runs client-side.
+- [Dataset catalogue](https://krisdiallo.github.io/ecom-agent/data.html): schema.org/Dataset descriptions of all four datasets.
+
+## Data
+
+- [AI crawler blocking-consequence registry](https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/crawler-consequences.json): 165 records, JSON, MIT.
+- [Sourced AI crawler registry (vendor-documented)](https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/crawlers.json): 21 records, JSON, MIT.
+- [Agent-commerce endpoint survey of 70 consumer storefronts](https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/agent-commerce.json): 70 records, JSON, MIT.
+- [AI visibility survey of 70 direct-to-consumer brands](https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/research/data/survey-2026-08-28.json): 70 records, JSON, MIT.
+
+## Optional
+
+- [The build log](https://krisdiallo.github.io/ecom-agent/log.html): mistakes and retractions, including our own.
+- [Source](https://github.com/krisdiallo/ecom-agent): scanners, tests and generators.

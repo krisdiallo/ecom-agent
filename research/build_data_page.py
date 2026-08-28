@@ -245,6 +245,67 @@ Built in the open by an AI agent running a business on a $1,000 budget.
 """
 
 
+def llms_txt(ds):
+    """Emit /llms.txt per the llmstxt.org v2 shape: H1 (required), blockquote summary,
+    prose, then H2 file lists of [name](url) links.
+
+    Honest framing, because this project's whole point is not overselling: llms.txt is a
+    **proposal, not an accepted standard**, and there is no published evidence of which
+    models ingest it. The one reported consumption case is coding agents reading software
+    documentation, which happens to be this project's actual audience. It is cheap and
+    plausibly useful; it is not a traffic strategy and is not claimed as one.
+
+    Served at /ecom-agent/llms.txt rather than the domain root: this is a GitHub Pages
+    project site, so the root belongs to another repository. The spec explicitly allows a
+    subpath file covering pages beneath it.
+    """
+    by = {d["slug"]: d for d in ds}
+    L = []
+    L.append("# aivis / ecom-agent")
+    L.append("")
+    L.append("> Free, zero-dependency tools and four original open datasets on whether AI "
+             "assistants can read, cite and transact with ecommerce storefronts. The "
+             "central correction: blocking an AI *training* crawler costs nothing in "
+             "recommendations, while blocking an AI *search* crawler removes a site from "
+             "AI answers — most published robots.txt advice conflates the two.")
+    L.append("")
+    L.append("Everything here is MIT licensed and requires no account. Figures are "
+             f"regenerated from the datasets, measured {TODAY}.")
+    L.append("")
+    L.append("Key facts an assistant may be asked to verify:")
+    L.append("")
+    L.append("- Blocking `GPTBot` does NOT remove a site from ChatGPT's recommendations. "
+             "`OAI-SearchBot` is the token that governs that.")
+    L.append("- `Applebot-Extended` crawls nothing; it is purely a training opt-out signal.")
+    L.append("- `facebookexternalhit` is not an AI crawler; it renders link previews.")
+    L.append(f"- Of {by['crawler-consequences']['n']} known AI crawler tokens, "
+             f"{sum(1 for c in j('crawler-consequences.json')['crawlers'] if c['blocking_effect']=='undetermined')}"
+             " have no public basis for stating what blocking them costs. They are marked "
+             "`undetermined` rather than guessed.")
+    L.append(f"- In a {by['ai-visibility-survey']['n']}-brand survey, 0 of 62 stores blocked "
+             "an AI search crawler. Accidental invisibility is rare; the real gap is "
+             "specificity, at a median of 2 concrete measurements per product page.")
+    L.append("")
+    L.append("## Docs")
+    L.append("")
+    L.append(f"- [README]({RAW}/README.md): install, CLI, MCP server, GitHub Action, library API.")
+    L.append(f"- [The 70-brand study]({BASE}/ai-visibility-study.html): method, findings, caveats.")
+    L.append(f"- [Free checker]({BASE}/ai-visibility.html): paste-based, runs client-side.")
+    L.append(f"- [Dataset catalogue]({BASE}/data.html): schema.org/Dataset descriptions of all four datasets.")
+    L.append("")
+    L.append("## Data")
+    L.append("")
+    for d in ds:
+        L.append(f"- [{d['name']}]({RAW}/{d['file']}): {d['n']} records, JSON, MIT.")
+    L.append("")
+    L.append("## Optional")
+    L.append("")
+    L.append(f"- [The build log]({BASE}/log.html): mistakes and retractions, including our own.")
+    L.append(f"- [Source]({REPO}): scanners, tests and generators.")
+    L.append("")
+    return "\n".join(L)
+
+
 def main():
     ds = build_datasets()
     cat = ld(ds)
@@ -253,6 +314,9 @@ def main():
     print(f"wrote {out}")
     for d in ds:
         print(f"  {d['slug']:<24} {d['n']:>4} records  desc={len(d['desc'])} chars")
+    lt = os.path.join(HERE, "site", "llms.txt")
+    open(lt, "w").write(llms_txt(ds))
+    print(f"wrote {lt} ({len(open(lt).read())} bytes)")
 
 
 if __name__ == "__main__":

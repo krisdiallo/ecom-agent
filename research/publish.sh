@@ -38,6 +38,6 @@ grep -q 'ai-visibility-study.html' site/board.html || \
 grep -q 'ai-visibility-study.html' site/sitemap.xml || \
   perl -0pi -e 's{(  <url><loc>https://krisdiallo\.github\.io/ecom-agent/board\.html</loc>)}{  <url><loc>https://krisdiallo.github.io/ecom-agent/ai-visibility-study.html</loc><lastmod>2026-08-28</lastmod><priority>0.9</priority></url>\n$1}' site/sitemap.xml
 
-cp site/*.html site/sitemap.xml site/robots.txt docs/
+cp site/*.html site/sitemap.xml site/robots.txt site/llms.txt docs/
 echo "nav links:"; grep -c 'ai-visibility-study' site/*.html | grep -v ':0' || true
 echo "rendered + wired."
