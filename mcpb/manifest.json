@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "aivis",
   "display_name": "AI Visibility Checker",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Check whether AI assistants can find, read and transact with an ecommerce store.",
   "long_description": "Three checks against a live store, read-only. (1) robots.txt, distinguishing the crawlers whose blocking removes you from AI answers (OAI-SearchBot, PerplexityBot, Claude-SearchBot, Amzn-SearchBot, Applebot) from training-only crawlers where blocking costs you nothing (GPTBot, ClaudeBot, Google-Extended) \u2014 a distinction most published advice gets backwards. (2) A product page's raw HTML rather than the rendered DOM, because most AI crawlers do not run JavaScript: structured data, offer completeness, and how many concrete measurements the page actually gives. (3) The agent-commerce layer (Universal Commerce Protocol over MCP), which decides whether an agent can buy rather than merely describe. Backed by a published survey of 70 consumer brands: 0 of 62 blocked an AI search crawler, and 49 of 70 expose a live agent-commerce endpoint. Every crawler claim is sourced to the vendor's own documentation.",
   "author": {
@@ -36,6 +36,10 @@
     {
       "name": "check_ai_visibility",
       "description": "Check whether AI assistants can find, read and transact with an ecommerce store. Read-only: nothing is created, purchased or uploaded."
+    },
+    {
+      "name": "build_recommendation_test",
+      "description": "Generate a varied prompt set and scoring rubric for testing whether AI assistants recommend a brand. Does not query any assistant."
     }
   ],
   "compatibility": {

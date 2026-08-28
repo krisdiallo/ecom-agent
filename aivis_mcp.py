@@ -68,8 +68,87 @@ TOOLS = [
             },
             "required": ["store"],
         },
-    }
+    },
+    {
+        "name": "build_recommendation_test",
+        "description": (
+            "Generate the prompt set for testing whether AI assistants actually recommend "
+            "a brand in its category, plus a scoring rubric. This tool does NOT query any "
+            "assistant — it cannot, and any tool claiming a definitive 'AI ranking' is ahead "
+            "of the evidence, because rankings are not public and vary by wording, location "
+            "and session. What it does is remove the part that does not scale: writing "
+            "varied, non-leading prompts and scoring the answers consistently. If you (the "
+            "calling assistant) can search the web, run these yourself and report the results "
+            "back to the user. Otherwise hand them to the user to run monthly."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "brand": {"type": "string", "description": "Brand name, e.g. 'Allbirds'."},
+                "category": {"type": "string",
+                             "description": "What they sell, in the words a buyer would use, "
+                                            "e.g. 'merino wool sneakers'."},
+                "market": {"type": "string",
+                           "description": "Optional market/locale, e.g. 'UK'. Answers vary by "
+                                          "location, so a result is only comparable within one."},
+            },
+            "required": ["brand", "category"],
+        },
+    },
 ]
+
+
+def build_recommendation_test(args):
+    brand = (args.get("brand") or "").strip()
+    cat = (args.get("category") or "").strip()
+    if not brand or not cat:
+        raise ValueError("brand and category are required")
+    mk = (args.get("market") or "").strip()
+    loc = f" in the {mk}" if mk else ""
+
+    # Deliberately varied in shape: a single phrasing is not a benchmark, and prompts
+    # that name the brand test recall rather than recommendation. Only the last two
+    # mention it, and they are scored separately for that reason.
+    prompts = [
+        f"What's the best {cat}{loc}?",
+        f"Where should I buy {cat}{loc}?",
+        f"Recommend a few brands for {cat}{loc}.",
+        f"I'm shopping for {cat}{loc} — what are my options?",
+        f"What's the most durable {cat} you'd recommend?",
+        f"Best value {cat} under a typical budget{loc}?",
+        f"Which {cat} brands do people actually rate?",
+        f"Compare the top {cat} brands{loc}.",
+        f"Is {brand} a good choice for {cat}?",
+        f"How does {brand} compare to other {cat} brands?",
+    ]
+    return {
+        "brand": brand, "category": cat, "market": mk or None,
+        "prompts": [{"n": i + 1, "prompt": p,
+                     "type": "unprompted" if i < 8 else "brand-named"}
+                    for i, p in enumerate(prompts)],
+        "scoring": {
+            "mentioned": "Did the answer name the brand at all?",
+            "position": "First, in the main list, or only an aside?",
+            "accurate": "Was everything it said about the brand true? Log any invented claim "
+                        "verbatim — a confident wrong fact is worse than being absent.",
+            "sources": "Which pages did it cite? Those are the pages actually doing the work.",
+            "competitors": "Which brands appeared instead? That gap is usually more actionable "
+                           "than your own score.",
+        },
+        "method_notes": [
+            "Prompts 1-8 never name the brand. Those measure recommendation. Prompts 9-10 do "
+            "name it, and measure only recall and accuracy — do not average the two groups.",
+            "Re-run monthly and compare the trend, not a single reading. One prompt is not a "
+            "benchmark.",
+            "Answers vary by location and session. Results are comparable only within one "
+            "market and one assistant.",
+            "This measures what assistants say, not why. The mechanical prerequisites — "
+            "crawler access, readable facts, agent-commerce — are what check_ai_visibility "
+            "covers.",
+        ],
+        "disclaimer": "No tool can tell you whether an assistant WILL recommend you. Rankings "
+                      "are not public. This is a repeatable measurement protocol, not a score.",
+    }
 
 
 def run_check(args):
@@ -107,6 +186,21 @@ def as_text(r):
     return "\n".join(lines)
 
 
+def protocol_text(r):
+    mk = f" ({r['market']})" if r.get("market") else ""
+    out = [f"Recommendation test for {r['brand']} — {r['category']}{mk}", "",
+           "Run these and log the result for each. Prompts 1-8 never name the brand and "
+           "measure recommendation; 9-10 name it and measure only recall and accuracy.", ""]
+    for p in r["prompts"]:
+        out.append(f"  {p['n']:>2}. [{p['type']}] {p['prompt']}")
+    out += ["", "Score each answer on:"]
+    for k, v in r["scoring"].items():
+        out.append(f"  - {k}: {v}")
+    out += ["", "Method:"] + [f"  - {n}" for n in r["method_notes"]]
+    out += ["", r["disclaimer"]]
+    return "\n".join(out)
+
+
 def handle(msg):
     m, mid = msg.get("method"), msg.get("id")
     if m == "initialize":
@@ -120,17 +214,21 @@ def handle(msg):
         return {"jsonrpc": "2.0", "id": mid, "result": {"tools": TOOLS}}
     if m == "tools/call":
         p = msg.get("params") or {}
-        if p.get("name") != "check_ai_visibility":
+        name = p.get("name")
+        handlers = {"check_ai_visibility": (run_check, as_text),
+                    "build_recommendation_test": (build_recommendation_test, protocol_text)}
+        if name not in handlers:
             return {"jsonrpc": "2.0", "id": mid,
-                    "error": {"code": -32602, "message": f"unknown tool {p.get('name')!r}"}}
+                    "error": {"code": -32602, "message": f"unknown tool {name!r}"}}
+        fn, fmt = handlers[name]
         try:
-            r = run_check(p.get("arguments") or {})
+            r = fn(p.get("arguments") or {})
         except Exception as e:
             return {"jsonrpc": "2.0", "id": mid, "result": {
-                "content": [{"type": "text", "text": f"check failed: {type(e).__name__}: {e}"}],
+                "content": [{"type": "text", "text": f"{name} failed: {type(e).__name__}: {e}"}],
                 "isError": True}}
         return {"jsonrpc": "2.0", "id": mid, "result": {
-            "content": [{"type": "text", "text": as_text(r)}],
+            "content": [{"type": "text", "text": fmt(r)}],
             "structuredContent": r}}
     if mid is None:
         return None
