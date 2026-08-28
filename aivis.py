@@ -290,7 +290,40 @@ def check_robots(host, rep):
               "This blocks every crawler without its own group, search engines included.")
 
 
+PROD_PAT = re.compile(r"/(products?|shop|item|p|dp|collections/[^/]+/products)/[^/\s<]+", re.I)
+
+
+def find_product_via_sitemap(host, budget=6):
+    """Walk sitemaps (including sitemap indexes) looking for something product-shaped.
+    Platform-agnostic on purpose: Shopify is only ~3 in 4 of the stores we sampled."""
+    seen, queue = set(), []
+    st, _, robots = get(f"https://{host}/robots.txt")
+    queue += re.findall(r"(?im)^\s*sitemap:\s*(\S+)", robots or "")
+    queue += [f"https://{host}/sitemap.xml", f"https://{host}/sitemap_index.xml",
+              f"https://{host}/product-sitemap.xml",
+              f"https://{host}/sitemap_products_1.xml?from=1&to=999999999"]
+    while queue and budget > 0:
+        sm = queue.pop(0)
+        if sm in seen:
+            continue
+        seen.add(sm)
+        budget -= 1
+        st, _, xml = get(sm, timeout=20)
+        if st != 200 or not xml:
+            continue
+        locs = re.findall(r"<loc>\s*([^<\s]+?)\s*</loc>", xml)
+        hits = [u for u in locs if PROD_PAT.search(u)]
+        if hits:
+            return hits[0]
+        # a sitemap index: follow the most product-looking children first
+        children = [u for u in locs if u.lower().endswith((".xml", ".xml.gz"))]
+        children.sort(key=lambda u: 0 if re.search(r"product|item|shop", u, re.I) else 1)
+        queue = children[:4] + queue
+    return None
+
+
 def check_product(host, rep, url=None):
+    explicit = bool(url)
     print(f"\n{C['b']}2. Product page — can a crawler read your facts?{C['x']}")
     if not url:
         st, _, js = get(f"https://{host}/products.json?limit=1")
@@ -302,21 +335,31 @@ def check_product(host, rep, url=None):
                     handle = ps[0].get("handle")
             except Exception:
                 pass
-        if not handle:
-            st, _, xml = get(f"https://{host}/sitemap_products_1.xml?from=1&to=999999999")
-            m = re.findall(r"<loc>\s*([^<\s]*?/products/[^<\s]+?)\s*</loc>", xml or "")
-            if m:
-                handle = m[0].rstrip("/").split("/products/")[-1].split("?")[0]
-        if not handle:
+        if handle:
+            url = f"https://{host}/products/{handle}"
+        else:
+            # Not Shopify (or products.json disabled). Walk sitemaps generically so this
+            # works on WooCommerce, BigCommerce and custom carts too — 24% of the hosts
+            # in our own 70-store sample were not Shopify.
+            url = find_product_via_sitemap(host)
+        if not url:
             rep.note("Could not find a product page automatically",
-                     "Pass one explicitly:  python3 aivis.py %s --url https://%s/products/..."
-                     % (host, host))
+                     "Point it at one directly:\n"
+                     f"  python3 aivis.py {host} --url https://{host}/<your-product-page>")
             return
-        url = f"https://{host}/products/{handle}"
 
     st, final, html = get(url)
+    if (st != 200 or not html) and not explicit:
+        # products.json can hand back a handle whose page is gone (stale feed). Fall
+        # back to sitemap discovery rather than reporting "could not fetch" and quitting.
+        alt = find_product_via_sitemap(host)
+        if alt and alt != url:
+            url = alt
+            st, final, html = get(url)
     if st != 200 or not html:
-        rep.note(f"Could not fetch {url} (HTTP {st or 'no response'})")
+        rep.note(f"Could not fetch {url} (HTTP {st or 'no response'})",
+                 f"Point it at a product page directly:\n"
+                 f"  python3 aivis.py {host} --url https://{host}/<your-product-page>")
         return
 
     # A redirect can land us somewhere that is not the product page at all — Gymshark
