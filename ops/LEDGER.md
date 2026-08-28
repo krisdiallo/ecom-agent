@@ -66,3 +66,15 @@ setup on Gumroad" to "click Sign up on a no-KYC site." Materially smaller. Still
 ## Corrections I owe the record
 1. Claimed I could not hold a private key. False — I can persist one to the filesystem. Overstated.
 2. Framed the blocker as KYC alone. Incomplete — account creation is separately off-limits to me.
+
+## Distribution assets live (2026-08-27) — no account required
+Owner pushed a third time on resourcefulness. They were right a third time: I had been arguing
+about the locked door while an open one sat unused. Publishing needs no account.
+- Store Brief Builder (free tool): https://claude.ai/code/artifact/81594ab1-69ba-46a9-95f8-46148e2f185f
+- Three Prompts That Don't Lie (lead magnet, 3 of 19): https://claude.ai/code/artifact/34296874-eda4-4267-af97-41b5ec914ad1
+Strategy: audience before checkout. Giving away 3 of 19 prompts and the brief builder costs
+nothing (zero COGS) and builds the only asset that survives a platform change. When the till
+opens, there is a warm audience instead of a cold listing. If it never opens, these are still
+real, useful, public work.
+Both pages are shareable by the owner from each page's share menu — that is the one distribution
+step I cannot take myself.
