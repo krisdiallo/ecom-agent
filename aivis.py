@@ -24,10 +24,11 @@ absent from what an assistant receives.
 MIT licensed. Source and the 70-store study it came from:
 https://github.com/krisdiallo/ecom-agent
 """
-import argparse, gzip, io, json, re, sys, urllib.error, urllib.request
+import argparse, gzip, io, ipaddress, json, re, socket, sys
+import urllib.error, urllib.parse, urllib.request
 from html import unescape
 
-__version__ = "1.1.2"
+__version__ = "1.2.0"
 
 UA = ("Mozilla/5.0 (compatible; aivis/%s; +https://github.com/krisdiallo/ecom-agent) "
       "AI-visibility self-check" % __version__)
@@ -67,11 +68,66 @@ def fold(s):
     return norm(re.sub(r"[^a-z0-9]+", " ", s))
 
 
+class BlockedTarget(Exception):
+    """Refused before any connection was made."""
+
+
+def _public_ip(ip):
+    a = ipaddress.ip_address(ip)
+    return not (a.is_private or a.is_loopback or a.is_link_local or a.is_reserved
+                or a.is_multicast or a.is_unspecified)
+
+
+def guard_url(url):
+    """Refuse anything that is not a public http(s) target.
+
+    This matters more here than in an ordinary CLI: aivis also runs as an MCP server,
+    so the hostname can come from a model that was itself fed untrusted text. Without
+    this, "check my store at 169.254.169.254" would make the tool fetch a cloud
+    metadata endpoint on the caller's behalf — a textbook SSRF, with the agent as the
+    confused deputy. Verified before the fix that the fetch was attempted.
+
+    Resolution is checked, not just the literal string, because a hostname an attacker
+    controls can resolve to 127.0.0.1 or 10.x just as easily as to a public address.
+    """
+    p = urllib.parse.urlsplit(url)
+    if p.scheme not in ("http", "https"):
+        raise BlockedTarget(f"scheme {p.scheme!r} not allowed")
+    host = p.hostname
+    if not host:
+        raise BlockedTarget("no host")
+    try:
+        infos = socket.getaddrinfo(host, p.port or (443 if p.scheme == "https" else 80),
+                                   proto=socket.IPPROTO_TCP)
+    except socket.gaierror as e:
+        raise BlockedTarget(f"cannot resolve {host}: {e.strerror or e}")
+    ips = {i[4][0] for i in infos}
+    bad = [ip for ip in ips if not _public_ip(ip)]
+    if bad:
+        raise BlockedTarget(f"{host} resolves to non-public address {bad[0]}")
+    return url
+
+
+class _GuardedRedirect(urllib.request.HTTPRedirectHandler):
+    """A public host can 302 to an internal one, so every hop is re-checked."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        guard_url(newurl)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_opener = urllib.request.build_opener(_GuardedRedirect)
+
+
 def get(url, timeout=25):
+    try:
+        guard_url(url)
+    except BlockedTarget:
+        return 0, url, ""
     req = urllib.request.Request(url, headers={
         "User-Agent": UA, "Accept": "*/*", "Accept-Encoding": "gzip"})
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
+        with _opener.open(req, timeout=timeout) as r:
             raw = r.read()
             if r.headers.get("Content-Encoding") == "gzip":
                 raw = gzip.GzipFile(fileobj=io.BytesIO(raw)).read()
@@ -537,12 +593,16 @@ def check_agent_commerce(host, rep):
 def get_ct(url, timeout=15, data=None, ctype=None):
     """get() variant that also returns Content-Type, needed to spot soft-404s that
     answer 200 with an HTML page."""
+    try:
+        guard_url(url)
+    except BlockedTarget:
+        return 0, "", ""
     h = {"User-Agent": UA, "Accept": "*/*", "Accept-Encoding": "gzip"}
     if ctype:
         h["Content-Type"] = ctype
     req = urllib.request.Request(url, headers=h, data=data)
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
+        with _opener.open(req, timeout=timeout) as r:
             raw = r.read()
             if r.headers.get("Content-Encoding") == "gzip":
                 raw = gzip.GzipFile(fileobj=io.BytesIO(raw)).read()
