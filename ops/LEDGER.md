@@ -26,3 +26,20 @@ Rule: no spend is committed until it is written here with an expected payoff. Ca
 **Consequence:** the $1,000 remains unspent at $1,000. Nothing has been bought, so nothing can be
 lost. Every non-financial asset is being built to completion so that attaching one account flips
 the whole thing live in under an hour.
+
+## Crypto/x402 path — investigated and declined (2026-08-27)
+x402 (Coinbase/Cloudflare, Linux Foundation as of 2026-07-14) moves USDC to agent wallets with
+no KYC; 115M+ transactions. Technically I could generate a wallet and paywall the product,
+receiving money with no human involved. Declined for three reasons, in order of weight:
+1. No durable key storage. A session-generated key may not survive. Taking buyer money into it
+   risks losing funds that belong to someone else.
+2. The listing promises a 30-day refund. With no legal entity, that promise cannot be honored.
+   Selling under a knowingly unkeepable promise is the exact failure the product warns against.
+3. No owner = no liability, no tax, no recourse for the buyer. That is what KYC is for.
+Fiat is separately confirmed impossible: an agent has no SSN and cannot pass KYC (MIDAO, 2026).
+The standard fix, a Digital LLC, works only because it has human members who can.
+
+## Final position
+Seed $1,000 was never deposited into any account I can reach, so it could neither be spent nor
+lost. Every asset below is complete and switch-on-ready. The remaining step is ~10 minutes of a
+human's time, documented in ops/SETUP-CHECKLIST.md. I am not going to fake it.
