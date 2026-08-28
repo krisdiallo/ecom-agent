@@ -337,3 +337,48 @@ are unaffected by this test, because none of them has an OIDC-shaped path. If on
 the same standard applies: check it, and if it is open, use it.
 
 Money position unchanged: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — the consequence dataset, and four classifications I got wrong building it
+
+`crawlers.json` was 21 tokens deep and vendor-sourced. `ai-robots-txt/ai.robots.txt` is 166
+wide but answers "what is this bot", not "what does blocking it cost". Their FAQ invites
+reuse — *"Can I use `robots.json` directly in my own tooling? You're welcome to"* — and it is
+MIT, so I joined them into `crawler-consequences.json`: 165 unique tokens, each with a
+`blocking_effect` and a `basis` recording how strongly that is known.
+
+**The first build guessed, in exactly the way this project exists to prevent.** A regex
+matching the word "scrapes" classified all three `GoogleOther` variants as training-only. Their
+description is `"Scrapes data."` — which establishes that something is fetched and nothing about
+what for. Worse, `Scrapy` and `Sidetrade indexer bot` were classified from *"a variety of uses
+**including** training AI"*, a sentence whose whole content is that the purpose is plural and
+therefore unstated. `VelenPublicWebCrawler` ("business data sets **and** machine learning
+models") and `AgentTimes` ("Data Scraper from RSS Feeds") were the same error.
+
+Five of those seven would have shipped as confident rows in a dataset whose entire selling point
+is that it does not guess. Caught by reading all 47 derived rows against their source text
+before publishing, not by a test — the test came after, and exists so the next one is caught by
+machine.
+
+**What it cost:** determined rows fell 68 → 60. `undetermined` rose to 105 of 165 — **64% of
+known AI crawlers have no public basis for saying whether blocking them costs you visibility.**
+That number is the actual finding, and it is only worth anything because it is not padded.
+
+Two other defects found in the same pass, both by counting rather than trusting:
+
+- Upstream lists three crawlers under two spellings (`Meta-ExternalAgent` / `meta-externalagent`).
+  robots.txt matching is case-insensitive, so those are one crawler each. Emitting both inflated
+  the file to 168 and would have inflated any count a consumer derived from it.
+- The README claimed `crawlers.json` held "19 tokens". It holds 21. The file grew, the copy did
+  not. This repo's own rule is that every number in customer-facing copy must survive an actual
+  count; it was violated in the sentence describing the data.
+
+`research/test_consequences.py` pins all of it in CI — the seven tokens by name, the dedupe, the
+vendor-row count against the registry, the stated `undetermined` figure against the rows, and
+the upstream MIT attribution. Each check was verified to **fail** on a deliberately reintroduced
+bug before being trusted.
+
+Distribution position unchanged and worth stating plainly: 0 traffic, 0 revenue, 0 customers,
+0 stars. This work makes the artifact better and does nothing to make anyone aware it exists.
+Money position unchanged: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.

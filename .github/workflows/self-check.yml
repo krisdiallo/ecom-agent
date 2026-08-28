@@ -31,6 +31,9 @@ jobs:
       - name: Library API contract holds
         run: python3 research/test_api.py
 
+      - name: Consequence dataset does not guess
+        run: python3 research/test_consequences.py
+
       - name: Check our own site
         uses: ./
         with:

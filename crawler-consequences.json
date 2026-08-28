@@ -1,0 +1,1187 @@
+{
+ "name": "crawler-consequences",
+ "version": "1.0.0",
+ "generated": "2026-08-28",
+ "license": "MIT",
+ "about": "Every known AI crawler, classified by what blocking it actually costs. The useful question is not 'is this an AI bot' but 'what do I lose by disallowing it' \u2014 blocking a training crawler costs nothing in recommendations, blocking a search crawler removes you from AI answers.",
+ "sources": [
+  {
+   "name": "krisdiallo/ecom-agent crawlers.json",
+   "role": "authoritative; each token quoted from vendor documentation with a checked date",
+   "url": "https://github.com/krisdiallo/ecom-agent/blob/main/crawlers.json"
+  },
+  {
+   "name": "ai-robots-txt/ai.robots.txt robots.json",
+   "role": "coverage of which AI user-agents exist; free-text function field",
+   "license": "MIT",
+   "url": "https://github.com/ai-robots-txt/ai.robots.txt",
+   "note": "Used with their explicit permission in FAQ.md: 'Can I use robots.json directly in my own tooling? You're welcome to.'"
+  }
+ ],
+ "honest_limitation": "105 of 165 tokens are `undetermined`. For those, the available source text does not establish whether blocking costs you AI visibility. They are NOT defaulted to 'training' \u2014 that guess would be wrong roughly as often as it was right, and silently.",
+ "summary": {
+  "removes_from_ai_answers": 17,
+  "undetermined": 105,
+  "opts_out_of_training_only": 38,
+  "may_be_ignored": 3,
+  "breaks_link_previews": 1,
+  "blocks_ad_review": 1
+ },
+ "crawlers": [
+  {
+   "token": "OAI-AdsBot",
+   "operator": "OpenAI",
+   "function": "ChatGPT ads review",
+   "blocking_effect": "blocks_ad_review",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "facebookexternalhit",
+   "operator": "Meta/Facebook",
+   "function": "Ostensibly only for sharing, but likely used as an AI crawler as well",
+   "blocking_effect": "breaks_link_previews",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "ChatGPT-User",
+   "operator": "[OpenAI](https://openai.com)",
+   "function": "AI Assistants",
+   "blocking_effect": "may_be_ignored",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "meta-externalfetcher",
+   "operator": "Unclear at this time.",
+   "function": "AI Assistants",
+   "blocking_effect": "may_be_ignored",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "Perplexity-User",
+   "operator": "[Perplexity](https://www.perplexity.ai/)",
+   "function": "AI Assistants",
+   "blocking_effect": "may_be_ignored",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "AI2Bot",
+   "operator": "[Ai2](https://allenai.org/crawler)",
+   "function": "Content is used to train open language models.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "Ai2Bot-Dolma",
+   "operator": "[Ai2](https://allenai.org/crawler)",
+   "function": "Content is used to train open language models.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "Amazonbot",
+   "operator": "Amazon",
+   "function": "Service improvement and enabling answers for Alexa users.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "anthropic-ai",
+   "operator": "[Anthropic](https://www.anthropic.com)",
+   "function": "Scrapes data to train Anthropic's AI products.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "Applebot-Extended",
+   "operator": "[Apple](https://support.apple.com/en-us/119829#datausage)",
+   "function": "Powers features in Siri, Spotlight, Safari, Apple Intelligence, and others.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "Awario",
+   "operator": "Awario",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "Brightbot 1.0",
+   "operator": "https://brightdata.com/brightbot",
+   "function": "LLM/AI training.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "Bytespider",
+   "operator": "ByteDance",
+   "function": "LLM training.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "CCBot",
+   "operator": "[Common Crawl Foundation](https://commoncrawl.org)",
+   "function": "Provides open crawl dataset, used for many purposes, including Machine Learning/AI.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "ChatGLM-Spider",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "ClaudeBot",
+   "operator": "[Anthropic](https://www.anthropic.com)",
+   "function": "Scrapes data to train Anthropic's AI products.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "CloudVertexBot",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "cohere-training-data-crawler",
+   "operator": "Cohere to download training data for its LLMs (Large Language Models) that power its enterprise AI products",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "Datenbank Crawler",
+   "operator": "Datenbank",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "DeepSeekBot",
+   "operator": "DeepSeek",
+   "function": "Training language models and improving AI products",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "Echobot Bot",
+   "operator": "Echobox",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "FacebookBot",
+   "operator": "Meta/Facebook",
+   "function": "Training language models",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "Factset_spyderbot",
+   "operator": "[Factset](https://www.factset.com/ai)",
+   "function": "AI model training.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "Google-Extended",
+   "operator": "Google",
+   "function": "LLM training.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "GPTBot",
+   "operator": "[OpenAI](https://openai.com)",
+   "function": "Scrapes data to train OpenAI's products.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "ICC-Crawler",
+   "operator": "[NICT](https://nict.go.jp)",
+   "function": "Scrapes data to train and support AI technologies.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "imageSpider",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "ISSCyberRiskCrawler",
+   "operator": "[ISS-Corporate](https://iss-cyber.com)",
+   "function": "Scrapes data to train machine learning models.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "Kangaroo Bot",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "laion-huggingface-processor",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "LCC",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "Lightpanda",
+   "operator": "Anyone who downloads the Lightpanda client. Possibly being used by a [Grok-adjacent](https://github.com/lightpanda-io/browser/issues/3156#issuecomment-5217843616) organization's botnet.",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "meta-externalagent",
+   "operator": "[Meta](https://developers.facebook.com/docs/sharing/webmasters/web-crawlers)",
+   "function": "Used to train models and improve products.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "MyCentralAIScraperBot",
+   "operator": "Unclear at this time.",
+   "function": "AI data scraper",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "NagetBot",
+   "operator": "Naget Inc (founded by Chris Samarinas, headquarter in Amherst, Massachusetts)",
+   "function": "AI data scraper",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "netEstate Imprint Crawler",
+   "operator": "netEstate",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "newsai",
+   "operator": "Unclear at this time.",
+   "function": "AI data scraper",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "PanguBot",
+   "operator": "the Chinese company Huawei",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "Spider",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "TikTokSpider",
+   "operator": "ByteDance",
+   "function": "LLM training.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "Timpibot",
+   "operator": "[Timpi](https://timpi.io)",
+   "function": "Scrapes data for use in training LLMs.",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "WARDBot",
+   "operator": "WEBSPARK",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "Webzio-Extended",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Scrapers",
+   "blocking_effect": "opts_out_of_training_only",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "AddSearchBot",
+   "operator": "Unclear at this time.",
+   "function": "AI Search Crawlers",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "AIWebIndex",
+   "operator": "[Lyrenth](https://lyrenth.com)",
+   "function": "AI Search Crawlers",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "Amzn-SearchBot",
+   "operator": "Unclear at this time.",
+   "function": "AI Search Crawlers",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "Amzn-User",
+   "operator": "Amazon, used for fetching web content to answer user queries through Alexa and other Amazon AI services",
+   "function": "AI Assistants",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "Anomura",
+   "operator": "[Direqt](https://direqt.ai)",
+   "function": "Collects data for AI search",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "Applebot",
+   "operator": "Unclear at this time.",
+   "function": "AI Search Crawlers",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "AzureAI-SearchBot",
+   "operator": "Unclear at this time.",
+   "function": "AI Search Crawlers",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "Channel3Bot",
+   "operator": "Unclear at this time.",
+   "function": "AI Search Crawlers",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "Claude-SearchBot",
+   "operator": "[Anthropic](https://www.anthropic.com)",
+   "function": "Claude-SearchBot navigates the web to improve search result quality for users. It analyzes online content specifically to enhance the relevance and accuracy of search responses.",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "Claude-User",
+   "operator": "[Anthropic](https://www.anthropic.com)",
+   "function": "AI Assistants",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "Cloudflare-AutoRAG",
+   "operator": "[Cloudflare](https://developers.cloudflare.com/autorag)",
+   "function": "Collects data for AI search",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "explicit-purpose-text"
+  },
+  {
+   "token": "ExaSearchBot",
+   "operator": "[Exa](https://exa.ai)",
+   "function": "AI Search Crawlers",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "Googlebot",
+   "operator": "Google",
+   "function": "Google Search",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "LinkupBot",
+   "operator": "Unclear at this time.",
+   "function": "AI Search Crawlers",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "OAI-SearchBot",
+   "operator": "[OpenAI](https://openai.com)",
+   "function": "Search result generation.",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "PerplexityBot",
+   "operator": "[Perplexity](https://www.perplexity.ai/)",
+   "function": "Search result generation.",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "vendor-documented"
+  },
+  {
+   "token": "ZanistaBot",
+   "operator": "Unclear at this time.",
+   "function": "AI Search Crawlers",
+   "blocking_effect": "removes_from_ai_answers",
+   "basis": "upstream-category"
+  },
+  {
+   "token": "AgentTimes",
+   "operator": "[The Agent Times](https://theagenttimes.com/about)",
+   "function": "Data Scraper from RSS Feeds.",
+   "blocking_effect": "undetermined",
+   "basis": "source-describes-mixed-or-unstated-purpose"
+  },
+  {
+   "token": "AI2Bot-DeepResearchEval",
+   "operator": "Ai2, a non-profit AI research institute",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "aiHitBot",
+   "operator": "[aiHit](https://www.aihitdata.com/about)",
+   "function": "A massive, artificial intelligence/machine learning, automated system.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "amazon-kendra",
+   "operator": "Amazon",
+   "function": "Collects data for AI natural language search",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "amazon-QBusiness",
+   "operator": "Unclear at this time.",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "AmazonBuyForMe",
+   "operator": "[Amazon](https://amazon.com)",
+   "function": "AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Andibot",
+   "operator": "[Andi](https://andisearch.com/)",
+   "function": "Search engine using generative AI, AI Search Assistant",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "ApifyBot",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "ApifyWebsiteContentCrawler",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Aranet-SearchBot",
+   "operator": "Unclear at this time.",
+   "function": "Undocumented AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "atlassian-bot",
+   "operator": "[Atlassian](https://www.atlassian.com)",
+   "function": "AI search, assistants and agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "bedrockbot",
+   "operator": "[Amazon](https://amazon.com)",
+   "function": "Data scraping for custom AI applications.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "bigsur.ai",
+   "operator": "Big Sur AI that fetches website content to enable AI-powered web agents, sales assistants, and content marketing solutions for busi\u2026",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Bravebot",
+   "operator": "https://safe.search.brave.com/help/brave-search-crawler",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Brightbot",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "BuddyBot",
+   "operator": "[BuddyBotLearning](https://www.buddybotlearning.com)",
+   "function": "AI Learning Companion",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "ChatGPT Agent",
+   "operator": "[OpenAI](https://openai.com)",
+   "function": "AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Claude-Code",
+   "operator": "Unclear at this time.",
+   "function": "AI Coding Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Claude-Web",
+   "operator": "Anthropic",
+   "function": "Undocumented AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Code",
+   "operator": "Unclear at this time.",
+   "function": "AI Coding Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "cohere-ai",
+   "operator": "[Cohere](https://cohere.com)",
+   "function": "Retrieves data to provide responses to user-initiated prompts.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Cotoyogi",
+   "operator": "[ROIS](https://ds.rois.ac.jp/en_center8/en_crawler/)",
+   "function": "AI LLM Scraper.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "CragCrawler",
+   "operator": "CragSoftware, a Brazil-based software company specializing in data engineering and AI web scraping services",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Crawl4AI",
+   "operator": "Unclear at this time.",
+   "function": "Undocumented AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Crawlspace",
+   "operator": "[Crawlspace](https://crawlspace.dev)",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Cursor",
+   "operator": "Unclear at this time.",
+   "function": "AI Coding Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Devin",
+   "operator": "Devin AI",
+   "function": "AI Coding Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Diffbot",
+   "operator": "[Diffbot](https://www.diffbot.com/)",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "DuckAssistBot",
+   "operator": "Unclear at this time.",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "EchoboxBot",
+   "operator": "[Echobox](https://echobox.com)",
+   "function": "Data collection to support AI-powered products.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "ExaBot",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "FirecrawlAgent",
+   "operator": "Firecrawl that extracts web content and converts it into structured data for use in LLM and AI applications",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "FriendlyCrawler",
+   "operator": "Unknown",
+   "function": "We are using the data from the crawler to build datasets for machine learning experiments.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "GeistHaus-PageFetcher",
+   "operator": "GeistHaus, a company developing AI systems for therapy and psychological assessment",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Gemini-Deep-Research",
+   "operator": "Unclear at this time.",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Google-Agent",
+   "operator": "Unclear at this time.",
+   "function": "AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Google-CloudVertexBot",
+   "operator": "Google",
+   "function": "Build and manage AI models for businesses employing Vertex AI",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Google-Firebase",
+   "operator": "Google",
+   "function": "Used as part of AI apps developed by users of Google's Firebase AI products.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Google-Gemini-CLI",
+   "operator": "Unclear at this time.",
+   "function": "AI Coding Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Google-NotebookLM",
+   "operator": "Unclear at this time.",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "GoogleAgent-Mariner",
+   "operator": "Google",
+   "function": "AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "GoogleAgent-URLContext",
+   "operator": "Google that retrieves web content on behalf of Gemini API users",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "GoogleOther",
+   "operator": "Google",
+   "function": "Scrapes data.",
+   "blocking_effect": "undetermined",
+   "basis": "source-describes-mixed-or-unstated-purpose"
+  },
+  {
+   "token": "GoogleOther-Image",
+   "operator": "Google",
+   "function": "Scrapes data.",
+   "blocking_effect": "undetermined",
+   "basis": "source-describes-mixed-or-unstated-purpose"
+  },
+  {
+   "token": "GoogleOther-Video",
+   "operator": "Google",
+   "function": "Scrapes data.",
+   "blocking_effect": "undetermined",
+   "basis": "source-describes-mixed-or-unstated-purpose"
+  },
+  {
+   "token": "HenkBot",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "iAskBot",
+   "operator": "Unclear at this time.",
+   "function": "Undocumented AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "iaskspider",
+   "operator": "Unclear at this time.",
+   "function": "Undocumented AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "iaskspider/2.0",
+   "operator": "iAsk",
+   "function": "Crawls sites to provide answers to user queries.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "ImagesiftBot",
+   "operator": "[ImageSift](https://imagesift.com)",
+   "function": "ImageSiftBot is a web crawler that scrapes the internet for publicly available images to support their suite of web intelligence products",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "img2dataset",
+   "operator": "[img2dataset](https://github.com/rom1504/img2dataset)",
+   "function": "Scrapes images for use in LLMs.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "kagi-fetcher",
+   "operator": "Kagi that fetches web content to answer user queries through Kagi AI, their suite of AI-powered tools including Assistant, Res\u2026",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Kimi-User",
+   "operator": "Moonshot AI that fetches web content on behalf of users interacting with Kimi",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "KlaviyoAIBot",
+   "operator": "[Klaviyo](https://www.klaviyo.com)",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "KunatoCrawler",
+   "operator": "Unclear at this time.",
+   "function": "Undocumented AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "LAIONDownloader",
+   "operator": "[Large-scale Artificial Intelligence Open Network](https://laion.ai/)",
+   "function": "AI tools and models for machine learning research.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "LinerBot",
+   "operator": "Unclear at this time.",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Linguee Bot",
+   "operator": "[Linguee](https://www.linguee.com)",
+   "function": "AI powered translation service",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Manus-User",
+   "operator": "Butterfly Effect, a company based in China",
+   "function": "AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "meta-webindexer",
+   "operator": "[Meta](https://developers.facebook.com/docs/sharing/webmasters/web-crawlers/)",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "MistralAI-User",
+   "operator": "Mistral",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "MistralAI-User/1.0",
+   "operator": "Mistral AI",
+   "function": "Takes action based on user prompts.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Mozilla-Tabstack",
+   "operator": "Mozilla that performs programmatic, AI-driven interactions with web content through Tabstack",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "NotebookLM",
+   "operator": "Unclear at this time.",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "NovaAct",
+   "operator": "Unclear at this time.",
+   "function": "AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "omgili",
+   "operator": "[Webz.io](https://webz.io/)",
+   "function": "Data is sold.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "omgilibot",
+   "operator": "[Webz.io](https://webz.io/)",
+   "function": "Data is sold.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "OpenAI",
+   "operator": "[OpenAI](https://openai.com)",
+   "function": "Unclear at this time.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "opencode",
+   "operator": "Unclear at this time.",
+   "function": "AI Coding Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Operator",
+   "operator": "Unclear at this time.",
+   "function": "AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Panscient",
+   "operator": "[Panscient](https://panscient.com)",
+   "function": "Data collection and analysis using machine learning and AI.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "panscient.com",
+   "operator": "[Panscient](https://panscient.com)",
+   "function": "Data collection and analysis using machine learning and AI.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "PetalBot",
+   "operator": "[Huawei](https://huawei.com/)",
+   "function": "Used to provide recommendations in Hauwei assistant and AI search services.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "PhindBot",
+   "operator": "[phind](https://www.phind.com/)",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Poggio-Citations",
+   "operator": "Poggio, a company that provides AI sales enablement tools for creating tailored narratives, business cases, and account plan\u2026",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Poseidon Research Crawler",
+   "operator": "[Poseidon Research](https://www.poseidonresearch.com)",
+   "function": "AI research crawler",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "QualifiedBot",
+   "operator": "[Qualified](https://www.qualified.com)",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Querit-SearchBot",
+   "operator": "Querit that indexes web content for their search API service, which is designed to provide real-time search results for larg\u2026",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "QueritBot",
+   "operator": "Querit, a company providing a search API for large language model integration",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "QuillBot",
+   "operator": "[Quillbot](https://quillbot.com)",
+   "function": "Company offers AI detection, writing tools and other services.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "quillbot.com",
+   "operator": "[Quillbot](https://quillbot.com)",
+   "function": "Company offers AI detection, writing tools and other services.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Reflectionbot",
+   "operator": "[Reflection](https://reflection.ai/)",
+   "function": "Undocumented AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "SBIntuitionsBot",
+   "operator": "[SB Intuitions](https://www.sbintuitions.co.jp/en/)",
+   "function": "Uses data gathered in AI development and information analysis.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Scrapy",
+   "operator": "[Zyte](https://www.zyte.com)",
+   "function": "Scrapes data for a variety of uses including training AI.",
+   "blocking_effect": "undetermined",
+   "basis": "source-describes-mixed-or-unstated-purpose"
+  },
+  {
+   "token": "SemrushBot-OCOB",
+   "operator": "[Semrush](https://www.semrush.com/)",
+   "function": "Crawls your site for ContentShake AI tool.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "SemrushBot-SWA",
+   "operator": "[Semrush](https://www.semrush.com/)",
+   "function": "Checks URLs on your site for SEO Writing Assistant.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Shap-User",
+   "operator": "Unclear at this time.",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "ShapBot",
+   "operator": "[Parallel](https://parallel.ai)",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Sidetrade indexer bot",
+   "operator": "[Sidetrade](https://www.sidetrade.com)",
+   "function": "Extracts data for a variety of uses including training AI.",
+   "blocking_effect": "undetermined",
+   "basis": "source-describes-mixed-or-unstated-purpose"
+  },
+  {
+   "token": "TavilyBot",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Terra Cotta",
+   "operator": "Unclear at this time.",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "TerraCotta",
+   "operator": "[Ceramic AI](https://ceramic.ai/)",
+   "function": "AI Data Providers",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Thinkbot",
+   "operator": "[Thinkbot](https://www.thinkbot.agency)",
+   "function": "Insights on AI integration and automation.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "TongyiBot",
+   "operator": "Alibaba that fetches web content for the Tongyi Qianwen assistant and related Qwen-generated answers",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "Trae",
+   "operator": "Unclear at this time.",
+   "function": "AI Coding Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "TwinAgent",
+   "operator": "Twin, a platform that creates automated workers to perform tasks by integrating with APIs and controlling web applications through browser automa\u2026",
+   "function": "AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "UseAI",
+   "operator": "Unclear at this time.",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "VelenPublicWebCrawler",
+   "operator": "[Velen Crawler](https://velen.io)",
+   "function": "Scrapes data for business data sets and machine learning models.",
+   "blocking_effect": "undetermined",
+   "basis": "source-describes-mixed-or-unstated-purpose"
+  },
+  {
+   "token": "wpbot",
+   "operator": "[QuantumCloud](https://www.quantumcloud.com)",
+   "function": "Live chat support and lead generation.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "WRTNBot",
+   "operator": "Unclear at this time.",
+   "function": "Undocumented AI Agents",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "YaK",
+   "operator": "[Meltwater](https://www.meltwater.com/en/suite/consumer-intelligence)",
+   "function": "According to the [Meltwater Consumer Intelligence page](https://www.meltwater.com/en/suite/consumer-intelligence) 'By applying AI, data science, and market research expertise to a live feed of global data sources, we transform unstructured data into actionable insights allowing better decision-making'.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "YandexAdditional",
+   "operator": "[Yandex](https://yandex.ru)",
+   "function": "Scrapes/analyzes data for the YandexGPT LLM.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "YandexAdditionalBot",
+   "operator": "[Yandex](https://yandex.ru)",
+   "function": "Scrapes/analyzes data for the YandexGPT LLM.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "YiyanBot",
+   "operator": "Baidu that fetches web content for the yiyan",
+   "function": "AI Assistants",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  },
+  {
+   "token": "YouBot",
+   "operator": "[You](https://about.you.com/youchat/)",
+   "function": "Scrapes data for search engine and LLMs.",
+   "blocking_effect": "undetermined",
+   "basis": "source-does-not-establish-consequence"
+  }
+ ]
+}

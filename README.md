@@ -216,7 +216,7 @@ Probe was read-only throughout: `tools/list` only. It never created a cart or st
 ## `crawlers.json` — the data behind all of this
 
 **[`crawlers.json`](crawlers.json)** is the machine-readable registry the tools are built on:
-19 tokens, each with its vendor, purpose, what blocking it actually does, whether it honours
+21 tokens, each with its vendor, purpose, what blocking it actually does, whether it honours
 robots.txt, **the vendor's own words, a source URL, and the date it was checked.**
 
 ```bash
@@ -232,6 +232,54 @@ sourced. `research/test_consistency.py` fails the build if the CLI and the regis
 disagree — which is how the Amazon misclassification above was caught before publication.
 
 MIT. Use it in your own tool; a link back is welcome but not required.
+
+## `crawler-consequences.json` — the whole ecosystem, and where the data runs out
+
+`crawlers.json` is deep but narrow: 21 tokens, each with a vendor quote. The ecosystem's
+list of *which* AI user-agents exist,
+[`ai-robots-txt/ai.robots.txt`](https://github.com/ai-robots-txt/ai.robots.txt) (MIT), is
+the reverse — 166 tokens, but its `function` field answers "what is this bot" rather than
+"what does blocking it cost me". Their FAQ invites reuse: *"Can I use `robots.json`
+directly in my own tooling? You're welcome to."*
+
+**[`crawler-consequences.json`](crawler-consequences.json)** joins them: 165 tokens, each
+carrying a `blocking_effect` and a `basis` saying how strongly that is known. (165 rather
+than 166 because upstream lists three crawlers under two spellings each —
+`Meta-ExternalAgent` and `meta-externalagent`. robots.txt matches user-agents
+case-insensitively, so those are one crawler, and emitting both would inflate any count a
+consumer derives from the file.)
+
+| `basis` | n | What it rests on |
+|---|---|---|
+| `vendor-documented` | 21 | The vendor's own words, quoted and dated in `crawlers.json` |
+| `explicit-purpose-text` | 13 | Upstream text stating the purpose outright |
+| `upstream-category` | 26 | Upstream's curated category — their editorial call, not the vendor's |
+| **`undetermined`** | **105** | **The sources do not establish a consequence** |
+
+**105 of 165 are undetermined, and that is the finding.** For 64% of known AI crawlers,
+nothing publicly available tells a store owner whether blocking costs them AI visibility.
+They are *not* defaulted to "training" — that guess would be wrong often, silently, and at
+scale. Filter on `basis` to pick your own confidence threshold; 34 rows rest on a stated
+purpose.
+
+Getting there required throwing out four of our own classifications. `GoogleOther` was
+labelled training-only because its description reads `"Scrapes data."` — which establishes
+that something is fetched, not what for. `Scrapy` and `Sidetrade indexer bot` were labelled
+from *"a variety of uses **including** training AI"*, a sentence that says the purpose is
+plural. Those are the same conflation this project exists to correct, committed by the tool
+that corrects it. [`research/test_consequences.py`](research/test_consequences.py) pins all
+seven in CI.
+
+```bash
+# high-confidence rows only
+curl -s https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/crawler-consequences.json \
+  | python3 -c "import json,sys; d=json.load(sys.stdin); \
+    print(*[c['token'] for c in d['crawlers'] \
+    if c['basis'] in ('vendor-documented','explicit-purpose-text') \
+    and c['blocking_effect']=='removes_from_ai_answers'], sep='\n')"
+```
+
+Rebuild it yourself against a fresh upstream copy: `python3 research/build_consequences.py`.
 
 ## What it checks
 
