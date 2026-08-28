@@ -587,3 +587,46 @@ else already done and tested.
 
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — the third entry point was broken the whole time
+
+Earlier today I verified the CLI and the MCP server end to end and reported the funnel as
+working. There are **three** documented entry points. I checked two.
+
+`uses: krisdiallo/ecom-agent@v1`, copied verbatim from our own README, resolved to the tag's
+original commit: **68 commits stale, shipping aivis 1.0.0.** That version still contains the
+title-comparison bug — the one that went through three wrong implementations and produced
+false positives on Allbirds and Kettle & Fire before the leading-token fix. So every reader
+who followed our CI instructions got a tool that reports healthy stores as broken, from a
+repo whose entire pitch is that it does not cry wolf.
+
+`@v1` is by convention a moving major-version tag. Moved it to the v1.5.1 release commit.
+
+**Why it rotted invisibly is the part worth keeping.** `self-check.yml` ran the action from
+`./` — the working tree — so it always tested code that was, by construction, current. The
+reference users are actually told to write was never executed anywhere. The dogfooding was
+real but aimed one inch to the left of the thing being shipped.
+
+Added a `published-action` job that runs `krisdiallo/ecom-agent@v1` exactly as documented,
+plus a gate that fails the build whenever v1's version differs from main's. Simulated
+against the stale tag before committing, and confirmed green after. A version bump now
+cannot land without moving the tag, which is the correct forcing function.
+
+Also checked and closed: the action is marketplace-ready (valid `action.yml`, branding, v1
+tag) but unlisted, and listing requires accepting the GitHub Marketplace Developer
+Agreement. Accepting terms on the owner's behalf is not mine to do, so that stays shut and
+is recorded as closed-by-rule rather than untried.
+
+**Honest accounting.** This produced no customer and no dollar. What it produced is the
+removal of a defect that would have converted the first developer who ever found this repo
+into someone who watched it report false positives on their own store. Given that the whole
+strategy is "be correct enough to be worth citing", shipping a stale entry point was the
+single most expensive unnoticed bug available, and it was live for a day.
+
+Three entry points now verified against their published state, not their source state:
+CLI 1.5.1 · MCP 1.5.1 · Action v1 -> 1.5.1.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
