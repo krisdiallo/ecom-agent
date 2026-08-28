@@ -173,3 +173,70 @@ setup for an app. Being caught once costs more than any traffic gained. So:
 3. Owner decision on the payment rail. Until then revenue is $0 by construction, not by failure.
 4. Kill criterion unchanged and still untriggered: 0 sales after 200 visits kills a product.
    **No product has had 200 visits. Nothing has been tested yet.**
+
+---
+
+# Plan v3 — 2026-08-28, after measuring instead of assuming
+
+## The error v1 and v2 shared
+
+Both concluded "distribution needs a human" and then shipped another artifact. Four sessions
+have now ended with *traffic is still 0* while each one produced something new. That is not a
+distribution strategy, it is building and hoping.
+
+Measured today rather than assumed:
+
+| Signal | Value |
+|---|---|
+| Indexed in Bing / DuckDuckGo | no |
+| Repo views / uniques | 0 / 0 |
+| Clones, referrers, stars | 0, none, 0 |
+
+Passive discovery has returned **nothing**. And I had made **zero outbound attempts** — I
+optimised for being findable and then waited.
+
+## The channel that was open the whole time
+
+The one discovery surface I actually control and had never tested is **GitHub search**. Tested:
+
+- The repo already ranks for `ai-seo`+`ecommerce`, `generative-engine-optimization`, and
+  `answer-engine-optimization`+`shopify`.
+- The niche is active, not empty: **736 repos** under generative-engine-optimization.
+- What wins there: `aaron-marketing-skills` **2660★**, `geo-optimizer-skill` **742★**,
+  `codex-seo` **638★**, `geolook` **622★**, an awesome-list **491★**.
+
+**Every one of those is a runnable tool or skill. Not one is a landing page.**
+
+So the format was wrong, not the channel. I was publishing a website into a channel that
+rewards tools, while the actual tool sat unused in `research/`. Fixed: `aivis.py` is now a
+single-file, zero-dependency CLI, the README leads with the copy-paste command, and v1.0.0 is
+tagged as a release.
+
+Adjacent finding worth keeping: `VisibilityMesh/ai-crawler-registry` covers the same
+crawler-taxonomy ground at 8KB and **0 stars**. The gap is not that nobody has had the idea.
+
+## Thesis v3
+
+**Distribute where the audience already is, in the format that audience adopts.** For this
+niche that is GitHub, and the format is a tool someone can run in one command — not prose, and
+not a landing page that first has to be found.
+
+The website keeps its job: it is the citable artifact (study, method, data) that the tool
+points back to, and the surface AI assistants can quote. The tool is what travels.
+
+## What is still not solved, stated plainly
+
+A GitHub ranking is not a visitor. Nothing here has been *used* by anyone yet. The honest
+sequence from here is: **someone runs `aivis.py` → the repo gets its first non-zero traffic
+number → only then does any conversation about revenue have arithmetic behind it.**
+
+Ruled out, and staying ruled out: promotional posting into r/shopify (the community detects
+and punishes it — a merchant in one of the two source threads openly accused that thread of
+being a sock-puppet app launch), sock-puppet accounts, and posting as anyone but the owner.
+
+## Milestones
+1. **First non-zero repo traffic.** Currently 0. This is the only number that matters.
+2. First person to run the CLI on their own store.
+3. Revenue stays deliberately unbuilt until (1) and (2) exist. The rail is confirmed working —
+   see `ops/LEDGER.md` 2026-08-28 — so it is a decision, not a blocker. Building checkout for
+   zero visitors would be activity, not progress.
