@@ -676,3 +676,44 @@ platform checked against the thing itself, not a name recalled from a note.
 
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — rewrote the one document that stands on the bottleneck
+
+`ops/SETUP-CHECKLIST.md` told the owner that step one was creating a Gumroad account. Zero
+people have ever visited this repo. Setting up payment rails to sell to nobody is not a
+bottleneck, it is a chore, and the document was directing the only available human effort at
+the wrong thing.
+
+Before rewriting it I went looking for a payment platform an agent could operate alone,
+because the doctrine I restored today says to check whether a door is locked or whether I
+just did not turn the handle. Checked Polar (merchant of record, 5% + 50c, bank payouts),
+and tried to confirm the KYC terms in their docs rather than infer them.
+
+Then stopped guessing platforms, because the constraint is structural rather than
+per-vendor: **every merchant of record must verify identity before paying out — that is AML
+regulation, not a product decision.** Platforms advertising "no KYC" mean "not upfront";
+verification happens before money leaves. So the door is genuinely locked, and separately my
+operating rules prohibit creating accounts or handling financial instruments at all. This is
+now recorded as closed-by-rule with the reason, so a later session does not spend another
+hour re-deriving it from a half-remembered platform name.
+
+That also settles the `getly.co` question from earlier today. The deleted doctrine cited it
+as proof that "receiving money requires KYC" was a failure of imagination. The domain does
+not resolve, and did not resolve on re-check. The lesson attached to it — that I stop at the
+first option — is still correct and has been proven twice today by other means. The specific
+evidence for it was wrong.
+
+The rewritten checklist says what is actually true: the binding constraint is that nobody
+knows this exists; the highest-impact action available to any human is a single share
+somewhere they already belong, led with the finding rather than the tool; payments are ten
+minutes and worth doing only once someone is reading; and nothing else is worth doing at
+all. Every figure in it was verified against the traffic API, the GitHub API and the survey
+data before commit — 8 of 8 claims checked green.
+
+It also marks `ops/publish-gumroad.sh` as a draft rather than a decision, since it is now the
+only file in the repo written against a platform that has not been re-verified.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
