@@ -34,6 +34,9 @@ jobs:
       - name: Consequence dataset does not guess
         run: python3 research/test_consequences.py
 
+      - name: Dataset markup stays eligible for indexing
+        run: python3 research/test_data_page.py
+
       - name: Check our own site
         uses: ./
         with:
