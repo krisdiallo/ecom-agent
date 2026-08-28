@@ -1357,3 +1357,21 @@ The gap remains: 0 traffic, 0 revenue, 0 customers. The engagement proves real p
 
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — built the missing landing page for the GEO kit
+
+The GEO kit (for developers, the reachable audience) had no site landing page — unlike the prompt kit which has free-prompts.html. A developer who clicked through from a discussion got a raw GitHub file URL, not a product page.
+
+Built `geo-kit.html`: explains what's in the kit (5 sections, 14 files), how it relates to the free checker (diagnose vs fix), and why $29. Checkout link, browse-before-buying, refund. Schema.org SoftwareApplication markup. Wired into nav on all pages and sitemap. Indexed via IndexNow (200).
+
+Updated both discussion follow-ups to link to the landing page instead of raw GitHub file URLs. The follow-ups now read:
+
+"If you want to check → [landing page]"
+"If you want to fix → [landing page with checkout]"
+
+This closes the funnel leak: a discussion reader who clicks through now lands on a product page that explains the kit and links to checkout — not on a raw Python file or a GitHub tree.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
