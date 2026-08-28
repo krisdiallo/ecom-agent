@@ -25,7 +25,7 @@ jobs:
       - name: MCP server speaks clean JSON-RPC
         run: python3 research/test_mcp.py
 
-      - name: SSRF guard holds
+      - name: SSRF and resource guards hold
         run: python3 research/test_ssrf.py
 
       - name: Check our own site

@@ -28,7 +28,7 @@ import argparse, gzip, io, ipaddress, json, re, socket, sys
 import urllib.error, urllib.parse, urllib.request
 from html import unescape
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 UA = ("Mozilla/5.0 (compatible; aivis/%s; +https://github.com/krisdiallo/ecom-agent) "
       "AI-visibility self-check" % __version__)
@@ -66,6 +66,31 @@ def norm(s):
 def fold(s):
     s = unescape(s or "").lower().replace("’", "'").replace("‘", "'")
     return norm(re.sub(r"[^a-z0-9]+", " ", s))
+
+
+# A page we have actually seen in the wild is 1.6 MB, and --pages 25 multiplies that.
+# Nothing stopped a target serving far more, and the gzip path was worse: a small
+# download decompresses unbounded, so a decompression bomb turns a few KB on the wire
+# into gigabytes in memory. Both paths are now capped. 8 MB is ~5x the largest real
+# page observed, which is generous for a document we only parse for text and JSON-LD.
+MAX_BYTES = 8 * 1024 * 1024
+
+
+def _read_capped(fp, limit=MAX_BYTES):
+    """Read at most `limit` bytes. Truncation is not an error: a page too large to be
+    read whole is also too large to be a sane product page, and the checks that matter
+    (schema, title, facts) live near the top of the document anyway."""
+    return fp.read(limit + 1)[:limit]
+
+
+def _gunzip_capped(raw, limit=MAX_BYTES):
+    out, z = b"", gzip.GzipFile(fileobj=io.BytesIO(raw))
+    while len(out) < limit:
+        chunk = z.read(min(262144, limit - len(out)))
+        if not chunk:
+            break
+        out += chunk
+    return out
 
 
 class BlockedTarget(Exception):
@@ -128,9 +153,9 @@ def get(url, timeout=25):
         "User-Agent": UA, "Accept": "*/*", "Accept-Encoding": "gzip"})
     try:
         with _opener.open(req, timeout=timeout) as r:
-            raw = r.read()
+            raw = _read_capped(r)
             if r.headers.get("Content-Encoding") == "gzip":
-                raw = gzip.GzipFile(fileobj=io.BytesIO(raw)).read()
+                raw = _gunzip_capped(raw)
             return r.status, r.geturl(), raw.decode("utf-8", "replace")
     except urllib.error.HTTPError as e:
         return e.code, url, ""
@@ -603,9 +628,9 @@ def get_ct(url, timeout=15, data=None, ctype=None):
     req = urllib.request.Request(url, headers=h, data=data)
     try:
         with _opener.open(req, timeout=timeout) as r:
-            raw = r.read()
+            raw = _read_capped(r)
             if r.headers.get("Content-Encoding") == "gzip":
-                raw = gzip.GzipFile(fileobj=io.BytesIO(raw)).read()
+                raw = _gunzip_capped(raw)
             return r.status, r.headers.get("Content-Type", ""), raw.decode("utf-8", "replace")
     except urllib.error.HTTPError as e:
         return e.code, "", ""

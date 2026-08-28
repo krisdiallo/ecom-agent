@@ -48,4 +48,34 @@ if st != 0 or body:
 else:
     print("ok: get() fails closed on blocked targets")
 
+
+
+# --- resource limits: same threat model, different exhaustion ---
+import gzip as _gz, io as _io
+
+buf = _io.BytesIO()
+with _gz.GzipFile(fileobj=buf, mode="wb") as z:
+    z.write(b"\0" * (64 * 1024 * 1024))          # 64MB -> a few KB on the wire
+out = m._gunzip_capped(buf.getvalue())
+if len(out) > m.MAX_BYTES:
+    print(f"FAIL: gzip bomb decompressed past the cap ({len(out)} > {m.MAX_BYTES})")
+    fail = True
+else:
+    print(f"ok: gzip bomb capped at {len(out):,} bytes")
+
+
+class _FP:
+    def __init__(self, n):
+        self.d = b"x" * n
+
+    def read(self, n=-1):
+        return self.d[:n] if n and n > 0 else self.d
+
+
+if len(m._read_capped(_FP(32 * 1024 * 1024))) > m.MAX_BYTES:
+    print("FAIL: raw read exceeded the cap")
+    fail = True
+else:
+    print("ok: raw read capped")
+
 sys.exit(1 if fail else 0)
