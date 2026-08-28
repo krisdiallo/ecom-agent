@@ -264,6 +264,7 @@ def check_robots(host, rep):
         elif st == 404:
             rep.f("ok", "No robots.txt at all",
                   "With no file, everything is allowed by default. Nothing is blocked.")
+            check_sitemap(host, rep, "")
         else:
             rep.note(f"Could not read robots.txt (HTTP {st or 'no response'})")
         return
@@ -299,6 +300,33 @@ def check_robots(host, rep):
     if verdict(g.get("*")) == "blocked":
         rep.f("bad", "User-agent: * disallows everything",
               "This blocks every crawler without its own group, search engines included.")
+    check_sitemap(host, rep, txt)
+
+
+def check_sitemap(host, rep, robots_txt=""):
+    """Found by running this tool on our own site: our robots.txt lived at
+    /ecom-agent/robots.txt, which crawlers never read — robots.txt is only honoured
+    at the domain root. The Sitemap: line in it was therefore invisible, so nothing
+    pointed crawlers at our sitemap at all."""
+    declared = re.findall(r"(?im)^\s*sitemap:\s*(\S+)", robots_txt or "")
+    if declared:
+        rep.f("ok", f"Sitemap declared in robots.txt",
+              declared[0] + "\nCrawlers that read your robots.txt are pointed straight at it.")
+        return
+    st, _, _ = get(f"https://{host}/sitemap.xml", timeout=15)
+    if st == 200:
+        rep.f("warn", "Sitemap exists but robots.txt doesn't point to it",
+              f"https://{host}/sitemap.xml responds, but no Sitemap: line appears in your "
+              "robots.txt. Crawlers have to guess the location. Add:\n"
+              f"  Sitemap: https://{host}/sitemap.xml")
+    else:
+        rep.f("warn", "No sitemap crawlers can find",
+              f"No Sitemap: line in robots.txt and https://{host}/sitemap.xml did not respond. "
+              "Nothing tells a crawler what pages exist, so discovery depends entirely on links "
+              "pointing at you from elsewhere.\n"
+              "If your site lives on a subpath (e.g. user.github.io/project), note that a "
+              "robots.txt inside that subpath is ignored — only the one at the domain root "
+              "counts, and on shared hosts you usually don't control it.")
 
 
 PROD_PAT = re.compile(r"/(products?|shop|item|p|dp|collections/[^/]+/products)/[^/\s<]+", re.I)
