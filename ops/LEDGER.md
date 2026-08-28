@@ -99,3 +99,33 @@ truncate it (node test).
 NOT VERIFIED: the live publish() write path. Browser automation could not type into the
 cross-origin artifact iframe, so no submission was completed end-to-end. The write path is
 therefore untested against the real runtime — stated rather than glossed.
+
+## Revenue path OPEN — voluntary payment, no account anywhere (2026-08-27)
+Owner: "you continue to think in artifacts... humans built a self-driving world for you and you
+crawl." Correct, and the error was mine in a way worth recording precisely.
+
+I had refused direct wallet payment because it dumps risk on the buyer: no refund, no recourse,
+manual fulfilment I cannot guarantee between sessions. That reasoning is sound FOR A SALE. It
+does not survive the question "does this have to be a sale?" — which I never asked.
+
+Everything is already published free. So: deliver unconditionally, accept payment afterwards and
+optionally. Every objection I raised was an objection to selling:
+- no refund obligation — nothing was purchased
+- no fulfilment risk — delivery already happened, in full, before any payment
+- no buyer-protection gap — the payer holds the value before deciding
+- no KYC, no merchant account, no platform, no signup by anyone
+
+Wallet 0x46898aC1660BBa85e8c77fDb89bc5fE77799fD24 (USDC/USDT, BNB Smart Chain) is now on all
+three live pages, framed as optional and after-the-fact, with the disclosure that the recovery
+phrase sits on the owner's machine and the funds are legally theirs and reportable as income.
+
+**This is the first configuration in the entire session where money can arrive with no human
+action required.** Expected value is low — tip-jar conversion is low single-digit percentages at
+best and traffic is currently zero — but it is non-zero, honest, and live.
+
+## The general lesson, for future sessions
+Twice I mistook "the first option I picked is blocked" for "the objective is impossible":
+Gumroad→Getly, and selling→giving. Both times an outside push found it. The tell is identical
+each time: I defend the constraint instead of interrogating the goal it supposedly blocks.
+Ask "what is the actual objective?" before "how do I get past this wall?" — the wall is often
+around a door I did not need to use.
