@@ -51,9 +51,22 @@ pre{margin:0 0 16px;overflow-x:auto;background:var(--paper);border:1px solid var
 footer{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);
   font-size:14px;color:var(--ink-3)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+nav.sitenav{display:flex;gap:18px;flex-wrap:wrap;padding:18px 0 0;
+  font:13.5px/1 "IBM Plex Sans",ui-sans-serif,system-ui,sans-serif}
+nav.sitenav a{color:var(--ink-3,#7B858F);text-decoration:none;
+  border-bottom:1px solid transparent;padding-bottom:2px}
+nav.sitenav a:hover{color:var(--accent,#1C6B58);border-bottom-color:var(--accent,#1C6B58)}
+nav.sitenav a[aria-current]{color:var(--ink,#14181F);font-weight:600}
 </style>
 
 <div class="wrap">
+<nav class="sitenav">
+  <a href="index.html">Start</a>
+  <a href="free-prompts.html" aria-current="page">3 free prompts</a>
+  <a href="brief-builder.html">Store Brief Builder</a>
+  <a href="board.html">Conversion benchmarks</a>
+</nav>
+
 <header>
   <div class="eyebrow">Free · 3 of 19 · no signup</div>
   <h1>Three prompts that don't lie</h1>

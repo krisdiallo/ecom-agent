@@ -47,6 +47,12 @@ border-radius:6px;padding:13px 15px;margin-top:22px;font-size:13.5px;color:var(-
 .bar{height:5px;background:var(--line2);border-radius:99px;overflow:hidden;margin:10px 0 6px}
 .bar span{display:block;height:100%;background:var(--accent);border-radius:99px}
 footer{margin-top:50px;padding-top:22px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink3)}
+nav.sitenav{display:flex;gap:18px;flex-wrap:wrap;padding:18px 0 0;
+  font:13.5px/1 "IBM Plex Sans",ui-sans-serif,system-ui,sans-serif}
+nav.sitenav a{color:var(--ink3);text-decoration:none;border-bottom:1px solid transparent;
+  padding-bottom:2px}
+nav.sitenav a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+nav.sitenav a[aria-current]{color:var(--ink);font-weight:600}
 `;
 
 var CATS=["Apparel & accessories","Home & furniture","Beauty & personal care","Food & drink",
@@ -74,7 +80,7 @@ function buildDoc(rows){
     +'<\/body><\/html>';
 }
 
-var readOnly=false, mine=null;
+var readOnly=(typeof claude==="undefined"||!claude), mine=null;
 
 function render(){
   var rows=getData();
@@ -119,8 +125,11 @@ function render(){
       +'not as a target.</p></div>';
   }
 
-  var form=readOnly?'<div class="card"><h2>Read-only</h2><p class="small">'
-      +'This view can read the board but not add to it.</p></div>'
+  var form=readOnly?'<div class="card"><h2>This copy is read-only</h2><p class="small">'
+      +'The board stores submissions inside the page itself, which only works on the hosted '
+      +'version. This mirror can show the numbers but cannot take yours. '
+      +'<a href="https://claude.ai/code/artifact/73114fbd-574b-4db7-9aa0-aa7a6fa8c2d4">'
+      +'Add yours on the live board</a>.</p></div>'
     :'<div class="card"><h2>Add yours — anonymous</h2><div class="grid">'
       +'<div class="f"><label for="c">Category</label><select id="c">'
         +CATS.map(function(x){return '<option>'+esc(x)+'</option>'}).join("")+'</select></div>'
@@ -135,7 +144,14 @@ function render(){
       +'</div><button id="go">Add and see where I land</button>'
       +'<p class="small" style="margin-top:10px">No email, no store name, no URL. Nothing here identifies you.</p></div>';
 
-  app.innerHTML='<div class="w"><header><div class="eyebrow">Free · anonymous · '+rows.length+' stores</div>'
+  app.innerHTML='<div class="w">'
+    +'<nav class="sitenav">'
+      +'<a href="index.html">Start</a>'
+      +'<a href="free-prompts.html">3 free prompts</a>'
+      +'<a href="brief-builder.html">Store Brief Builder</a>'
+      +'<a href="board.html" aria-current="page">Conversion benchmarks</a>'
+    +'</nav>'
+    +'<header><div class="eyebrow">Free · anonymous · '+rows.length+' stores</div>'
     +'<h1>Is 1.4% bad?</h1>'
     +'<p class="sub">Every store owner asks it and the honest answer is "compared to what?". '
     +'Published benchmarks are vendor marketing. This is a pile of self-reported numbers from '
@@ -165,7 +181,9 @@ function submit(){
   var rows=getData(); rows.push(entry);
   mine=entry;
   try{sessionStorage.setItem("crb.mine",JSON.stringify(entry));}catch(e){}
-  claude.use("artifact").then(function(a){
+  var C=(typeof claude!=="undefined"&&claude)?claude:null;
+  if(!C){readOnly=true;btn.disabled=false;render();return;}
+  C.use("artifact").then(function(a){
     if(!a){readOnly=true;btn.disabled=false;render();return;}
     return a.publish(buildDoc(rows)).then(function(){
       document.getElementById("data").textContent=JSON.stringify(rows);
