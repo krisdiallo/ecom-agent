@@ -259,6 +259,7 @@ class R:
         self.bad = self.warn = self.ok = 0
         self.quiet = quiet
         self.findings = []
+        self.saw_product = False
 
     def f(self, lvl, title, body=""):
         col = {"bad": C["r"], "warn": C["y"], "ok": C["g"]}[lvl]
@@ -445,6 +446,95 @@ def _legacy_find(host, budget=6):
     return None
 
 
+def check_agent_commerce(host, rep):
+    """The layer everyone arguing about robots.txt is missing.
+
+    Shopify now serves /llms.txt "Agent Instructions" advertising the Universal
+    Commerce Protocol: a live MCP endpoint an agent can call to search your catalogue,
+    build a cart and complete a checkout. That is a machine-readable commerce API which
+    skips HTML parsing altogether — so it matters more than any amount of page copy for
+    an agent that intends to actually buy. Verified live on real stores 2026-08-28.
+
+    Read-only: this only ever calls tools/list, which enumerates capabilities. It never
+    creates a cart or starts a checkout.
+    """
+    say = (lambda *a, **k: None) if rep.quiet else print
+    say(f"\n{C['b']}3. Agent commerce — can an AI agent actually transact with you?{C['x']}")
+
+    st, ct, body = get_ct(f"https://{host}/llms.txt")
+    has_llms = st == 200 and "html" not in ct.lower() and not re.match(r"\s*<", body or "")
+
+    st2, _, ucp_body = get_ct(f"https://{host}/.well-known/ucp")
+    endpoint, version = None, None
+    if st2 == 200 and (ucp_body or "").strip().startswith("{"):
+        try:
+            u = json.loads(ucp_body)
+            u = u.get("ucp", u)
+            version = u.get("version")
+            for s in (u.get("services") or {}).get("dev.ucp.shopping") or []:
+                if s.get("transport") == "mcp" and s.get("endpoint"):
+                    endpoint = s["endpoint"]
+                    break
+        except Exception:
+            pass
+
+    tools = []
+    if endpoint or st2 == 200:
+        ep = endpoint or f"https://{host}/api/ucp/mcp"
+        payload = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/list"}).encode()
+        st3, _, mb = get_ct(ep, data=payload, ctype="application/json", timeout=20)
+        if st3 == 200 and (mb or "").strip().startswith("{"):
+            try:
+                tools = sorted(t.get("name") for t in
+                               json.loads(mb).get("result", {}).get("tools", []) if t.get("name"))
+            except Exception:
+                pass
+
+    if tools:
+        buy = [t for t in tools if re.search(r"checkout|cart|order", t)]
+        rep.f("ok", f"Live agent-commerce endpoint — {len(tools)} tools",
+              "An AI agent can call your store directly instead of scraping it.\n"
+              + (f"UCP version {version}\n" if version else "")
+              + "tools: " + ", ".join(tools[:8]) + ("…" if len(tools) > 8 else "")
+              + (f"\nIncludes {len(buy)} cart/checkout tools, so an agent can complete a purchase."
+                 if buy else ""))
+    elif has_llms or version:
+        rep.f("warn", "Agent-commerce advertised but the endpoint did not answer",
+              "Your store publishes agent instructions or a UCP profile, but the MCP endpoint "
+              "did not return a tool list. An agent following those instructions hits a dead end.")
+    elif not rep.saw_product:
+        rep.note("No agent-commerce endpoint (and no product page found)",
+                 "This does not look like a storefront, so that is expected rather than a "
+                 "problem. Run it against a store to get a meaningful result here.")
+    else:
+        rep.f("warn", "No agent-commerce endpoint found",
+              "No /llms.txt agent instructions and no /.well-known/ucp profile. Shopify serves "
+              "these automatically on stores that support the Universal Commerce Protocol — "
+              "7 of 8 Shopify stores we sampled had a live one. Without it, an agent that wants "
+              "to buy has to scrape your HTML, which is strictly worse for both of you.\n"
+              "This is newer and less discussed than robots.txt, and it is the layer that "
+              "decides whether an assistant can transact rather than merely describe you.")
+
+
+def get_ct(url, timeout=15, data=None, ctype=None):
+    """get() variant that also returns Content-Type, needed to spot soft-404s that
+    answer 200 with an HTML page."""
+    h = {"User-Agent": UA, "Accept": "*/*", "Accept-Encoding": "gzip"}
+    if ctype:
+        h["Content-Type"] = ctype
+    req = urllib.request.Request(url, headers=h, data=data)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            raw = r.read()
+            if r.headers.get("Content-Encoding") == "gzip":
+                raw = gzip.GzipFile(fileobj=io.BytesIO(raw)).read()
+            return r.status, r.headers.get("Content-Type", ""), raw.decode("utf-8", "replace")
+    except urllib.error.HTTPError as e:
+        return e.code, "", ""
+    except Exception:
+        return 0, "", ""
+
+
 def check_catalogue(host, rep, n):
     """Sample n product pages and report whether problems are systemic or one-offs."""
     say = (lambda *a, **k: None) if rep.quiet else print
@@ -478,6 +568,7 @@ def check_catalogue(host, rep, n):
         rep.note("Found product URLs but could not fetch any of them")
         return
     t = len(rows)
+    rep.saw_product = any(a.get("product") or a.get("js_injected") for _u, a in rows)
     say(f"  {C['d']}checked {t} page(s){C['x']}")
 
     def report(key, lvl, label, detail):
@@ -565,6 +656,9 @@ def check_product(host, rep, url=None):
 
     say(f"  {C['d']}checked: {final}{C['x']}")
     a = analyse(html)
+    # "Is this a storefront?" is better answered by finding Product schema than by
+    # having successfully fetched some page — an explicit --url could be anything.
+    rep.saw_product = bool(a.get("product")) or a.get("js_injected", False)
 
     if a["js_injected"]:
         rep.f("bad", "Structured data is injected by JavaScript — crawlers never see it",
@@ -651,6 +745,8 @@ def main():
                     help="sample N product pages instead of one, and report whether "
                          "problems are systemic (default: 1)")
     ap.add_argument("--no-color", action="store_true")
+    ap.add_argument("--no-agent", action="store_true",
+                    help="skip the agent-commerce (UCP/MCP) check")
     ap.add_argument("--json", action="store_true",
                     help="machine-readable output (for CI)")
     ap.add_argument("--fail-on", choices=["critical", "warning", "never"],
@@ -671,6 +767,8 @@ def main():
         check_catalogue(host, rep, min(args.pages, 25))
     else:
         check_product(host, rep, args.url)
+    if not args.no_agent:
+        check_agent_commerce(host, rep)
 
     if args.json:
         json.dump({"tool": "aivis", "version": __version__, "host": host,
