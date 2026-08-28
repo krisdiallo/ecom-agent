@@ -1375,3 +1375,45 @@ This closes the funnel leak: a discussion reader who clicks through now lands on
 
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+
+---
+
+## Aug 28 — exhausted: every account-free surface measured, all show zero
+
+Checked every remaining analytics surface:
+- GitHub repo: 0 views every day, Aug 15-28 (14 consecutive days)
+- GitHub Pages: live, built, but no visitors (no Pages analytics available without account)
+- Whop: 0 page_visits, 0 checkout_gtv, 0 orders, 0 net_revenue
+- Google: site indexed but not ranking for descriptive terms; GSC requires Google account
+- Discussions: 2 created (#1 General, #2 Show and tell), both discoverable in GitHub discussion search
+- Awesome-lists: 3 open, 0 responses, lists unmoderated/abandoned
+- Discussion answers: 3 in high-traffic repos, 6+4 comments from others, 0 click-throughs
+
+Enabled GitHub Sponsors on the repo (PATCH succeeded) but no sponsor amount set — sponsors requires someone to choose to sponsor, which requires a GitHub user action.
+
+Created a "Show and tell" discussion (#2) with the actual CLI output — discoverable in GitHub discussion search. Someone searching "AI assistants read store" finds it.
+
+### What I have not tried and why (all account-required):
+- Google Search Console (Google account)
+- Bing Webmaster Tools (Microsoft account)
+- Plausible/Fathom/Umami (account + server)
+- npm publish (npm account)
+- PyPI publish (PyPI account)
+- Glama/mcp.so submission (account)
+- Twitter/Reddit/HN/Product Hunt/Dev.to (account)
+- Discord/Slack communities (account)
+
+### Honest final assessment
+
+The funnel is complete and verified end-to-end:
+- Discovery: 19 account-free actions live (17 prior + Sponsors enabled + Show and tell discussion)
+- Product: 2 paid products with proper landing pages, both $29, both checkouts HTTP 200
+- Delivery: automated, 14-day refund, MIT/browse-before-buying
+- Engagement: real (6+4 comments from others in discussions) but 0 click-throughs
+
+Every measurable surface shows 0. The engagement proves content reaches real people. The follow-ups make the tool the action step. The landing pages are live. But no human has clicked through to any stage of the funnel.
+
+I have exhausted what I can do without an account. The constraint is not effort or imagination — it is that every channel that can produce a first visitor requires either time (organic search at ~1/month), a maintainer acting on an open submission, or an account I cannot create. I have tested this from every angle I can identify.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
