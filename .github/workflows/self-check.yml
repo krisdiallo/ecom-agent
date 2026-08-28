@@ -45,3 +45,32 @@ jobs:
           # our own pages are not a product listing, so Product-schema findings
           # are expected here; we watch for regressions rather than gate on them
           fail-on: never
+
+  # The job above runs the action from './', which is whatever is in the working tree.
+  # The README tells users to write 'krisdiallo/ecom-agent@v1', and nothing tested that
+  # reference — so the v1 tag sat 68 commits stale, shipping aivis 1.0.0 with the
+  # title-comparison bug that produced false positives on healthy stores. Anyone
+  # following our CI instructions got the broken version, silently, for a day.
+  # This job exercises the documented reference so the tag cannot rot unnoticed again.
+  published-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run the action exactly as the README documents it
+        id: pub
+        uses: krisdiallo/ecom-agent@v1
+        with:
+          site: krisdiallo.github.io
+          url: https://krisdiallo.github.io/ecom-agent/ai-visibility.html
+          fail-on: never
+
+      - name: The published tag must not be a stale major version
+        run: |
+          set -euo pipefail
+          curl -sf -o tag_aivis.py  https://raw.githubusercontent.com/krisdiallo/ecom-agent/v1/aivis.py
+          curl -sf -o main_aivis.py https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/aivis.py
+          TAG_V=$(python3 tag_aivis.py --version | awk '{print $2}')
+          MAIN_V=$(python3 main_aivis.py --version | awk '{print $2}')
+          echo "v1 ships $TAG_V, main is $MAIN_V"
+          test "$TAG_V" = "$MAIN_V" || {
+            echo "::error::v1 ships $TAG_V but main is $MAIN_V — move the v1 tag to the latest release"
+            exit 1; }
