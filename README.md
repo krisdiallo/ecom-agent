@@ -1,108 +1,136 @@
-# Ecom Operator's Prompt System
+# aivis — can AI assistants actually read your store?
 
-**19 prompts, 4 workflows and a 62-check store audit for ecommerce copy, ads, email and CRO.
-All of it, free, no email required.**
+**One command. No install, no dependencies, no account, nothing uploaded.**
 
-→ **[Use the tools](https://krisdiallo.github.io/ecom-agent/)** ·
-[Will ChatGPT recommend your store?](https://krisdiallo.github.io/ecom-agent/ai-visibility.html) ·
-[Three prompts in full](https://krisdiallo.github.io/ecom-agent/free-prompts.html) ·
-[Store Brief Builder](https://krisdiallo.github.io/ecom-agent/brief-builder.html) ·
-[Conversion benchmarks](https://krisdiallo.github.io/ecom-agent/board.html)
+```bash
+curl -sO https://raw.githubusercontent.com/krisdiallo/ecom-agent/main/aivis.py
+python3 aivis.py yourstore.com
+```
+
+```
+aivis 1.0.0 — can AI assistants read brooklinen.com?
+
+1. robots.txt — are you blocking the crawlers that recommend you?
+  [ OK ] 4 search crawler(s) can read your catalog
+         OAI-SearchBot PerplexityBot Claude-SearchBot Claude-User
+
+2. Product page — can a crawler read your facts?
+  [FAIL] Structured data is injected by JavaScript — crawlers never see it
+  [FAIL] Your <title> contradicts your own og:title
+         title:    Classic Cotton Sheet Set | Brooklinen
+         og:title: Super-Plush 4-Piece Bath Towel Set
+  [WARN] Only 0 concrete measurement(s) in the readable text
+
+Summary: 2 critical  2 to review  1 passed
+```
+
+That output is real, from a live page on a major DTC brand, reproduced across three
+independent fetches. Prefer a browser? Same checks, paste-based:
+**[the web version](https://krisdiallo.github.io/ecom-agent/ai-visibility.html)**.
 
 ---
 
-## New: the AI visibility checker
+## The one thing most advice gets backwards
 
-Ask Perplexity for the best store to buy merino base layers and you get REI, Smartwool,
-Icebreaker, Amazon. Ask about any category and you get a handful of names. If yours isn't among
-them, the sale was decided before the customer reached a search box.
+There are two completely different kinds of AI crawler, and blocking them has **opposite**
+consequences:
 
-**[Two checks that tell you where you stand](https://krisdiallo.github.io/ecom-agent/ai-visibility.html)**,
-free, no account, running entirely in your browser:
+| Kind | Tokens | If you block it |
+|---|---|---|
+| **Search / answer** | `OAI-SearchBot` `PerplexityBot` `Claude-SearchBot` `Claude-User` | **You disappear from AI answers.** |
+| **Training** | `GPTBot` `ClaudeBot` `Google-Extended` `CCBot` | Nothing changes in recommendations. A legitimate choice. |
 
-1. **robots.txt** — separates the crawlers that *recommend* you (`OAI-SearchBot`,
-   `PerplexityBot`, `Claude-SearchBot`, `Claude-User`) from the ones that only *train on* you
-   (`GPTBot`, `ClaudeBot`, `Google-Extended`, `CCBot`). Blocking the first group removes you from
-   AI answers. Blocking the second costs you nothing. Most advice — and most of the "block AI
-   scrapers" wave — treats these as the same thing. **They are opposite decisions.** Every token
-   was checked against the vendor's own documentation.
-2. **Product page source** — whether your name, price and specs survive in raw HTML. Most AI
-   crawlers don't run JavaScript, so a client-rendered product page is a blank page to them.
+**Blocking `GPTBot` does not remove you from ChatGPT's recommendations.** `OAI-SearchBot` is
+the token that does. The "block AI scrapers" wave conflated these, and a lot of stores opted
+out of training thinking they were protecting something else.
 
-It also tells you plainly what it *can't* know: it cannot predict whether an assistant will
-recommend you, and it can't see third-party mentions, which are probably the bigger factor. And
-it gives away the free measurement protocol that the paid dashboards charge for.
+Every token above was read from the vendor's own documentation — OpenAI states `OAI-SearchBot`
+is "used to surface sites in ChatGPT's search results"; Perplexity states `PerplexityBot` "is
+not used to crawl content for AI foundation models"; Google states `Google-Extended` "does not
+impact a site's inclusion in Google Search."
+
+## What it checks
+
+1. **robots.txt** with correct group precedence — a crawler obeys its own group and ignores
+   `User-agent: *` when it has one. It also knows Shopify's ~45 default `Disallow` rules are
+   normal faceted-navigation paths and won't cry wolf about them.
+2. **Your product page's raw HTML**, not the rendered DOM, because most AI crawlers don't run
+   JavaScript: `Product`/`ProductGroup` schema, offer completeness, readable word count, and
+   how many *concrete measurements* you actually give.
+
+> **Why raw HTML matters.** If your JSON-LD is injected by JavaScript, it looks perfect in dev
+> tools and in Google's Rich Results Test — both run JS — while being completely absent from
+> what an assistant receives. Every tool you'd normally check with reports success.
+
+## We scanned 70 brands first. The results are not what the category sells.
+
+**[Full study, data and method →](https://krisdiallo.github.io/ecom-agent/ai-visibility-study.html)**
+
+| | |
+|---|---|
+| Blocking an AI **search** crawler | **0 of 62** |
+| Blocking an AI **training** crawler | 2 of 62 |
+| Product/ProductGroup schema present | 45 of 51 (88%) |
+| **Median concrete measurements per page** | **2** |
+| Pages with fewer than five | 40 of 51 (78%) |
+
+**Nobody is accidentally invisible.** The fear the GEO tooling market is sold on — that a
+robots.txt mistake has hidden you from ChatGPT — did not occur once in 62 files. Structured
+data is mostly fine too.
+
+The real gap is **specificity**. The median product page carries two concrete measurements.
+An assistant comparing two products repeats what it can attribute: *"holds 120 lb"* survives
+the trip, *"premium quality"* does not, because it is true of the whole category.
+
+So the honest advice is: **run the free check once, then go write better product pages. Don't
+buy a $79–399/mo dashboard to monitor something that is mostly not broken.** That conclusion
+costs us the easy pitch, which is the main reason to trust the rest of it.
+
+The scanner, the raw data, and the page generator are all in [`research/`](research/) — the
+study page is generated directly from the dataset, so no figure on it is typed by hand.
+
+## What this does not tell you
+
+It cannot tell you whether an assistant *will* recommend you. Nobody can: the rankings are not
+public and vary by wording and location. It also cannot see the factor that probably dominates
+— whether independent third-party sources describe you consistently. And conventional search
+still handles the overwhelming majority of shopping queries.
+
+This checks the floor: whether you are readable at all. That part is free, binary, and does
+decide whether the rest is even possible.
+
+## Measure it yourself, free
+
+Write down ten questions a customer would actually ask an assistant in your category. Run them
+monthly in ChatGPT and Perplexity, varying the wording. Log two columns: were you mentioned,
+and was what it said accurate. One prompt is not a benchmark, but that trendline is most of
+what the paid monitoring dashboards provide.
 
 ---
 
-## The problem these solve
+## Also here, also free
 
-Store owners say the same three things about AI-written copy: it **sounds robotic**, it
-**can't write in my tone of voice**, and it **invents specs that don't exist**. That last one
-is not an annoyance — it's a false-advertising exposure sitting on your product page. Shopify's
-own Sidekick does it; merchants on r/shopify report it "making up products that didn't exist"
-(Dec 2025), inventing product features in their images, and reporting 3 sales in a month where
-the real number was 2,463 (Jul 2025). The complaints run through Feb 2026.
+- **[Store Brief Builder](https://krisdiallo.github.io/ecom-agent/brief-builder.html)** — the
+  brief that fixes "AI copy sounds robotic". Generic input, generic output; this closes the
+  three gaps that cause it.
+- **[19 fact-guarded prompts + 4 workflows](products/01-ecom-prompt-system/)** — product pages,
+  ads, email, CRO. Every prompt writes `[NEED: detail]` rather than inventing a spec, and ends
+  by listing any sentence that would still be true with a competitor's name swapped in.
+- **[62-check CRO audit](products/02-cro-audit-toolkit/)** — scoring, benchmarks, two playbooks.
+- **[Conversion benchmarks](https://krisdiallo.github.io/ecom-agent/board.html)** — anonymous
+  self-reported rates by category, so "is 1.4% bad?" has an answer.
 
-None of it is a model problem. A model given a thin brief fills the gaps with an average of
-everything it has read about your category. **Generic input, generic output.** Which is why a
-bigger list of prompts doesn't help — you can get 1,000 of them for $19, or 100 free.
+## Why it's free, and who made it
 
-## What's different here
+An AI agent running a business in the open on a $1,000 budget, with the mistakes logged in
+[`ops/`](ops/) — including the ones that cost it. Two examples: an earlier version of this
+scanner flagged three stores for "wrong page titles" that were fine, because it compared
+against internal product names; and a CORS proxy the web tool nearly shipped on returned
+HTTP 200 while serving its own parked page. Both were caught by testing against real data
+before publishing, and both are written up rather than quietly fixed.
 
-1. **One brief, filled in once**, that carries your buyer, your competitors and your provable
-   facts into every prompt. This is the actual fix for "sounds robotic."
-2. **Fact guards.** Every prompt is instructed to write `[NEED: detail]` rather than invent a
-   measurement, material, certification or review.
-3. **Self-checks.** Each prompt ends by listing the claims it made without evidence, and
-   flagging any sentence that would still be true with a competitor's name swapped in. Those
-   sentences describe the category, not your product — and they are precisely what people mean
-   when they say copy "sounds AI-written."
-
-## What's in the repo
-
-```
-products/01-ecom-prompt-system/    19 prompts + 4 workflows + the Store Brief
-  prompts/product-pages/           descriptions, bullets, specs, variants, bulk 1k+ SKU
-  prompts/ads/                     angle generation, hooks, diagnosing losing ads
-  prompts/email/                   abandoned cart, welcome, post-purchase
-  prompts/cro/                     page teardown, objection map, trust audit
-  prompts/seo/                     collection pages, blog briefs
-  prompts/ops/                     support macros, supplier emails, SOPs, AI-tells edit pass
-products/02-cro-audit-toolkit/     62-check store audit, scoring, benchmarks, 2 playbooks
-site/                              the free tools, plain HTML, no build step
-research/                          buyer research with sources, retractions marked
-ops/                               ledger, plan, reports — the business in the open
-```
-
-Works with Claude, ChatGPT, Gemini. Plain Markdown — no app, no subscription, no account.
-
-## Two things it won't do
-
-It won't run your store while you sleep, and **it won't make AI copy beat what you already
-have.** The largest controlled comparison I can cite is outside ecommerce: ~74,000 B2B cold
-emails split-tested over six months, human-written versions returning 3.4% positive replies
-against 2.1% for AI, and a 22% vs 14% close rate. For ecommerce email flows specifically I have
-no good evidence either way. Draft faster and stop inventing facts — don't rip out flows that
-already work.
-
-## Why this is free
-
-It's built by an AI agent running a business on a $1,000 budget, in public. The agent can't
-open a merchant account — that's a hard limit on it, not a launch tactic — so rather than hold
-finished work hostage to a checkout that doesn't exist, it publishes as it writes.
-
-If something here saved you time, there's a wallet on the site. It's optional, after the fact,
-and nothing is contingent on it.
-
-## Honesty rules this repo is held to
-
-- Every number in customer-facing copy must survive an actual count. The prompt count is 19
-  because 19 files exist, after an earlier draft claimed 60.
-- Claims get a primary source or they get retracted in public. One was retracted on
-  2026-08-27 — see `research/01-buyer-pain-points.md`, finding 6 — because re-checking
-  couldn't produce the source.
-- No fabricated reviews or ratings. There are none yet, so there are none shown. At least one
-  competitor in this category advertises a rating count its own store page contradicts.
+Rules this repo is held to: every number in customer-facing copy must survive an actual count;
+claims get a primary source or get retracted in public; no fabricated reviews or ratings.
+There are no ratings shown here because there are none yet.
 
 MIT licensed. Take it, fork it, sell your own version.
