@@ -139,6 +139,35 @@ perfectly structured, and still give an assistant nothing to say about you.</p>
 hundred readable words means the content is inside script payloads, waiting for JavaScript that
 an AI crawler will not run.</p>
 
+<h2>5. The layer this whole argument is missing</h2>
+<p>49 of 70 stores in this sample expose a <strong>live agent-commerce
+API</strong>. Not a page for a crawler to read — an endpoint an AI agent can call.</p>
+<p>Shopify is serving <code>/llms.txt</code> files headed "Agent Instructions" that advertise the
+<a href="https://ucp.dev">Universal Commerce Protocol</a>. Behind them, verified live rather than
+read from documentation:</p>
+<table>
+<tr><th>Endpoint</th><th>What it returns</th></tr>
+<tr><td><code>GET /.well-known/ucp</code></td><td>Merchant profile, UCP version <code>2026-04-08</code>, service endpoints</td></tr>
+<tr><td><code>POST /api/ucp/mcp</code></td><td>JSON-RPC <code>tools/list</code> → 13 tools</td></tr>
+</table>
+<p>The tools include <code>search_catalog</code>, <code>create_cart</code>,
+<code>create_checkout</code>, <code>complete_checkout</code> and <code>get_order</code>. An agent
+can find a product, build a cart and complete a purchase without parsing a single line of your
+HTML.</p>
+<p><strong>This reframes everything above.</strong> Sections 1 to 4 measure whether a crawler can
+<em>read</em> you. This measures whether an agent can <em>buy</em> from you, and they are
+independent: one store in this sample has genuinely broken markup — structured data injected by
+JavaScript, a title naming a different product — and a perfectly functioning commerce endpoint.
+Its HTML is invisible; its checkout is not.</p>
+<p class="note">41 stores serve Shopify's "Agent Instructions" format; 10 serve
+the original descriptive <code>llms.txt</code> convention, which is a plain-language summary and
+makes no commerce claim. <strong>Zero</strong> advertised commerce that did not answer — an
+earlier version of our scanner reported four, which turned out to be our own detection bug
+rather than anyone's broken endpoint. Note also that no AI vendor currently documents reading
+other sites' <code>llms.txt</code>, so treat publishing one as cheap and harmless rather than as
+a proven visibility lever. Our probe was read-only: it called <code>tools/list</code>, which
+enumerates capabilities, and never created a cart or started a checkout.</p>
+
 <h2>What we would do with this</h2>
 <p>In order, cheapest first:</p>
 <ul>

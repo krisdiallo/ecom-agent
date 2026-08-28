@@ -462,7 +462,18 @@ def check_agent_commerce(host, rep):
     say(f"\n{C['b']}3. Agent commerce — can an AI agent actually transact with you?{C['x']}")
 
     st, ct, body = get_ct(f"https://{host}/llms.txt")
-    has_llms = st == 200 and "html" not in ct.lower() and not re.match(r"\s*<", body or "")
+    has_llms = (st == 200 and "html" not in ct.lower()
+                and not re.match(r"\s*<", body or "")
+                and not re.search(r"<!doctype|<html", (body or "")[:600], re.I))
+    # Two different conventions are live in the wild and they mean different things:
+    #   - Shopify's auto-generated "# Agent Instructions — Brand", which advertises UCP
+    #     and a transactional MCP endpoint;
+    #   - the original docs-style llms.txt (an H1 plus a summary), which is purely
+    #     descriptive and never claims a commerce endpoint at all.
+    # Treating the second as a broken promise would accuse a store of failing to deliver
+    # something it never offered.
+    claims_commerce = has_llms and bool(
+        re.search(r"agent instructions|ucp\b|/api/ucp/mcp|shop\.app/SKILL\.md", body, re.I))
 
     st2, _, ucp_body = get_ct(f"https://{host}/.well-known/ucp")
     endpoint, version = None, None
@@ -498,10 +509,17 @@ def check_agent_commerce(host, rep):
               + "tools: " + ", ".join(tools[:8]) + ("…" if len(tools) > 8 else "")
               + (f"\nIncludes {len(buy)} cart/checkout tools, so an agent can complete a purchase."
                  if buy else ""))
-    elif has_llms or version:
-        rep.f("warn", "Agent-commerce advertised but the endpoint did not answer",
-              "Your store publishes agent instructions or a UCP profile, but the MCP endpoint "
-              "did not return a tool list. An agent following those instructions hits a dead end.")
+    elif claims_commerce or version:
+        rep.f("bad", "Agent commerce is advertised but the endpoint does not answer",
+              "Your /llms.txt or UCP profile tells agents how to transact with you, and the MCP "
+              "endpoint did not return a tool list. An agent that follows your own instructions "
+              "hits a dead end — worse than not advertising it at all.")
+    elif has_llms:
+        rep.f("ok", "Serves a descriptive llms.txt (no commerce endpoint)",
+              "This is the original llms.txt convention: a plain-language summary for assistants, "
+              "not a transactional interface. It makes no claim about commerce, so nothing here "
+              "is broken. Note that no AI vendor currently documents reading other sites' "
+              "llms.txt, so treat it as cheap and harmless rather than as a visibility lever.")
     elif not rep.saw_product:
         rep.note("No agent-commerce endpoint (and no product page found)",
                  "This does not look like a storefront, so that is expected rather than a "
