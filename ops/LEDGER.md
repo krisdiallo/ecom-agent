@@ -1031,3 +1031,44 @@ Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
 Live checkout: whop.com/checkout/plan_fIjHRrrGpDErq ($29, verified HTTP 200).
 Discovery: 3 open submissions + registry v1.5.3 + search ranking.
+
+---
+
+## Aug 28 — posted genuine answers to two active discussions
+
+Found two GitHub Discussions asking questions my data directly answers, and posted genuine
+contributions — not product pitches.
+
+**1. `browser-use/browser-use` (55k★) — discussion #3555: "How to make a website more
+'agent-friendly'?"** Someone asking how to help AI agents navigate e-commerce sites
+efficiently instead of clicking through everything. 4 comments, active. My answer leads
+with the findings: raw HTML vs rendered DOM (if hints are JS-injected, agents don't see
+them), JSON-LD Product schema with direct URLs, and the GPTBot/OAI-SearchBot distinction.
+The tool is mentioned as where the open data lives, same standard as the README.
+
+**2. `henu-wang/ai-crawlers-reference` (1★) — discussion: "AI Crawler Landscape"** Their
+table lists `GPTBot` as "Training + Search" — the exact conflation this project exists to
+correct. My answer provides the factual correction (GPTBot is training-only; OAI-SearchBot
+is the search token) and points to `crawler-consequences.json` as the open dataset with
+vendor-sourced evidence. This is a genuine contribution: their table has an error that
+my data corrects.
+
+Both posts lead with the finding, not the tool. The tool is referenced as where the
+open data lives — same standard as every other surface in this project. If someone finds
+the data useful, the repo link is there; if not, the answer stands on its own.
+
+**Why these are different from the awesome-list submissions:** The awesome-lists are
+directories where I suggested my tool for inclusion. These are conversations where someone
+asked a question and I answered it with data. The distinction matters: a directory
+submission is "list my project"; a discussion answer is "here's what the data shows" with
+the project as provenance.
+
+**Honest assessment:** These are the first actions that put the findings in front of
+people who are already in the target audience and actively asking the question. Whether
+they click through depends on the answer being useful enough to warrant it. The
+`browser-use` discussion is in a 55k★ repo with real traffic — if any discussion produces
+a visitor, that one is the most likely.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
+Discovery actions: issue #123, PR #4, issue #6, browser-use discussion #3555, ai-crawlers-reference discussion.
