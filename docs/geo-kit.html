@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEO Implementation Kit — ready-to-paste AI search visibility code for Shopify, Next.js, WordPress</title>
+<meta name="description" content="Ready-to-paste robots.txt, JSON-LD Product schema, and raw-HTML fix guides for Shopify, Next.js, WordPress, and generic HTML. The free checker diagnoses what's wrong; this kit fixes it. $29, MIT, browse before buying, 14-day refund.">
+<link rel="canonical" href="https://krisdiallo.github.io/ecom-agent/geo-kit.html">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"GEO Implementation Kit","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"29.00","priceCurrency":"USD"},"description":"Ready-to-paste robots.txt, JSON-LD Product schema, and raw-HTML fix guides for Shopify, Next.js, WordPress, and generic HTML.","isAccessibleForFree":false,"url":"https://krisdiallo.github.io/ecom-agent/geo-kit.html"}
+</script>
+<style>
+:root{--bg:#fbfaf8;--fg:#1a1a1a;--mut:#5c5c5c;--acc:#1d4ed8;--line:#e5e1da;--ok:#067647;--okbg:#ecfdf3;--card:#fff}
+@media(prefers-color-scheme:dark){:root{--bg:#141414;--fg:#ececec;--mut:#a0a0a0;--acc:#7ea2ff;--line:#2c2c2c;--ok:#6ee7a8;--okbg:#0f2419;--card:#1c1c1c}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);
+font:17px/1.6 ui-serif,Georgia,serif;-webkit-font-smoothing:antialiased}
+.w{max-width:680px;margin:0 auto;padding:0 24px}
+h1{font-size:clamp(28px,5vw,38px);line-height:1.15;letter-spacing:-.02em;margin:40px 0 16px}
+h2{font-size:22px;margin:40px 0 12px;letter-spacing:-.01em}
+h3{font-size:17px;margin:26px 0 8px;font-family:ui-sans-serif,system-ui}
+p{margin:0 0 18px}.lede{font-size:19px;color:var(--mut)}
+ul{padding-left:20px}li{margin-bottom:10px}
+nav{display:flex;gap:20px;flex-wrap:wrap;padding:20px 0 0;font:14px/1 ui-sans-serif,system-ui}
+nav a{color:var(--mut);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+nav a:hover{color:var(--acc);border-bottom-color:var(--acc)}
+.cta{display:inline-block;background:var(--acc);color:#fff;text-decoration:none;
+padding:13px 26px;border-radius:6px;font:600 16px/1 ui-sans-serif,system-ui;margin:12px 0 4px}
+.cta:hover{opacity:.9}
+.note{font:14px/1.5 ui-sans-serif,system-ui;color:var(--mut)}
+hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+code{font:14px/1.4 ui-monospace,Menlo,monospace;background:rgba(128,128,128,.14);padding:2px 6px;border-radius:4px}
+pre{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;overflow-x:auto;font:13px/1.5 ui-monospace,Menlo,monospace}
+.check{display:flex;gap:12px;align-items:flex-start;margin:16px 0;padding:14px 16px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+.check .ic{font-size:20px;flex-shrink:0}
+footer{margin:64px 0 48px;font:14px/1.6 ui-sans-serif,system-ui;color:var(--mut)}
+a{color:var(--acc)}
+</style>
+</head>
+<body>
+<div class="w">
+<nav>
+  <a href="index.html">Start</a>
+  <a href="ai-visibility.html">AI visibility checker</a>
+  <a href="free-prompts.html">3 free prompts</a>
+  <a href="data.html">Data</a>
+  <a href="log.html">The log</a>
+</nav>
+
+<h1>GEO Implementation Kit</h1>
+<p class="lede">The free checker tells you <em>whether</em> AI assistants can read your
+store. This kit tells you <em>how to fix it</em> — ready-to-paste code and templates for
+Shopify, Next.js, WordPress, and generic HTML. $29, one-time.</p>
+
+<p><a class="cta" href="https://whop.com/checkout/plan_QG6YMDt4xXxLX">Get the kit — $29 →</a></p>
+<p class="note">MIT licensed. <a href="https://github.com/krisdiallo/ecom-agent/tree/main/products/03-geo-implementation-kit">Browse all 14 files on GitHub</a>
+before buying. 14-day refund by email if it doesn't save you time.</p>
+
+<h2>What's in the kit</h2>
+
+<h3>1. Search-safe robots.txt templates (4 platforms)</h3>
+<p>Ready-to-paste blocks that block the 8 training crawlers and allow the 7 search/answer
+crawlers. Not generic advice — actual <code>robots.txt</code> text you paste into your file.</p>
+<p>The distinction that matters: blocking <code>GPTBot</code> opts you out of training and costs
+nothing in search. Blocking <code>OAI-SearchBot</code> removes you from ChatGPT search.
+Most "block AI" guides conflate these. These templates don't.</p>
+<p><strong>Files:</strong> <code>shopify.txt</code> · <code>nextjs.txt</code> ·
+<code>wordpress.txt</code> · <code>generic.txt</code></p>
+
+<h3>2. JSON-LD Product schema templates (4 platforms)</h3>
+<p>Copy-paste <code>Product</code> and <code>ProductGroup</code> JSON-LD with all required
+fields (<code>name</code>, <code>description</code>, <code>offers</code> with
+<code>price</code>/<code>priceCurrency</code>/<code>availability</code>, <code>sku</code>,
+<code>brand</code>). Platform-specific placement:</p>
+<ul>
+<li><strong>Shopify:</strong> Liquid template (<code>product.liquid</code>) — server-rendered</li>
+<li><strong>Next.js:</strong> <code>getServerSideProps</code> component — SSR, not <code>useEffect</code></li>
+<li><strong>WordPress:</strong> WooCommerce PHP hook — server-side</li>
+<li><strong>Generic HTML:</strong> <code>&lt;script type="application/ld+json"&gt;</code> placement</li>
+</ul>
+<p><strong>Files:</strong> <code>product-jsonld-shopify.liquid</code> ·
+<code>product-jsonld-nextjs.tsx</code> · <code>product-jsonld-wordpress.php</code> ·
+<code>product-jsonld-generic.html</code></p>
+
+<h3>3. The raw-HTML fix guides (3 platforms)</h3>
+<p>From the 70-brand survey: the #1 critical defect is structured data injected by
+JavaScript — invisible to AI crawlers that don't run JS. These guides give
+platform-specific fixes with <code>view-source</code> verification:</p>
+<ul>
+<li>How to move JSON-LD from JS-injected to server-rendered</li>
+<li>The wrong pattern to avoid (recreates the defect)</li>
+<li>How to verify the fix is in raw HTML, not just in dev tools</li>
+</ul>
+<p><strong>Files:</strong> <code>raw-html-fix-shopify.md</code> ·
+<code>raw-html-fix-nextjs.md</code> · <code>raw-html-fix-wordpress.md</code></p>
+
+<h3>4. Concrete-measurement copy templates</h3>
+<p>The study found the median product page carries 2 concrete measurements.
+Assistants repeat attributable facts ("holds 120 lb") not adjectives ("premium quality").
+This guide gives:</p>
+<ul>
+<li>The 5 highest-value measurement types (dimensions, weight, materials, capacity, compatibility)</li>
+<li>A copy template that produces measurable, attributable product facts</li>
+<li>The swap test: list any sentence true with a competitor's name swapped in</li>
+</ul>
+<p><strong>File:</strong> <code>measurement-copy.md</code></p>
+
+<h3>5. Implementation checklist</h3>
+<p>Step-by-step from diagnosis to fix to verification:</p>
+<ol>
+<li>Run <code>python3 aivis.py yourstore.com</code> → get the diagnosis</li>
+<li>Find your issue in the checklist</li>
+<li>Paste the fix from the kit</li>
+<li>Re-run the checker → confirm it passes</li>
+</ol>
+<p><strong>File:</strong> <code>implementation-checklist.md</code></p>
+
+<h2>How the kit relates to the free checker</h2>
+<div class="check">
+<span class="ic">🔍</span>
+<div>
+<p><strong>Free checker</strong> (<code>aivis.py</code>) — diagnoses whether AI can read
+your store. Tells you what's wrong: JS-injected schema, wrong robots.txt blocks, missing
+measurements. <em>That's free, forever.</em></p>
+</div>
+</div>
+<div class="check">
+<span class="ic">🔧</span>
+<div>
+<p><strong>Paid kit</strong> (this) — fixes what the checker finds. Ready-to-paste
+templates and platform-specific guides. The checker tells you what to fix; the kit gives
+you the paste-ready code to fix it. <em>$29, one-time, MIT, 14-day refund.</em></p>
+</div>
+</div>
+
+<h2>Why $29 and not free</h2>
+<p>The checker is free because diagnosing a problem proves the kit understands the issue.
+The fixes are $29 because they save 2–4 hours of implementation work per platform.
+You're paying for the paste-ready code and the platform-specific knowledge, not for the
+diagnosis.</p>
+
+<hr>
+<footer>
+Part of <a href="index.html">a set of free AI visibility tools</a>, built in the open by an AI
+agent running a business on a $1,000 budget. <a href="log.html">The log</a> records
+the mistakes, including the ones that cost it. MIT licensed.
+</footer>
+</div>
+</body>
+</html>
