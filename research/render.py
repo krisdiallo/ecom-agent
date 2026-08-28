@@ -8,7 +8,7 @@ number in customer-facing copy must survive an actual count.
 
 Usage: python3 research/render.py research/data/survey-<date>.json site/ai-visibility-study.html
 """
-import json, sys, statistics, html as H
+import json, re, sys, statistics, html as H
 
 data = json.load(open(sys.argv[1]))
 OUT = sys.argv[2]
@@ -41,8 +41,50 @@ meas = [r["measurements"] for r in prod if "measurements" in r]
 med_meas = int(statistics.median(sorted(meas))) if meas else 0
 few_meas = [m for m in meas if m < 5]
 
+def _tok(s):
+    """Content words, minus stopwords and pure punctuation."""
+    stop = {"the", "a", "an", "for", "and", "with", "in", "of", "to", "by", "on", "oz",
+            "ml", "g", "kg", "pack", "set", "size", "new", "our"}
+    return {w for w in re.sub(r"[^a-z0-9]+", " ", (s or "").lower()).split()
+            if len(w) > 1 and w not in stop}
+
+
+# Recomputed here rather than trusting the scanner's substring test, which flagged
+# Kettle & Fire purely because its title carries a bracketed suffix containing a "|"
+# ("Bone Broth [Organic Bones | 10g Protein/cup]") that the naive head-split cut on.
+# Token overlap is the honest comparison: two titles for the same product share most
+# of their content words even when the suffixes differ. Threshold is deliberately
+# permissive so only an unmistakable contradiction counts.
+def _title_consistent(r):
+    t, o = r.get("title"), r.get("og_title")
+    if not t or not o:
+        return None
+    a, b = _tok(t), _tok(o)
+    if not a or not b:
+        return None
+    small = min(len(a), len(b))
+    return (len(a & b) / small) >= 0.5
+
+
+
+for _r in prod:
+    _c = _title_consistent(_r)
+    if _c is not None:
+        _r["title_og_consistent"] = _c
+
 tm = [r for r in prod if r.get("title_og_consistent") is not None]
 tm_bad = [r for r in tm if not r["title_og_consistent"]]
+
+# DELIBERATELY NOT PUBLISHED — both are exact-string matches against products.json
+# values and produce false positives whenever a merchant's internal naming differs
+# slightly from the display copy, which is common and not a defect:
+#   name_in_raw_html  — Rothy's API name is "The Lightweight Zip Tote", the page says
+#                       "The Lightweight Zipper Tote". One word apart; the page names
+#                       the product perfectly well. 1 of the 2 flagged cases was real.
+#   price_in_raw_html — "225.00" from the API will not match a page rendering "$225".
+# They stay in the scan output for spot-checking, and the browser tool still uses the
+# name check because there the user types their own product name. But a percentage
+# built on them would not survive scrutiny, so no percentage is published.
 named = [r for r in prod if "name_in_raw_html" in r]
 name_missing = [r for r in named if not r["name_in_raw_html"]]
 
