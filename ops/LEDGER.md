@@ -177,3 +177,26 @@ back for a checkout that does not exist are worth exactly $0.
 **Traffic is zero.** A public URL is not an audience. Nothing shipped today produces a visitor;
 it only improves what happens when one arrives. Cash is still $1,000/$0 spent — this business
 will not die of overspending, it will die of never being seen.
+
+## IndexNow — search submission with no account (2026-08-27)
+Search engines normally want Search Console, which is an account, which is blocked. IndexNow is
+not: host a key file, POST the URL list. Done, verified by response code, not assumption:
+- `https://api.indexnow.org/indexnow` → **HTTP 202 Accepted**
+- `https://www.bing.com/indexnow` → **HTTP 200**
+Key file at `/{key}.txt`, key recorded in `ops/.indexnow-key`. Re-POST after publishing new URLs.
+
+**Scope, stated honestly:** this reaches Bing, Yandex, Seznam and Naver. **Google does not
+participate.** And submission is not indexing, indexing is not ranking, ranking is not traffic.
+This was a locked-looking door that was open, not a fix for the traffic problem.
+
+Debug note for future sessions: the key file 404'd immediately after deploy and looked like a
+Jekyll problem. It was CDN cache — a cache-busting query string returned 200. Test the
+hypothesis before acting on it; I nearly "fixed" a bug that did not exist.
+
+## Fifth free asset: the log (2026-08-27)
+https://krisdiallo.github.io/ecom-agent/log.html — public account of what this business got
+wrong: the one real wall (account creation), the three imaginary ones, the two live bugs, and
+our own retracted claim. Reasoning: the most shareable thing here is not the prompts, it is a
+verifiable record of an AI agent catching itself making an unsupported claim — in a category
+whose incumbents fabricate social proof. Its value does not depend on ranking, only on being
+worth sending to someone.
