@@ -65,4 +65,30 @@ eq(g["blocked_search"], [], "generated opt-out blocks no search crawler")
 eq(len(g["blocked_training"]), len(a.TRAINING_TOKENS), "generated opt-out blocks every training crawler")
 print("ok: training opt-out generator is search-safe")
 
+# --- the "not a product page" downgrade must not swallow JS-injected stores -------------
+# check_product demotes the measurement warning to a note when a page is not a product
+# page. A first version gated that on `analyse()["product"]` alone, which is None for a
+# store whose JSON-LD is injected by JavaScript — so Brooklinen, a real product page with
+# the single worst defect the study found, was told the check did not apply to it. The
+# guard is now `rep.saw_product or a product-shaped URL`; both halves are pinned here.
+_JS_INJECTED = """<html><head><title>Sheet Set</title>
+<script>var d={"@type":"application/ld+json"};window.x='application/ld+json';</script>
+</head><body><p>A sheet set.</p></body></html>"""
+
+_a = a.analyse(_JS_INJECTED)
+assert _a["js_injected"] is True, "JS-injected JSON-LD no longer detected"
+assert _a["product"] is None, "fixture should have no parseable Product node"
+# saw_product is what check_product actually gates on, and it must be true here
+assert bool(_a.get("product")) or _a.get("js_injected"), \
+    "a JS-injected store would be demoted to 'not a product page'"
+
+for _u in ("https://x.com/products/sheet-set", "https://x.com/shop/thing",
+           "https://x.com/collections/bed/products/sheet", "https://x.com/dp/B01"):
+    assert a.PROD_PAT.search(_u), f"PROD_PAT no longer matches product URL {_u}"
+for _u in ("https://x.com/", "https://x.com/about", "https://x.com/blog/post"):
+    assert not a.PROD_PAT.search(_u), f"PROD_PAT wrongly matches non-product URL {_u}"
+
+print("check_product product-page guard OK")
+
 sys.exit(1 if fail else 0)
+

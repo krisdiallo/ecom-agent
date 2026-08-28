@@ -28,7 +28,7 @@ import argparse, gzip, io, ipaddress, json, re, socket, sys
 import urllib.error, urllib.parse, urllib.request
 from html import unescape
 
-__version__ = "1.5.0"
+__version__ = "1.5.1"
 
 UA = ("Mozilla/5.0 (compatible; aivis/%s; +https://github.com/krisdiallo/ecom-agent) "
       "AI-visibility self-check" % __version__)
@@ -966,6 +966,22 @@ def check_product(host, rep, url=None):
           f"{band_of(len(m), BENCH['measurements'])}.")
     if len(m) >= 5:
         rep.f("ok", f"{len(m)} concrete measurements", "e.g. " + ", ".join(m[:6]) + "\n" + vs)
+    elif not rep.saw_product and not PROD_PAT.search(final or ""):
+        # No Product node at all, so this is a homepage, article or landing page. The
+        # benchmark is 51 *product* pages and the advice below ("add dimensions and
+        # weight") is meaningless here. Section 3 already declines to grade a non-store
+        # this way; grading it here anyway told people their about page had its "most
+        # winnable gap" in shipping weights. Caught by running this on our own site.
+        #
+        # Deliberately gated on rep.saw_product (which counts JS-injected schema as a
+        # product page) and the URL shape, NOT on a["product"] alone. A first attempt
+        # used a["product"], and Brooklinen — a real product page whose JSON-LD is
+        # JS-injected — was demoted to "not a product page", silently suppressing this
+        # warning for precisely the stores with the worst problem in the study.
+        rep.note(f"{len(m)} concrete measurement(s), but this is not a product page",
+                 "The measurement benchmark comes from 51 product pages, where dimensions "
+                 "and weight are what an assistant repeats. On a page with no Product "
+                 "schema there is nothing to compare against, so this is not scored.")
     else:
         rep.f("warn", f"Only {len(m)} concrete measurement(s) in the readable text",
               vs + "\nAssistants repeat facts, not adjectives: 'holds 120 lb' survives the "
