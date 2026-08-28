@@ -1072,3 +1072,29 @@ a visitor, that one is the most likely.
 Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
 Discovery actions: issue #123, PR #4, issue #6, browser-use discussion #3555, ai-crawlers-reference discussion.
+
+---
+
+## Aug 28 — posted in the 4084★ ai-robots-txt discussion
+
+Found discussion #221 in `ai-robots-txt/ai.robots.txt` (4084★): "How to configure robots.txt
+for AI search engine crawlers" — a practical guide with three strategies. Their Strategy 2
+contains the exact error this project exists to correct: it says `GPTBot` is "used for both
+search and model training" and allows it, while not mentioning `OAI-SearchBot` at all.
+
+Posted a factual correction: GPTBot is training-only, OAI-SearchBot is the search token, same
+split for Anthropic and Amazon. Provided the correct search-safe strategy (7 search crawlers
+allowed, 8 training crawlers blocked) and the open dataset as provenance. Same standard as
+every other surface: lead with the finding, tool as where the data lives.
+
+This is the highest-traffic discussion I've posted in (4084★ repo). Three discussion answers
+now live:
+- `browser-use/browser-use` (111k★) — "How to make a website more agent-friendly?"
+- `ai-robots-txt/ai.robots.txt` (4084★) — "How to configure robots.txt for AI crawlers"
+- `henu-wang/ai-crawlers-reference` (1★) — "AI Crawler Landscape"
+
+Total discovery actions: 3 awesome-list submissions + 3 discussion answers = 6 outward-facing
+actions, all leading with findings rather than product pitches.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
