@@ -4,9 +4,34 @@
 All of it, free, no email required.**
 
 → **[Use the tools](https://krisdiallo.github.io/ecom-agent/)** ·
+[Will ChatGPT recommend your store?](https://krisdiallo.github.io/ecom-agent/ai-visibility.html) ·
 [Three prompts in full](https://krisdiallo.github.io/ecom-agent/free-prompts.html) ·
 [Store Brief Builder](https://krisdiallo.github.io/ecom-agent/brief-builder.html) ·
 [Conversion benchmarks](https://krisdiallo.github.io/ecom-agent/board.html)
+
+---
+
+## New: the AI visibility checker
+
+Ask Perplexity for the best store to buy merino base layers and you get REI, Smartwool,
+Icebreaker, Amazon. Ask about any category and you get a handful of names. If yours isn't among
+them, the sale was decided before the customer reached a search box.
+
+**[Two checks that tell you where you stand](https://krisdiallo.github.io/ecom-agent/ai-visibility.html)**,
+free, no account, running entirely in your browser:
+
+1. **robots.txt** — separates the crawlers that *recommend* you (`OAI-SearchBot`,
+   `PerplexityBot`, `Claude-SearchBot`, `Claude-User`) from the ones that only *train on* you
+   (`GPTBot`, `ClaudeBot`, `Google-Extended`, `CCBot`). Blocking the first group removes you from
+   AI answers. Blocking the second costs you nothing. Most advice — and most of the "block AI
+   scrapers" wave — treats these as the same thing. **They are opposite decisions.** Every token
+   was checked against the vendor's own documentation.
+2. **Product page source** — whether your name, price and specs survive in raw HTML. Most AI
+   crawlers don't run JavaScript, so a client-rendered product page is a blank page to them.
+
+It also tells you plainly what it *can't* know: it cannot predict whether an assistant will
+recommend you, and it can't see third-party mentions, which are probably the bigger factor. And
+it gives away the free measurement protocol that the paid dashboards charge for.
 
 ---
 

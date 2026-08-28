@@ -106,3 +106,70 @@ and keep the product worth finding when someone does arrive.
 3. Kill criterion, restated honestly: a product with 0 sales after 200 visits is dead. **No
    product has had 200 visits.** Nothing has been tested yet. Do not conclude the products
    failed — they have not been shown to anyone.
+
+---
+
+# Plan v2 — 2026-08-28
+
+## What v1 got wrong
+
+v1 concluded: *"Every remaining growth lever needs a human... I have taken this as far as it
+goes without one."* Two of the three premises behind that were wrong.
+
+**1. The payment block was never a category, only four platforms.** See `ops/LEDGER.md`,
+2026-08-28. A verified merchant account with live rails was available the whole time. Revenue is
+no longer structurally impossible; it is one owner decision away.
+
+**2. The product was in a category with demonstrated zero demand, and v1 had the evidence.**
+v1 recorded "0 reviews across the board" on competing prompt packs and read it as weak supply.
+It is at least as consistent with no demand — and against zero traffic, nothing distinguishes
+them. We were spending effort on the optimistic reading of our own disconfirming data.
+
+v1's traffic research still stands and is not revisited: SEO on a `github.io` subdomain returns
+nothing inside 90 days. Do not write content on faith.
+
+## Revised thesis
+
+Sell (or give away) **diagnostics for problems store owners can't see themselves**, in a
+category where the anxiety is current and the incumbents charge subscription prices.
+
+Prompt packs are commodity supply: 1,000 for $19, 100 free, zero reviews anywhere. An
+AI-visibility diagnostic is not: it is personalised, it produces a result worth screenshotting,
+and it is the thing merchants are actively asking about in the target community *this month*.
+Writesonic repositioned its whole business to this at $79–399/mo, which is a costly signal about
+where the money is.
+
+## What is verified, and what is not
+
+Verified today, first-hand:
+- Perplexity returns only large incumbents for a category shopping query (merino base layers →
+  REI, Smartwool, Icebreaker, Amazon, Alpinetrek).
+- Two live r/shopify threads, 35 comments, including an agency saying manual prompt testing
+  "doesn't scale" and paid tools already being named.
+- The crawler taxonomy, from each vendor's own docs.
+- Shopify's default robots.txt blocks **no** AI crawlers — so this check passes for most stores.
+  Said plainly rather than dressed up as a scare.
+
+Not verified, and not to be claimed:
+- That improving any of this causes recommendations. Nobody has shown that publicly.
+- That AI shopping traffic is large today. A Top-1% r/shopify commenter puts Google at ~90% of
+  shopping queries. Both counterweights are printed on the tool's own page.
+
+## Distribution — the still-unsolved problem
+
+Traffic is 0. The community that has the demand **actively detects and punishes promotional
+posting** — a merchant in one of the two threads accused it of being an AI-written sock-puppet
+setup for an app. Being caught once costs more than any traffic gained. So:
+
+- **Ruled out:** promotional posting, sock-puppet accounts, posting as anyone but the owner.
+- **Cheap and done:** structured data on the tool so assistants can cite it, IndexNow, repo
+  topics and description aimed at how people actually search this.
+- **Open:** the honest version of the r/shopify lane needs a real account with real standing.
+  That is the owner's to use or not.
+
+## Milestones
+1. ~~First $100 by wk 4~~ (v1, removed — assumed traffic that doesn't exist). Still removed.
+2. **First 10 visitors.** Still the gating number. Everything else is downstream.
+3. Owner decision on the payment rail. Until then revenue is $0 by construction, not by failure.
+4. Kill criterion unchanged and still untriggered: 0 sales after 200 visits kills a product.
+   **No product has had 200 visits. Nothing has been tested yet.**
