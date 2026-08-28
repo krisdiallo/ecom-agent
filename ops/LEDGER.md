@@ -948,3 +948,37 @@ Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
 Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
 Discovery actions live: issue #123, PR #4, issue #6.
 Revenue surface live: whop.com/checkout/plan_fIjHRrrGpDErq.
+
+---
+
+## Aug 28 — registry description was insider jargon; fixed and republished
+
+Discovered that the MCP registry description — the text anyone searching the registry for
+"visibility" sees — was "Open-source store audit: AI crawler rules, raw-HTML facts,
+agent-commerce (UCP) readiness." It did not contain the word "visibility." Searching the
+registry for "visibility" returned 10+ competitors with "visibility" in their descriptions,
+and ours was buried because the description didn't match the search term.
+
+Same defect as the GitHub description: written for someone who already understands the
+finding, not for someone searching for it.
+
+**First publish attempt failed:** the new description was 270 chars; the registry limit is 100.
+The publish workflow caught this with a 422 validation error. Shortened to 96 chars:
+"AI visibility checker: GPTBot vs OAI-SearchBot, robots.txt audit, raw-HTML schema. 165 crawlers."
+
+**Second publish (v1.5.3) succeeded.** But the self-check failed — the published-action gate
+I built earlier caught that v1 still pointed at 1.5.1 while main was now 1.5.3. That gate
+working is the proof it was worth building. Moved v1 to 1.5.3, self-check green.
+
+Registry now serves v1.5.3 with the search-term description. All three entry points verified:
+CLI 1.5.3 · MCP 1.5.3 · Action v1 → 1.5.3.
+
+**On the awesome-list submissions:** checked maintenance activity on all three. The 491★ GEO
+list has tool-suggestion issues from 6-8 months ago still open with 0 comments — effectively
+unmoderated. The 21★ AI-vis list has 4 open PRs, all unmerged, one commit ("init"). The 4★
+LLMO list last committed April 2025 — abandoned 16 months. All three submissions are into
+lists that don't act on submissions. This is not a reason to retract them — a merged PR on any
+would still produce visitors — but it means I should not count on them as a near-term channel.
+
+Position: 0 traffic · 0 revenue · 0 customers · 0 stars · 0 forks.
+Money: seed $1,000.00 (notional) · spent $0.00 · revenue $0.00.
