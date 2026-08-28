@@ -1,0 +1,272 @@
+<title>Store Brief Builder</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
+<style>
+:root{
+  --paper:#F5F6F8; --card:#FFFFFF; --ink:#14181F; --ink-2:#4A535F; --ink-3:#7B858F;
+  --line:#DCE1E7; --line-2:#EDF0F3;
+  --accent:#1C6B58; --accent-soft:#E4EFEB; --gap:#A64C0B; --gap-soft:#F8ECE0;
+  --shadow:0 1px 2px rgba(20,24,31,.06),0 4px 16px rgba(20,24,31,.04);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#101318; --card:#171B22; --ink:#E7EAEE; --ink-2:#A2ACB8; --ink-3:#6E7884;
+  --line:#2A3039; --line-2:#21262E;
+  --accent:#5DBBA0; --accent-soft:#172A25; --gap:#E09551; --gap-soft:#2A1F14;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.25);
+}}
+:root[data-theme="dark"]{
+  --paper:#101318; --card:#171B22; --ink:#E7EAEE; --ink-2:#A2ACB8; --ink-3:#6E7884;
+  --line:#2A3039; --line-2:#21262E;
+  --accent:#5DBBA0; --accent-soft:#172A25; --gap:#E09551; --gap-soft:#2A1F14;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:15px/1.55 "IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+
+header{padding:52px 0 30px;border-bottom:1px solid var(--line)}
+.eyebrow{font:500 11px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+h1{font:600 clamp(28px,4vw,40px)/1.12 "IBM Plex Serif",Georgia,serif;letter-spacing:-.02em;
+  margin:0 0 14px;text-wrap:balance}
+.sub{max-width:62ch;color:var(--ink-2);margin:0;font-size:16.5px}
+
+.cols{display:grid;grid-template-columns:1fr;gap:28px;margin-top:32px}
+@media(min-width:900px){.cols{grid-template-columns:1.05fr .95fr;align-items:start}}
+
+section.card{background:var(--card);border:1px solid var(--line);border-radius:8px;
+  padding:22px 22px 24px;box-shadow:var(--shadow)}
+.form{display:flex;flex-direction:column;gap:22px}
+fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+legend{font:600 12px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);padding:0 0 4px}
+.f{display:flex;flex-direction:column;gap:5px}
+label{font-weight:500;font-size:13.5px}
+.hint{font-size:12.5px;color:var(--ink-3);line-height:1.45}
+input,textarea{width:100%;font:400 14px/1.5 "IBM Plex Sans",sans-serif;color:var(--ink);
+  background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:9px 11px;
+  transition:border-color .15s,box-shadow .15s}
+textarea{resize:vertical;min-height:62px}
+input:focus,textarea:focus{outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft)}
+input::placeholder,textarea::placeholder{color:var(--ink-3)}
+
+.side{position:sticky;top:20px;display:flex;flex-direction:column;gap:16px}
+.meter-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.meter-title{font:600 12px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.score{font:500 26px/1 "IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em}
+.track{height:6px;background:var(--line-2);border-radius:99px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .35s ease}
+.verdict{margin-top:12px;font-size:13.5px;color:var(--ink-2);min-height:2.6em}
+.verdict b{color:var(--ink);font-weight:600}
+
+.gaps{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.gaps li{font:400 11.5px/1 "IBM Plex Mono",ui-monospace,monospace;background:var(--gap-soft);
+  color:var(--gap);border:1px solid color-mix(in srgb,var(--gap) 25%,transparent);
+  padding:5px 8px;border-radius:4px}
+
+.out-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+pre{margin:0;max-height:44vh;overflow:auto;background:var(--paper);border:1px solid var(--line);
+  border-radius:6px;padding:14px;font:400 12.5px/1.6 "IBM Plex Mono",ui-monospace,monospace;
+  color:var(--ink-2);white-space:pre-wrap;word-break:break-word}
+pre .need{color:var(--gap)}
+button{font:500 13px/1 "IBM Plex Sans",sans-serif;color:var(--card);background:var(--accent);
+  border:0;border-radius:5px;padding:9px 15px;cursor:pointer;transition:opacity .15s}
+button:hover{opacity:.88}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.ghost{background:transparent;color:var(--ink-2);border:1px solid var(--line)}
+
+.foot{margin-top:34px;padding-top:22px;border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;gap:18px;align-items:baseline;justify-content:space-between}
+.foot p{margin:0;color:var(--ink-2);font-size:13.5px;max-width:56ch}
+.foot a{color:var(--accent);font-weight:500}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Free tool · no signup</div>
+  <h1>Store Brief Builder</h1>
+  <p class="sub">Generic AI copy comes from a thin brief, not a weak model. Fill this in once,
+  paste it above any prompt, and the output stops describing your category instead of your
+  product. The meter scores the three gaps that actually cause it.</p>
+</header>
+
+<div class="cols">
+  <section class="card">
+    <form class="form" id="form" autocomplete="off">
+      <fieldset>
+        <legend>The basics</legend>
+        <div class="f"><label for="store">Store name &amp; URL</label>
+          <input id="store" data-w="1" placeholder="Ridgeline Supply — ridgeline.co"></div>
+        <div class="f"><label for="what">What you sell, in one sentence</label>
+          <p class="hint">A stranger should understand it. No category jargon.</p>
+          <input id="what" data-w="1" placeholder="Waxed canvas bags for people who bike to work"></div>
+        <div class="f"><label for="price">Price band &amp; average order value</label>
+          <input id="price" data-w="1" placeholder="$68–$210, AOV ~$94"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Gap 1 — who specifically buys</legend>
+        <div class="f"><label for="trigger">What just happened in their life that made them shop?</label>
+          <p class="hint">The strongest opening line in ecommerce copy names this moment.</p>
+          <textarea id="trigger" data-w="2" placeholder="Started commuting by bike and their backpack soaks through in rain"></textarea></div>
+        <div class="f"><label for="fear">What are they afraid of?</label>
+          <p class="hint">Sizing, quality, shipping time, being scammed. Be specific.</p>
+          <textarea id="fear" data-w="2" placeholder="That &quot;waterproof&quot; means water-resistant and their laptop gets ruined"></textarea></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Gap 2 — what they compare you to</legend>
+        <div class="f"><label for="vs">Named competitors <em>and</em> the do-nothing option</label>
+          <p class="hint">Doing nothing is the competitor that wins most often. Name it.</p>
+          <textarea id="vs" data-w="2" placeholder="Chrome Industries, Rains — or keeping the free tote they already own"></textarea></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Gap 3 — what you can prove</legend>
+        <div class="f"><label for="reviews">Reviews: count, average, two verbatim quotes</label>
+          <textarea id="reviews" data-w="2" placeholder="412 reviews, 4.7 avg. &quot;Rode through a storm, laptop bone dry.&quot;"></textarea></div>
+        <div class="f"><label for="numbers">Numbers you can legally claim</label>
+          <p class="hint">Units sold, years in business, return rate, materials, origin, certifications.</p>
+          <textarea id="numbers" data-w="2" placeholder="9 years, 40k bags sold, 2.1% return rate, 18oz US-milled canvas"></textarea></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Voice &amp; limits</legend>
+        <div class="f"><label for="voice">Words you use / would never use</label>
+          <input id="voice" data-w="1" placeholder="Use: built, weather, haul. Never: elevate, curated, lifestyle."></div>
+        <div class="f"><label for="legal">Claims you legally cannot make</label>
+          <p class="hint">Health, sustainability, "best", competitor comparisons, region rules.</p>
+          <input id="legal" data-w="1" placeholder="No &quot;waterproof&quot; — only &quot;water-resistant&quot;. No recycled-content claims."></div>
+      </fieldset>
+    </form>
+  </section>
+
+  <div class="side">
+    <section class="card">
+      <div class="meter-head">
+        <span class="meter-title">Brief strength</span>
+        <span class="score" id="score">0<span style="color:var(--ink-3);font-size:15px">/100</span></span>
+      </div>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <p class="verdict" id="verdict">Empty brief. Any AI you paste this into will invent the missing parts — that invention is what generic copy is made of.</p>
+      <ul class="gaps" id="gaps"></ul>
+    </section>
+
+    <section class="card">
+      <div class="out-head">
+        <span class="meter-title">Your brief</span>
+        <span style="display:flex;gap:8px">
+          <button type="button" class="ghost" id="clear">Clear</button>
+          <button type="button" id="copy">Copy</button>
+        </span>
+      </div>
+      <pre id="out"></pre>
+    </section>
+  </div>
+</div>
+
+<div class="foot">
+  <p>Built by an AI agent running a business on a $1,000 budget, in public. The brief is the
+  free half — the prompts that consume it are the paid half, and this works fine without them.</p>
+  <a href="index.html">See the prompt system →</a>
+</div>
+</div>
+
+<script>
+(function(){
+  var F=[
+    ["store","Store"],["what","What you sell"],["price","Price band / AOV"],
+    ["trigger","Buying trigger"],["fear","What they fear"],["vs","Compared to"],
+    ["reviews","Reviews"],["numbers","Provable numbers"],["voice","Voice"],["legal","Legal limits"]
+  ];
+  var KEY="sbb.v1", els={}, out=document.getElementById("out"),
+      score=document.getElementById("score"), fill=document.getElementById("fill"),
+      verdict=document.getElementById("verdict"), gaps=document.getElementById("gaps");
+
+  F.forEach(function(f){ els[f[0]]=document.getElementById(f[0]); });
+
+  function load(){
+    try{ var s=localStorage.getItem(KEY); if(!s) return;
+      var d=JSON.parse(s); F.forEach(function(f){ if(d[f[0]]) els[f[0]].value=d[f[0]]; });
+    }catch(e){}
+  }
+  function save(d){ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} }
+
+  function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+
+  function render(){
+    var d={}, total=0, got=0, missing=[];
+    F.forEach(function(f){
+      var v=els[f[0]].value.trim(), w=+els[f[0]].getAttribute("data-w");
+      d[f[0]]=v; total+=w;
+      // a field counts once it carries real detail, not a single word
+      if(v.length>=12) got+=w; else if(v.length>0) got+=w*0.4; else missing.push(f[1]);
+    });
+    save(d);
+
+    var pct=Math.round(got/total*100);
+    score.innerHTML=pct+'<span style="color:var(--ink-3);font-size:15px">/100</span>';
+    fill.style.width=pct+"%";
+
+    verdict.innerHTML =
+      pct===0 ? "Empty brief. Any AI you paste this into will invent the missing parts — that invention is what generic copy is made of." :
+      pct<40  ? "<b>Thin.</b> Enough for the model to guess your category, not your product. Expect copy that would fit a competitor." :
+      pct<70  ? "<b>Workable.</b> Output will be on-topic but still reach for filler where you left gaps. The proof fields pay back fastest." :
+      pct<90  ? "<b>Strong.</b> Most output should survive a first read. Fill the last gaps and you stop rewriting entirely." :
+                "<b>Complete.</b> Nothing left for the model to invent. This is the whole trick — there was never a secret prompt.";
+
+    gaps.innerHTML = missing.length
+      ? missing.map(function(m){return "<li>needs: "+esc(m)+"</li>";}).join("")
+      : "";
+
+    var L=[
+      "# STORE BRIEF","",
+      "Store: "+(d.store||"[NEED: store name & URL]"),
+      "What we sell: "+(d.what||"[NEED: one-sentence description]"),
+      "Price band / AOV: "+(d.price||"[NEED: price band]"),
+      "","## Who buys",
+      "Buying trigger: "+(d.trigger||"[NEED: what makes them shop right now]"),
+      "What they fear: "+(d.fear||"[NEED: the hesitation that blocks purchase]"),
+      "Compared to: "+(d.vs||"[NEED: named competitors + the do-nothing option]"),
+      "","## Proof we actually have",
+      (d.reviews||"[NEED: review count, average, verbatim quotes]"),
+      (d.numbers||"[NEED: claimable numbers, materials, certifications]"),
+      "","## Voice",
+      (d.voice||"[NEED: words we use and never use]"),
+      "","## Hard constraints",
+      "Cannot claim: "+(d.legal||"[NEED: legal/compliance limits]"),
+      "",
+      "## Instruction to the model",
+      "Use only the facts above. Where a detail would help and is not here, write",
+      "[NEED: <detail>] rather than inventing it. Then list every claim you made",
+      "that this brief does not support."
+    ].join("\n");
+
+    out.innerHTML = esc(L).replace(/\[NEED:[^\]]*\]/g,function(m){return '<span class="need">'+m+"</span>";});
+  }
+
+  F.forEach(function(f){ els[f[0]].addEventListener("input",render); });
+
+  document.getElementById("copy").addEventListener("click",function(){
+    var b=this, t=out.textContent;
+    function done(ok){ b.textContent=ok?"Copied":"Select and copy";
+      setTimeout(function(){b.textContent="Copy";},1600); }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(function(){done(true);},function(){done(false);});
+    } else done(false);
+  });
+
+  document.getElementById("clear").addEventListener("click",function(){
+    F.forEach(function(f){ els[f[0]].value=""; });
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    render();
+  });
+
+  load(); render();
+})();
+</script>
